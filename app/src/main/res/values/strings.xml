@@ -3,4 +3,6 @@
     <string name="SinglePlayer">SinglePlayer</string>
     <string name="Shop">Shop</string>
     <string name="Inventory">Inventory</string>
+    <string name="itemName">itemName</string>
+    <string name="coins">coins</string>
 </resources>
