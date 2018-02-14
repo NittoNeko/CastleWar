@@ -2,6 +2,10 @@ package ca.uwaterloo.cw.castlewar;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.content.Intent;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public void enterInventory(View view)
     {
         // Create an intent to show a new screen passing data to it
-        Intent userSearchIntent = new Intent(this, InventoryActivity.class);
+        Intent userIntent = new Intent(this, InventoryActivity.class);
 
         // Show new screen
         startActivity(userIntent);
