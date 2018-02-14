@@ -3,4 +3,5 @@
     <string name="SinglePlayer">SinglePlayer</string>
     <string name="Shop">Shop</string>
     <string name="Inventory">Inventory</string>
+    <string name="title_activity_prepare">PrepareStage</string>
 </resources>
