@@ -1,5 +1,6 @@
 package ca.uwaterloo.cw.castlewar;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 /**
@@ -8,8 +9,8 @@ import android.graphics.Bitmap;
 
 public class Enemy extends Units {
 
-    public Enemy(int id, String name, Bitmap image, int hp, int attack, int defense, int speed)
+    public Enemy(Context context, int id, String name, int drawable, int hp, int maxHP, int attack, int defense, int speed)
     {
-        super(id, name, image, hp, attack, defense, speed);
+        super(context, id, name, drawable, hp, maxHP, attack, defense, speed);
     }
 }

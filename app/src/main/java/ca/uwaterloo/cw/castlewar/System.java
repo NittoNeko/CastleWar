@@ -1,7 +1,5 @@
 package ca.uwaterloo.cw.castlewar;
 
-import android.graphics.BitmapFactory;
-
 import java.util.ArrayList;
 
 /**
@@ -10,7 +8,7 @@ import java.util.ArrayList;
 
 public class System {
     ArrayList<Ally> allies;
-    ArrayList<Buff> buffs;
+    ArrayList<Effect> effects;
     ArrayList<Enemy> enemies;
     ArrayList<Potion> potions;
     ArrayList<Towers> towers;

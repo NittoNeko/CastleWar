@@ -1,21 +1,22 @@
 package ca.uwaterloo.cw.castlewar;
 
-import android.graphics.Bitmap;
+
+import android.content.Context;
 
 /**
  * Created by harri on 2018/2/14.
  */
 
-public class Buff extends GameObject {
+public class Effect extends GameObject {
 
     private int attack;
     private int defense;
     private int speed;
     private int turnLeft;
 
-    public Buff(int id, String name, Bitmap image, int attack, int defense, int speed, int turnLeft)
+    public Effect(Context context, int id, String name, int drawable, int attack, int defense, int speed, int turnLeft)
     {
-        super(id, name, image);
+        super(context, id, name, drawable);
         this.attack = attack;
         this.defense = defense;
         this.speed = speed;
