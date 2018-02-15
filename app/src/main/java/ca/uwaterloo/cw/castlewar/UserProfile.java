@@ -6,6 +6,8 @@ package ca.uwaterloo.cw.castlewar;
 
 public class UserProfile {
 
+
+
     public UserProfile() {
         super();
     }
