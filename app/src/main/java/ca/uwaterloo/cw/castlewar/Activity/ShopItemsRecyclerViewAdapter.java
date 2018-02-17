@@ -1,4 +1,4 @@
-package ca.uwaterloo.cw.castlewar;
+package ca.uwaterloo.cw.castlewar.Activity;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ca.uwaterloo.cw.castlewar.R;
 
 /**
  * Created by WangY on 2018-02-04.
@@ -49,7 +51,7 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
         ConstraintLayout shopItemView = (ConstraintLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.shop_item, parent, false);
 
         // Get references to view components
-        TextView itemNameView = shopItemView.findViewById(R.id.itemName);
+        TextView itemNameView = shopItemView.findViewById(R.id.Levels);
         TextView coinsView = shopItemView.findViewById(R.id.coins);
         ImageView itemPictureImageView = shopItemView.findViewById(R.id.itemPicture);
 

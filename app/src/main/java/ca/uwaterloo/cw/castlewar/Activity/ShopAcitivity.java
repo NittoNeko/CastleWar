@@ -1,4 +1,4 @@
-package ca.uwaterloo.cw.castlewar;
+package ca.uwaterloo.cw.castlewar.Activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,8 @@ import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ca.uwaterloo.cw.castlewar.R;
 
 /**
  * Created by WangY on 2018-02-04.
