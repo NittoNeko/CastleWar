@@ -6,4 +6,8 @@
     <string name="title_activity_prepare">PrepareStage</string>
     <string name="itemName">itemName</string>
     <string name="coins">coins</string>
+    <string name="Levels">levels</string>
+    <string name="Terrain">terrain</string>
+    <string name="Enemies">enemies</string>
+    <string name="Rewards">rewards</string>
 </resources>
