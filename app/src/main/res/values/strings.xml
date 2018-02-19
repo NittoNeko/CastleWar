@@ -10,4 +10,8 @@
     <string name="Terrain">terrain</string>
     <string name="Enemies">enemies</string>
     <string name="Rewards">rewards</string>
+    <string name="EnemyTitle">"Enemy: "</string>
+    <string name="RewardTitle">Reward:</string>
+    <string name="GoButton">Go!</string>
+    <string name="BackButton">Back</string>
 </resources>

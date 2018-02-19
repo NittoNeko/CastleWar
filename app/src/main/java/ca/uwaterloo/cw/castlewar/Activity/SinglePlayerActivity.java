@@ -9,12 +9,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.R;
 
 
 public class SinglePlayerActivity extends AppCompatActivity {
-
-    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +32,11 @@ public class SinglePlayerActivity extends AppCompatActivity {
         levelsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         // Set the adapter which will fill the data on the RecyclerView items
-        levelsRecyclerView.setAdapter(new LevelsRecyclerViewAdapter());
+        levelsRecyclerView.setAdapter(new LevelsRecyclerViewAdapter(this));
+    }
 
-
+    public void onBackPressed(View view)
+    {
+        super.onBackPressed();
     }
 }

@@ -1,25 +1,21 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import ca.uwaterloo.cw.castlewar.Model.Level;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.R;
 
 public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecyclerViewAdapter.ViewHolder>{
+    Context context;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -27,6 +23,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         public TextView terrainTextView;
         public TextView enemiesTextView;
         public TextView rewardsTextView;
+        public Button startButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -35,7 +32,9 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
     }
 
     // Construct the ViewAdapter
-    public LevelsRecyclerViewAdapter() {}
+    public LevelsRecyclerViewAdapter(Context context) {
+        this.context = context;
+    }
 
     // Create new views
     @Override
@@ -45,16 +44,18 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
 
         // Get references to view components
         TextView levelTextView = levelsView.findViewById(R.id.Levels);
-        TextView terrainTextVie = levelsView.findViewById(R.id.Terrain);
+        TextView terrainTextView = levelsView.findViewById(R.id.Terrain);
         TextView enemiesTextView = levelsView.findViewById(R.id.Enemies);
         TextView rewardsTextView = levelsView.findViewById(R.id.Rewards);
+        Button startButton = levelsView.findViewById(R.id.GoButton);
 
         // Create a new ViewHolder instance and assign references to it
         LevelsRecyclerViewAdapter.ViewHolder viewHolder = new LevelsRecyclerViewAdapter.ViewHolder(levelsView);
         viewHolder.levelTextView = levelTextView;
-        viewHolder.terrainTextView = terrainTextVie;
+        viewHolder.terrainTextView = terrainTextView;
         viewHolder.enemiesTextView = enemiesTextView;
         viewHolder.rewardsTextView = rewardsTextView;
+        viewHolder.startButton = startButton;
 
         return viewHolder;
     }
@@ -63,14 +64,20 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Level level = SystemData.getLevel(position);
+        final int freshPosition = holder.getAdapterPosition();
+        Level level = SystemData.getLevel(freshPosition);
 
         // Assign data to view components
         holder.levelTextView.setText(level.getName());
-        holder.terrainTextView.setText(level.getTerrain().getName());
+        holder.terrainTextView.setText(level.getDisplayableTerrain());
         holder.enemiesTextView.setText(level.getDisplayableEnemies());
         holder.rewardsTextView.setText(level.getDisplayableRewards());
-
+        holder.startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SystemData.startLevel(context, freshPosition);
+            }
+        });
     }
 
     // Return the size of myShopItems

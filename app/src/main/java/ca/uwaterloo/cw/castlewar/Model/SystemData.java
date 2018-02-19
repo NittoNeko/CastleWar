@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import ca.uwaterloo.cw.castlewar.Activity.GameLogic;
 import ca.uwaterloo.cw.castlewar.R;
 
 /**
@@ -20,6 +21,15 @@ import ca.uwaterloo.cw.castlewar.R;
 */
 
 public class SystemData {
+    public enum TypeId
+    {
+        ALLY(0), ENEMY(1), POTION(2), TOWER(3), BUFF(4), LEVEL(5), TERRAIN(6);
+
+        private final int id;
+        private TypeId(int id) {this.id = id;}
+        public int id() {return id;}
+    }
+
     public enum AllyId
     {
         SWORDMAN(0), ARCHER(1), MAGE(2);
@@ -65,15 +75,6 @@ public class SystemData {
         public int id() {return id;}
     }
 
-    public enum TypeId
-    {
-        ALLY(0), ENEMY(1), POTION(2), TOWER(3), BUFF(4), LEVEL(5), TERRAIN(6);
-
-        private final int id;
-        private TypeId(int id) {this.id = id;}
-        public int id() {return id;}
-    }
-
     public enum LevelId
     {
         ONE_ONE(0), ONE_TWO(1), ONE_THREE(2), ONE_FOUR(3), ONE_FIVE(4), ONE_SIX(5);
@@ -97,51 +98,60 @@ public class SystemData {
     public static final int POTION_NUM = 4;
     public static final int TOWER_NUM = 2;
     public static final int BUFF_NUM = 3;
-    public static final int LEVEL_NUM = 1;
+    public static final int LEVEL_NUM = 2;
     public static final int TERRAIN_NUM = 1;
 
     // Samples of every Game object
-    private static final ArrayList<Level> LEVELS = new ArrayList<>(LEVEL_NUM);
-    private static final ArrayList<Ally> ALLIES = new ArrayList<>(ALLY_NUM);
-    private static final ArrayList<Enemy> ENEMIES = new ArrayList<>(ENEMY_NUM);
-    private static final ArrayList<Potion> POTIONS = new ArrayList<>(POTION_NUM );
-    private static final ArrayList<Tower> TOWERS = new ArrayList<>(TOWER_NUM );
-    private static final ArrayList<Buff> BUFFS = new ArrayList<>(BUFF_NUM);
-    private static final ArrayList<Terrain> TERRAINS = new ArrayList<>(TERRAIN_NUM);
+    private static final Level[] LEVELS = new Level[LEVEL_NUM];
+    private static final Ally[] ALLIES = new Ally[ALLY_NUM];
+    private static final Enemy[] ENEMIES = new Enemy[ENEMY_NUM];
+    private static final Potion[] POTIONS = new Potion[POTION_NUM];
+    private static final Buff[] BUFFS = new Buff[BUFF_NUM];
+    private static final Terrain[] TERRAINS = new Terrain[TERRAIN_NUM];
+    private static final Tower[] TOWERS = new Tower[TOWER_NUM];
 
     // bitmap of game object
-    private static final ArrayList<Bitmap> ALLY_BITMAP = new ArrayList<>(ALLY_NUM );
-    private static final ArrayList<Bitmap> ENEMY_BITMAP = new ArrayList<>(ENEMY_NUM);
-    private static final ArrayList<Bitmap> POTION_BITMAP = new ArrayList<>(POTION_NUM );
-    private static final ArrayList<Bitmap> TOWER_BITMAP = new ArrayList<>(TOWER_NUM );
-    private static final ArrayList<Bitmap> BUFF_BITMAP = new ArrayList<>(BUFF_NUM);
-    private static final ArrayList<Bitmap> TERRAIN_BITMAP = new ArrayList<>(TERRAIN_NUM);
+    private static final Bitmap[] ALLY_BITMAPS = new Bitmap[ALLY_NUM];
+    private static final Bitmap[] ENEMY_BITMAPS = new Bitmap[ENEMY_NUM];
+    private static final Bitmap[] POTION_BITMAPS = new Bitmap[POTION_NUM];
+    private static final Bitmap[] BUFF_BITMAPS = new Bitmap[BUFF_NUM];
+    private static final Bitmap[] TERRAIN_BITMAPS = new Bitmap[TERRAIN_NUM];
+    private static final Bitmap[] TOWER_BITMAPS = new Bitmap[TOWER_NUM];
 
+    // Initialize every game object
+    // Pass only references to save CPU
+    // Order of Type being initialized MATTERS!
+    // Buff > Potion
+    // Terrain > Level
     public static void initializeData()
     {
         // Sample Ally
-        ALLIES.set(AllyId.SWORDMAN.id(), new Ally.SwordMan());
-        ALLIES.set(AllyId.ARCHER.id(), new Ally.Archer());
-        ALLIES.set(AllyId.MAGE.id(), new Ally.Mage());
+        ALLIES[AllyId.SWORDMAN.id()] = new Ally.SwordMan();
+        ALLIES[AllyId.ARCHER.id()] = new Ally.Archer();
+        ALLIES[AllyId.MAGE.id()] = new Ally.Mage();
 
         // Sample Enemy
-        ENEMIES.set(EnemyId.SKELETON.id(), new Enemy.Skeleton());
-        ENEMIES.set(EnemyId.ZOMBIE.id(), new Enemy.Zombie());
-        ENEMIES.set(EnemyId.SLIME.id(), new Enemy.Skeleton());
-
-        // Sample Potion
-        POTIONS.set(PotionId.HP.id(), new Potion.HpPotion());
-        POTIONS.set(PotionId.ATTACK.id(), new Potion.AttackPotion());
-        POTIONS.set(PotionId.DEFENSE.id(), new Potion.DefensePotion());
-        POTIONS.set(PotionId.SPEED.id(), new Potion.SpeedPotion());
+        ENEMIES[EnemyId.SKELETON.id()] = new Enemy.Skeleton();
+        ENEMIES[EnemyId.ZOMBIE.id()] = new Enemy.Zombie();
+        ENEMIES[EnemyId.SLIME.id()] = new Enemy.Skeleton();
 
         // Sample Buff
-        BUFFS.set(BuffId.ATTACK.id(), new Buff.AttackBuff());
-        BUFFS.set(BuffId.DEFENSE.id(), new Buff.DefenseBuff());
-        BUFFS.set(BuffId.SPEED.id(), new Buff.SpeedBuff());
+        BUFFS[BuffId.ATTACK.id()] = new Buff.AttackBuff();
+        BUFFS[BuffId.DEFENSE.id()] = new Buff.DefenseBuff();
+        BUFFS[BuffId.SPEED.id()] = new Buff.SpeedBuff();
+
+        // Sample Potion
+        POTIONS[PotionId.HP.id()] = new Potion.HpPotion();
+        POTIONS[PotionId.ATTACK.id()] = new Potion.AttackPotion();
+        POTIONS[PotionId.DEFENSE.id()] = new Potion.DefensePotion();
+        POTIONS[PotionId.SPEED.id()] = new Potion.SpeedPotion();
+
+        // Sample Terrain
+        TERRAINS[TerrainId.FOREST.id()] = new Terrain.Forest();
 
         // Sample Level
-        LEVELS.set(LevelId.ONE_ONE.id(), new Level.Level_1_1());
+        LEVELS[LevelId.ONE_ONE.id()] = new Level.Level_1_1();
+        LEVELS[LevelId.ONE_TWO.id()] = new Level.Level_1_2();
     }
 
     // create any game object
@@ -180,58 +190,58 @@ public class SystemData {
     // need to cast to subclasses
     public static GameObject get(int id, int type)
     {
-        if (type == TypeId.ALLY.id()) return ALLIES.get(id);
-        else if (type == TypeId.ENEMY.id()) return ENEMIES.get(id);
-        else if (type == TypeId.POTION.id()) return POTIONS.get(id);
-        else if (type == TypeId.BUFF.id()) return BUFFS.get(id);
-        else if (type == TypeId.LEVEL.id()) return LEVELS.get(id);
-        else if (type == TypeId.TERRAIN.id()) return TERRAINS.get(id);
+        if (type == TypeId.ALLY.id()) return ALLIES[id];
+        else if (type == TypeId.ENEMY.id()) return ENEMIES[id];
+        else if (type == TypeId.POTION.id()) return POTIONS[id];
+        else if (type == TypeId.BUFF.id()) return BUFFS[id];
+        else if (type == TypeId.LEVEL.id()) return LEVELS[id];
+        else if (type == TypeId.TERRAIN.id()) return TERRAINS[id];
         return null;
     }
 
     // convert Drawable to Bitmap
     public static void initializeBitmap(Context context)
     {
-        ALLY_BITMAP.set(AllyId.SWORDMAN.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        ALLY_BITMAP.set(AllyId.ARCHER.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        ALLY_BITMAP.set(AllyId.MAGE.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
+        ALLY_BITMAPS[AllyId.SWORDMAN.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        ALLY_BITMAPS[AllyId.ARCHER.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        ALLY_BITMAPS[AllyId.MAGE.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
 
-        ENEMY_BITMAP.set(EnemyId.SKELETON.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        ENEMY_BITMAP.set(EnemyId.ZOMBIE.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        ENEMY_BITMAP.set(EnemyId.SLIME.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
+        ENEMY_BITMAPS[EnemyId.SKELETON.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        ENEMY_BITMAPS[EnemyId.ZOMBIE.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        ENEMY_BITMAPS[EnemyId.SLIME.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
 
-        POTION_BITMAP.set(PotionId.HP.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        POTION_BITMAP.set(PotionId.ATTACK.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        POTION_BITMAP.set(PotionId.DEFENSE.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        POTION_BITMAP.set(PotionId.SPEED.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
+        POTION_BITMAPS[PotionId.HP.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        POTION_BITMAPS[PotionId.ATTACK.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        POTION_BITMAPS[PotionId.DEFENSE.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        POTION_BITMAPS[PotionId.SPEED.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
 
-        TOWER_BITMAP.set(TowerId.EVIL.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        TOWER_BITMAP.set(TowerId.HOLY.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
+        TOWER_BITMAPS[TowerId.EVIL.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        TOWER_BITMAPS[TowerId.HOLY.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
 
-        BUFF_BITMAP.set(BuffId.ATTACK.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        BUFF_BITMAP.set(BuffId.DEFENSE.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
-        BUFF_BITMAP.set(BuffId.SPEED.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
+        BUFF_BITMAPS[BuffId.ATTACK.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        BUFF_BITMAPS[BuffId.DEFENSE.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        BUFF_BITMAPS[BuffId.SPEED.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
 
-        TERRAIN_BITMAP.set(TerrainId.FOREST.id(), BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background));
+        TERRAIN_BITMAPS[TerrainId.FOREST.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
     }
 
-    public static int getSize()
+    public static void startLevel(Context context, int levelId)
     {
-        return ALLY_BITMAP.size();
+        GameLogic game = new GameLogic(context, SystemData.getLevel(levelId));
     }
 
     public static Level getLevel(int position)
     {
-        return LEVELS.get(position);
+        return LEVELS[position];
     }
 
-    public static Bitmap getAllyBitmap(int id) {return id < ALLY_BITMAP.size() ? ALLY_BITMAP.get(id) : null;}
+    public static Bitmap getAllyBitmap(int id) {return id < ALLY_NUM ? ALLY_BITMAPS[id] : null;}
 
-    public static Bitmap getEnemyBitmap(int id) {return id < ENEMY_BITMAP.size() ? ENEMY_BITMAP.get(id) : null;}
+    public static Bitmap getEnemyBitmap(int id) {return id < ENEMY_NUM ? ENEMY_BITMAPS[id] : null;}
 
-    public static Bitmap getPotionBitmap(int id) {return id < POTION_BITMAP.size() ? POTION_BITMAP.get(id) : null;}
+    public static Bitmap getPotionBitmap(int id) {return id < POTION_NUM ? POTION_BITMAPS[id] : null;}
 
-    public static Bitmap getTowerBitmap(int id) {return id < TOWER_BITMAP.size() ? TOWER_BITMAP.get(id) : null;}
+    public static Bitmap getTowerBitmap(int id) {return id < TOWER_NUM ? TOWER_BITMAPS[id] : null;}
 
-    public static Bitmap getBuffBitmap(int id) {return id < BUFF_BITMAP.size() ? BUFF_BITMAP.get(id) : null;}
+    public static Bitmap getBuffBitmap(int id) {return id < BUFF_NUM ? BUFF_BITMAPS[id] : null;}
 }

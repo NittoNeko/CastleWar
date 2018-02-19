@@ -18,9 +18,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.PrepareActivity"
-            android:label="@string/title_activity_prepare"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".Activity.SinglePlayerActivity"
+            android:label="@string/SinglePlayer"
+            android:theme="@style/AppTheme"
             android:screenOrientation="landscape">
         </activity>
         <activity
