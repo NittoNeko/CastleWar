@@ -19,11 +19,12 @@ public class GameObject {
         this.name = name;
         this.type = type;
 
-        if (type == SystemData.TypeId.ALLY.ordinal()) this.image = SystemData.getAllyBitmap(id);
-        else if (type == SystemData.TypeId.ENEMY.ordinal()) this.image = SystemData.getEnemyBitmap(id);
-        else if (type == SystemData.TypeId.POTION.ordinal()) this.image = SystemData.getPotionBitmap(id);
-        else if (type == SystemData.TypeId.TOWER.ordinal()) this.image = SystemData.getTowerBitmap(id);
-        else if (type == SystemData.TypeId.BUFF.ordinal()) this.image = SystemData.getBuffBitmap(id);
+        if (type == SystemData.TypeId.ALLY.id()) this.image = SystemData.getAllyBitmap(id);
+        else if (type == SystemData.TypeId.ENEMY.id()) this.image = SystemData.getEnemyBitmap(id);
+        else if (type == SystemData.TypeId.POTION.id()) this.image = SystemData.getPotionBitmap(id);
+        else if (type == SystemData.TypeId.TOWER.id()) this.image = SystemData.getTowerBitmap(id);
+        else if (type == SystemData.TypeId.BUFF.id()) this.image = SystemData.getBuffBitmap(id);
+        else if (type == SystemData.TypeId.TERRAIN.id()) this.image = SystemData.getTerrainBitmap(id);
         else this.image = null;
     }
 

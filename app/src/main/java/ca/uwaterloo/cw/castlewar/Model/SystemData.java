@@ -1,9 +1,12 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.Context;
+import android.graphics.Point;
 import android.support.annotation.Nullable;
+import android.view.Display;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,13 +95,17 @@ public class SystemData {
         private TerrainId(int id) {this.id = id;}
         public int id() {return id;}
     }
+    // size of the device screen
+    private static int screenWidth;
+    private static int screenHeight;
+
     // total num of types of gameobjects
     public static final int ALLY_NUM = 3;
     public static final int ENEMY_NUM = 3;
     public static final int POTION_NUM = 4;
     public static final int TOWER_NUM = 2;
     public static final int BUFF_NUM = 3;
-    public static final int LEVEL_NUM = 2;
+    public static final int LEVEL_NUM = 6;
     public static final int TERRAIN_NUM = 1;
 
     // Samples of every Game object
@@ -117,6 +124,15 @@ public class SystemData {
     private static final Bitmap[] BUFF_BITMAPS = new Bitmap[BUFF_NUM];
     private static final Bitmap[] TERRAIN_BITMAPS = new Bitmap[TERRAIN_NUM];
     private static final Bitmap[] TOWER_BITMAPS = new Bitmap[TOWER_NUM];
+
+    public static void initializeConfig(Activity activity)
+    {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        screenWidth = point.x;
+        screenHeight = point.y;
+    }
 
     // Initialize every game object
     // Pass only references to save CPU
@@ -152,6 +168,11 @@ public class SystemData {
         // Sample Level
         LEVELS[LevelId.ONE_ONE.id()] = new Level.Level_1_1();
         LEVELS[LevelId.ONE_TWO.id()] = new Level.Level_1_2();
+        LEVELS[2] = new Level.Level_1_2();
+        LEVELS[3] = new Level.Level_1_2();
+        LEVELS[4] = new Level.Level_1_2();
+        LEVELS[5] = new Level.Level_1_2();
+
     }
 
     // create any game object
@@ -199,6 +220,13 @@ public class SystemData {
         return null;
     }
 
+    private static Bitmap getScaledTerrainBitmap(Context context, int source)
+    {
+        Bitmap original = BitmapFactory.decodeResource(context.getResources(), source);
+        float ratio = (float) screenHeight / (float) original.getHeight();
+        return Bitmap.createScaledBitmap(original, (int) (ratio * (float) original.getWidth()), screenHeight, false);
+    }
+
     // convert Drawable to Bitmap
     public static void initializeBitmap(Context context)
     {
@@ -222,12 +250,7 @@ public class SystemData {
         BUFF_BITMAPS[BuffId.DEFENSE.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
         BUFF_BITMAPS[BuffId.SPEED.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
 
-        TERRAIN_BITMAPS[TerrainId.FOREST.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-    }
-
-    public static void startLevel(Context context, int levelId)
-    {
-        GameLogic game = new GameLogic(context, SystemData.getLevel(levelId));
+        TERRAIN_BITMAPS[TerrainId.FOREST.id()] = getScaledTerrainBitmap(context, R.drawable.forest_background);
     }
 
     public static Level getLevel(int position)
@@ -244,4 +267,14 @@ public class SystemData {
     public static Bitmap getTowerBitmap(int id) {return id < TOWER_NUM ? TOWER_BITMAPS[id] : null;}
 
     public static Bitmap getBuffBitmap(int id) {return id < BUFF_NUM ? BUFF_BITMAPS[id] : null;}
+
+    public static Bitmap getTerrainBitmap(int id) {return id < TERRAIN_NUM ? TERRAIN_BITMAPS[id] : null;}
+
+    public static int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public static int getScreenHeight() {
+        return screenHeight;
+    }
 }

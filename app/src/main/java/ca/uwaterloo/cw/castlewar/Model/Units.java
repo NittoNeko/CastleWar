@@ -8,6 +8,9 @@ import java.util.ArrayList;
  */
 
 public class Units extends GameObject {
+    private int x;
+    private int y;
+
     private int hp;
     private int maxHp;
     private int attack;
@@ -65,5 +68,13 @@ public class Units extends GameObject {
 
     public ArrayList<Buff> getCurrentBuffs() {
         return currentBuffs;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }

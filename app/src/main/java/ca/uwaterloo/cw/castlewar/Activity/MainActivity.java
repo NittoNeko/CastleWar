@@ -1,5 +1,6 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity{
     {
         public void run()
         {
+            SystemData.initializeConfig(MainActivity.this);
             SystemData.initializeBitmap(getApplicationContext());
             SystemData.initializeData();
         }
@@ -24,20 +26,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_main);
-
-        TextView shopOption = findViewById(R.id.Shop);
-        TextView singleOption = findViewById(R.id.SinglePlayer);
-        TextView inventoryOption = findViewById(R.id.Inventory);
-        ProgressBar loading = findViewById(R.id.InitializationBar);
-
-        loading.setVisibility(View.VISIBLE);
-        shopOption.setVisibility(View.INVISIBLE);
-        inventoryOption.setVisibility(View.INVISIBLE);
-        singleOption.setVisibility(View.INVISIBLE);
 
         Initializer init = new Initializer();
         init.start();
@@ -46,11 +35,6 @@ public class MainActivity extends AppCompatActivity{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        loading.setVisibility(View.INVISIBLE);
-        shopOption.setVisibility(View.VISIBLE);
-        inventoryOption.setVisibility(View.VISIBLE);
-        singleOption.setVisibility(View.VISIBLE);
     }
 
     public void enterSinglePlayer(View view) {

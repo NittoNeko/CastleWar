@@ -15,7 +15,7 @@ import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.R;
 
 public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecyclerViewAdapter.ViewHolder>{
-    Context context;
+    private final SinglePlayerActivity singlePlayerActivity;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -28,12 +28,11 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         public ViewHolder(View itemView) {
             super(itemView);
         }
-
     }
 
     // Construct the ViewAdapter
-    public LevelsRecyclerViewAdapter(Context context) {
-        this.context = context;
+    public LevelsRecyclerViewAdapter(SinglePlayerActivity singlePlayerActivity) {
+        this.singlePlayerActivity = singlePlayerActivity;
     }
 
     // Create new views
@@ -62,7 +61,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
 
     // Replace the contents of a view
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final int freshPosition = holder.getAdapterPosition();
         Level level = SystemData.getLevel(freshPosition);
@@ -75,7 +74,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         holder.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SystemData.startLevel(context, freshPosition);
+                singlePlayerActivity.startLevel(freshPosition);
             }
         });
     }
