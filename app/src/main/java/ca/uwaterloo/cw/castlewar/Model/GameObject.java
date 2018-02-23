@@ -1,6 +1,7 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.lang.String;
 
@@ -9,34 +10,26 @@ import java.lang.String;
  */
 
 public class GameObject {
-    private int id;
     private String name;
     private Bitmap image;
-    private int type;
+    private SystemData.TypeId type;
+    private int x;
+    private int y;
 
-    public GameObject(int id, String name, int type) {
-        this.id = id;
+
+    public GameObject(String name, SystemData.TypeId type, Bitmap image) {
         this.name = name;
+        this.image = image;
         this.type = type;
-
-        if (type == SystemData.TypeId.ALLY.id()) this.image = SystemData.getAllyBitmap(id);
-        else if (type == SystemData.TypeId.ENEMY.id()) this.image = SystemData.getEnemyBitmap(id);
-        else if (type == SystemData.TypeId.POTION.id()) this.image = SystemData.getPotionBitmap(id);
-        else if (type == SystemData.TypeId.TOWER.id()) this.image = SystemData.getTowerBitmap(id);
-        else if (type == SystemData.TypeId.BUFF.id()) this.image = SystemData.getBuffBitmap(id);
-        else if (type == SystemData.TypeId.TERRAIN.id()) this.image = SystemData.getTerrainBitmap(id);
-        else this.image = null;
-    }
-
-    public int getId() {
-        return id;
+        this.x = 0;
+        this.y = 0;
     }
 
     public Bitmap getImage() {
         return image;
     }
 
-    public int getType() {
+    public SystemData.TypeId getType() {
         return type;
     }
 

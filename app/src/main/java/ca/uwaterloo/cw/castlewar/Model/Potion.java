@@ -1,20 +1,25 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import ca.uwaterloo.cw.castlewar.R;
 
 /**
  * Created by harri on 2018/2/14.
  */
 
 public class Potion extends Item {
-
+    private SystemData.PotionId id;
     private int hpRecover;
     private Buff buff;
     private int cost;
 
-    public Potion(int id, String name, int buyPrice, int sellPrice, int hpRecover, Buff buff, int cost)
+    public Potion(SystemData.PotionId id, String name, Bitmap image, int buyPrice, int sellPrice, int hpRecover, Buff buff, int cost)
     {
-        super(id, name, SystemData.TypeId.POTION.id(), buyPrice, sellPrice);
+        super(name, SystemData.TypeId.POTION, image, buyPrice, sellPrice);
+        this.id = id;
         this.hpRecover = hpRecover;
         this.buff = buff;
         this.cost = cost;
@@ -24,7 +29,8 @@ public class Potion extends Item {
     {
         public HpPotion()
         {
-            super(SystemData.PotionId.HP.id(), "Health Potion", 100, 50, 50, null, 1);
+            super(SystemData.PotionId.HP, "Health Potion", BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+                    100, 50, 50, null, 1);
         }
     }
 
@@ -32,7 +38,8 @@ public class Potion extends Item {
     {
         public AttackPotion()
         {
-            super(SystemData.PotionId.ATTACK.id(), "Attack Potion", 300, 200, 0, null, 1);
+            super(SystemData.PotionId.ATTACK, "Attack Potion",BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+                    300, 200, 0, null, 1);
         }
     }
 
@@ -40,7 +47,8 @@ public class Potion extends Item {
     {
         public DefensePotion()
         {
-            super(SystemData.PotionId.DEFENSE.id(), "Defense Potion", 200, 100, 0, null, 1);
+            super(SystemData.PotionId.DEFENSE, "Defense Potion",BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+                    200, 100, 0, null, 1);
         }
     }
 
@@ -48,7 +56,8 @@ public class Potion extends Item {
     {
         public SpeedPotion()
         {
-            super(SystemData.PotionId.SPEED.id(), "Speed Potion", 100, 50, 0, null, 1);
+            super(SystemData.PotionId.SPEED, "Speed Potion",BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+                    100, 50, 0, null, 1);
         }
     }
 }

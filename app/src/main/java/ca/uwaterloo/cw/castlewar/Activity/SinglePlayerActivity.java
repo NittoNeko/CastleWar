@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ca.uwaterloo.cw.castlewar.Model.Level;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.R;
 
@@ -56,14 +57,12 @@ public class SinglePlayerActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void startLevel(int levelId)
+    public void startLevel(Level level)
     {
         setContentView(R.layout.game_screen);
-
-        gameLogic = new MultithreadGameLogic(this, handler,SystemData.getLevel(levelId));
+        gameLogic = new MultithreadGameLogic(this, handler,level);
         gameLogic.onResume();
     }
-
     public void onResume()
     {
         super.onResume();

@@ -64,7 +64,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final int freshPosition = holder.getAdapterPosition();
-        Level level = SystemData.getLevel(freshPosition);
+        final Level level = SystemData.create(SystemData.LevelId.values()[freshPosition]);
 
         // Assign data to view components
         holder.levelTextView.setText(level.getName());
@@ -74,7 +74,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         holder.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                singlePlayerActivity.startLevel(freshPosition);
+                singlePlayerActivity.startLevel(level);
             }
         });
     }
@@ -82,6 +82,6 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
     // Return the size of myShopItems
     @Override
     public int getItemCount() {
-        return SystemData.LEVEL_NUM;
+        return SystemData.LevelId.values().length;
     }
 }

@@ -1,8 +1,10 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.content.Intent;
 import android.view.Window;
@@ -17,9 +19,10 @@ public class MainActivity extends AppCompatActivity{
     {
         public void run()
         {
-            SystemData.initializeConfig(MainActivity.this);
-            SystemData.initializeBitmap(getApplicationContext().getResources());
-            SystemData.initializeData();
+            Display display = getWindowManager().getDefaultDisplay();
+            Point point = new Point();
+            display.getSize(point);
+            SystemData.initializeConfig(MainActivity.this.getApplicationContext(), point.x, point.y);
             SystemData.setIfOutput(true);
         }
     }

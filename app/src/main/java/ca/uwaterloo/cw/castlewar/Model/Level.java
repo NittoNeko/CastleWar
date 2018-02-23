@@ -1,14 +1,20 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import ca.uwaterloo.cw.castlewar.R;
 
 /**
  * Created by harri on 2018/2/15.
  */
 
 public class Level extends GameObject {
+    private SystemData.LevelId id;
 
     public static class Reward {
         private Item item;
@@ -43,9 +49,10 @@ public class Level extends GameObject {
     private int areas;
     private int maxCost;
 
-    public Level(int id, String name, ArrayList<Enemy> enemies, ArrayList<Reward> rewards, Terrain terrain, int coinRewards, int areas, int maxCost)
+    public Level(SystemData.LevelId id, String name, Bitmap image, ArrayList<Enemy> enemies, ArrayList<Reward> rewards, Terrain terrain, int coinRewards, int areas, int maxCost)
     {
-        super(id, name, SystemData.TypeId.LEVEL.id());
+        super(name, SystemData.TypeId.LEVEL, image);
+        this.id = id;
         this.enemies = enemies;
         this.rewards = rewards;
         this.terrain = terrain;
@@ -56,11 +63,12 @@ public class Level extends GameObject {
     public String getDisplayableEnemies()
     {
         String displayableEnemies = "";
+
         for (int i = 0; i < enemies.size(); ++i)
         {
             displayableEnemies += (i != 0 ? ", " : "") + enemies.get(i).getName();
         }
-        return displayableEnemies + "two zombies are coming at you, and you may be very scary";
+        return displayableEnemies;
     }
 
     public String getDisplayableTerrain()
@@ -82,6 +90,10 @@ public class Level extends GameObject {
         return displayableRewards;
     }
 
+    public SystemData.LevelId getId() {
+        return id;
+    }
+
     public Terrain getTerrain() {
         return terrain;
     }
@@ -89,17 +101,18 @@ public class Level extends GameObject {
     public static class Level_1_1 extends Level
     {
         public Level_1_1() {
-            super(SystemData.LevelId.ONE_ONE.id(), "Level 1-1",
+            super(SystemData.LevelId.ONE_ONE, "Level 1-1",
+                    BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.forest_background),
                     new ArrayList<Enemy>(Arrays.asList(new Enemy[]{
-                            (Enemy) SystemData.get(SystemData.EnemyId.SKELETON.id(), SystemData.TypeId.ENEMY.id()),
-                            (Enemy) SystemData.get(SystemData.EnemyId.ZOMBIE.id(), SystemData.TypeId.ENEMY.id()),
-                            (Enemy) SystemData.get(SystemData.EnemyId.SLIME.id(), SystemData.TypeId.ENEMY.id())
+                            SystemData.create(SystemData.EnemyId.SKELETON),
+                            SystemData.create(SystemData.EnemyId.ZOMBIE),
+                            SystemData.create(SystemData.EnemyId.SLIME)
                     })),
                     new ArrayList<Reward>(Arrays.asList(new Reward[]{
-                            new Reward((Potion) SystemData.get(SystemData.PotionId.HP.id(), SystemData.TypeId.POTION.id()), 3, 1),
-                            new Reward((Potion) SystemData.get(SystemData.PotionId.HP.id(), SystemData.TypeId.POTION.id()), 1, 0)
+                            new Reward(SystemData.create(SystemData.PotionId.HP), 3, 1),
+                            new Reward(SystemData.create(SystemData.PotionId.HP), 1, 0)
                     })),
-                    (Terrain) SystemData.get(SystemData.TerrainId.FOREST.id(), SystemData.TypeId.TERRAIN.id()),
+                    SystemData.create(SystemData.TerrainId.FOREST),
                     500, 5, 2);
         }
     }
@@ -107,17 +120,18 @@ public class Level extends GameObject {
     public static class Level_1_2 extends Level
     {
         public Level_1_2() {
-            super(SystemData.LevelId.ONE_TWO.id(), "Level 1-2",
+            super(SystemData.LevelId.ONE_TWO, "Level 1-2",
+                    BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.forest_background),
                     new ArrayList<Enemy>(Arrays.asList(new Enemy[]{
-                            (Enemy) SystemData.get(SystemData.EnemyId.SKELETON.id(), SystemData.TypeId.ENEMY.id()),
-                            (Enemy) SystemData.get(SystemData.EnemyId.ZOMBIE.id(), SystemData.TypeId.ENEMY.id()),
-                            (Enemy) SystemData.get(SystemData.EnemyId.SLIME.id(), SystemData.TypeId.ENEMY.id())
+                            SystemData.create(SystemData.EnemyId.SKELETON),
+                                    SystemData.create(SystemData.EnemyId.ZOMBIE),
+                            SystemData.create(SystemData.EnemyId.SLIME)
                     })),
                     new ArrayList<Reward>(Arrays.asList(new Reward[]{
-                            new Reward((Potion) SystemData.get(SystemData.PotionId.HP.id(), SystemData.TypeId.POTION.id()), 3, 1),
-                            new Reward((Potion) SystemData.get(SystemData.PotionId.HP.id(), SystemData.TypeId.POTION.id()), 1, 0)
+                            new Reward(SystemData.create(SystemData.PotionId.HP), 3, 1),
+                            new Reward(SystemData.create(SystemData.PotionId.HP), 1, 0)
                     })),
-                    (Terrain) SystemData.get(SystemData.TerrainId.FOREST.id(), SystemData.TypeId.TERRAIN.id()),
+                    SystemData.create(SystemData.TerrainId.FOREST),
                     500, 5, 2);
         }
     }

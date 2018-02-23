@@ -1,6 +1,8 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 
 /**
@@ -8,9 +10,6 @@ import java.util.ArrayList;
  */
 
 public class Units extends GameObject {
-    private int x;
-    private int y;
-
     private int hp;
     private int maxHp;
     private int attack;
@@ -21,9 +20,8 @@ public class Units extends GameObject {
     private int cost;
     private ArrayList<Buff> currentBuffs = new ArrayList<>();
 
-    public Units(int id, String name, int type, int hp, int maxHp, int attack, int defense, int speed, int move, int range, int cost)
-    {
-        super(id, name, type);
+    public Units(String name, SystemData.TypeId type, Bitmap image, int hp, int maxHp, int attack, int defense, int speed, int move, int range, int cost) {
+        super(name, type, image);
         this.hp = hp;
         this.maxHp = maxHp;
         this.attack = attack;
@@ -68,13 +66,5 @@ public class Units extends GameObject {
 
     public ArrayList<Buff> getCurrentBuffs() {
         return currentBuffs;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 }

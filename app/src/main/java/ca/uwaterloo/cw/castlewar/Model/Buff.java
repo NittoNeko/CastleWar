@@ -1,20 +1,26 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import ca.uwaterloo.cw.castlewar.R;
+
 /**
  * Created by harri on 2018/2/14.
  */
 
 public class Buff extends GameObject {
-
+    private SystemData.BuffId id;
     private int attack;
     private int defense;
     private int speed;
     private int turnLeft;
 
-    public Buff(int id, String name, int attack, int defense, int speed, int turnLeft)
+    public Buff(SystemData.BuffId id, String name, Bitmap image, int attack, int defense, int speed, int turnLeft)
     {
-        super(id, name, SystemData.TypeId.BUFF.id());
+        super(name, SystemData.TypeId.BUFF, image);
+        this.id = id;
         this.attack = attack;
         this.defense = defense;
         this.speed = speed;
@@ -41,7 +47,8 @@ public class Buff extends GameObject {
     {
         public AttackBuff()
         {
-            super(SystemData.BuffId.ATTACK.id(), "Brave", 20, 0, 0, 3);
+            super(SystemData.BuffId.ATTACK, "Brave", BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+                    20, 0, 0, 3);
         }
     }
 
@@ -49,7 +56,8 @@ public class Buff extends GameObject {
     {
         public DefenseBuff()
         {
-            super(SystemData.BuffId.DEFENSE.id(), "Brave", 0, 10, 0, 3);
+            super(SystemData.BuffId.DEFENSE, "Brave", BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+                    0, 10, 0, 3);
         }
     }
 
@@ -57,7 +65,8 @@ public class Buff extends GameObject {
     {
         public SpeedBuff()
         {
-            super(SystemData.BuffId.SPEED.id(), "Brave", 0, 0, 5, 3);
+            super(SystemData.BuffId.SPEED, "Brave", BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+                    0, 0, 5, 3);
         }
     }
 }

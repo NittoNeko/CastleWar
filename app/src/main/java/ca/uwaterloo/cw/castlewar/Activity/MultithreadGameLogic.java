@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import ca.uwaterloo.cw.castlewar.Model.Ally;
 import ca.uwaterloo.cw.castlewar.Model.Enemy;
+import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Level;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.R;
@@ -23,6 +24,11 @@ import ca.uwaterloo.cw.castlewar.R;
  */
 
 public class MultithreadGameLogic {
+
+    public enum State
+    {
+        PREPARE, MOVING, BATTLING;
+    }
 
     // simple condition lock
     public class UiLock extends Object
@@ -37,6 +43,7 @@ public class MultithreadGameLogic {
 
         private void updateData()
         {
+            // check if new units are needed
 
         }
 
@@ -74,7 +81,16 @@ public class MultithreadGameLogic {
                 @Override
                 public void run() {
                     gameScreen.setImageBitmap(screen);
-                    unitMenu.bringToFront();
+                    if (currentState == MultithreadGameLogic.State.PREPARE)
+                    {
+                        unitMenu.bringToFront();
+                    } else if (currentState == MultithreadGameLogic.State.MOVING)
+                    {
+                        gameScreen.bringToFront();
+                    } else if (currentState == MultithreadGameLogic.State.BATTLING)
+                    {
+                        combatBoard.bringToFront();
+                    }
 
                     if (SystemData.isIfOutput()) System.out.println("after ui set before wake: " + SystemClock.uptimeMillis());
 
@@ -139,6 +155,7 @@ public class MultithreadGameLogic {
     private Activity activity;
     private ArrayList<Ally> allies;
     private ArrayList<Enemy> enemies;
+    private ArrayList<GameObject> drawables;
     private Level level;
 
     // game control
@@ -153,6 +170,7 @@ public class MultithreadGameLogic {
     private final long DATA_SLEEP_TIME = MILISECOND / (long) DATA_PER_SECOND;
     private boolean inGame;
     private UiLock uiLock = new UiLock();
+    private State currentState = State.PREPARE;
 
     // screen control
     private final int backgroundWidth;
