@@ -1,6 +1,7 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.Context;
@@ -11,7 +12,7 @@ import android.view.Display;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import ca.uwaterloo.cw.castlewar.Activity.GameLogic;
+
 import ca.uwaterloo.cw.castlewar.R;
 
 /**
@@ -95,9 +96,17 @@ public class SystemData {
         private TerrainId(int id) {this.id = id;}
         public int id() {return id;}
     }
+
+    // output control
+    private static boolean ifOutput = false;
+
+    // game setting
+    public static final int GAME_SPEED = 24;
+
     // size of the device screen
     private static int screenWidth;
     private static int screenHeight;
+    private static int groundLine;
 
     // total num of types of gameobjects
     public static final int ALLY_NUM = 3;
@@ -118,6 +127,7 @@ public class SystemData {
     private static final Tower[] TOWERS = new Tower[TOWER_NUM];
 
     // bitmap of game object
+    private static Bitmap target;
     private static final Bitmap[] ALLY_BITMAPS = new Bitmap[ALLY_NUM];
     private static final Bitmap[] ENEMY_BITMAPS = new Bitmap[ENEMY_NUM];
     private static final Bitmap[] POTION_BITMAPS = new Bitmap[POTION_NUM];
@@ -132,6 +142,7 @@ public class SystemData {
         display.getSize(point);
         screenWidth = point.x;
         screenHeight = point.y;
+        groundLine = (int) (screenHeight * 1.5);
     }
 
     // Initialize every game object
@@ -220,37 +231,39 @@ public class SystemData {
         return null;
     }
 
-    private static Bitmap getScaledTerrainBitmap(Context context, int source)
+    private static Bitmap getScaledTerrainBitmap(Resources resources, int source)
     {
-        Bitmap original = BitmapFactory.decodeResource(context.getResources(), source);
+        Bitmap original = BitmapFactory.decodeResource(resources, source);
         float ratio = (float) screenHeight / (float) original.getHeight();
         return Bitmap.createScaledBitmap(original, (int) (ratio * (float) original.getWidth()), screenHeight, false);
     }
 
     // convert Drawable to Bitmap
-    public static void initializeBitmap(Context context)
+    public static void initializeBitmap(Resources resources)
     {
-        ALLY_BITMAPS[AllyId.SWORDMAN.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        ALLY_BITMAPS[AllyId.ARCHER.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        ALLY_BITMAPS[AllyId.MAGE.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        ALLY_BITMAPS[AllyId.SWORDMAN.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        ALLY_BITMAPS[AllyId.ARCHER.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        ALLY_BITMAPS[AllyId.MAGE.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
 
-        ENEMY_BITMAPS[EnemyId.SKELETON.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        ENEMY_BITMAPS[EnemyId.ZOMBIE.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        ENEMY_BITMAPS[EnemyId.SLIME.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        ENEMY_BITMAPS[EnemyId.SKELETON.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        ENEMY_BITMAPS[EnemyId.ZOMBIE.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        ENEMY_BITMAPS[EnemyId.SLIME.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
 
-        POTION_BITMAPS[PotionId.HP.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        POTION_BITMAPS[PotionId.ATTACK.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        POTION_BITMAPS[PotionId.DEFENSE.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        POTION_BITMAPS[PotionId.SPEED.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        POTION_BITMAPS[PotionId.HP.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        POTION_BITMAPS[PotionId.ATTACK.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        POTION_BITMAPS[PotionId.DEFENSE.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        POTION_BITMAPS[PotionId.SPEED.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
 
-        TOWER_BITMAPS[TowerId.EVIL.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        TOWER_BITMAPS[TowerId.HOLY.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        TOWER_BITMAPS[TowerId.EVIL.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        TOWER_BITMAPS[TowerId.HOLY.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
 
-        BUFF_BITMAPS[BuffId.ATTACK.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        BUFF_BITMAPS[BuffId.DEFENSE.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
-        BUFF_BITMAPS[BuffId.SPEED.id()] = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher_background);
+        BUFF_BITMAPS[BuffId.ATTACK.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        BUFF_BITMAPS[BuffId.DEFENSE.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
+        BUFF_BITMAPS[BuffId.SPEED.id()] = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher_background);
 
-        TERRAIN_BITMAPS[TerrainId.FOREST.id()] = getScaledTerrainBitmap(context, R.drawable.forest_background);
+        TERRAIN_BITMAPS[TerrainId.FOREST.id()] = getScaledTerrainBitmap(resources, R.drawable.forest_background);
+
+        target = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources, R.drawable.target), 32, 32, false);
     }
 
     public static Level getLevel(int position)
@@ -270,11 +283,28 @@ public class SystemData {
 
     public static Bitmap getTerrainBitmap(int id) {return id < TERRAIN_NUM ? TERRAIN_BITMAPS[id] : null;}
 
+    public static Bitmap getTarget() {
+        return target;
+    }
+
+    public static int getGroundLine()
+    {
+        return groundLine;
+    }
+
     public static int getScreenWidth() {
         return screenWidth;
     }
 
     public static int getScreenHeight() {
         return screenHeight;
+    }
+
+    public static void setIfOutput(boolean ifOutput) {
+        SystemData.ifOutput = ifOutput;
+    }
+
+    public static boolean isIfOutput() {
+        return ifOutput;
     }
 }

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,7 +28,7 @@ import ca.uwaterloo.cw.castlewar.R;
 
 
 public class SinglePlayerActivity extends AppCompatActivity {
-    private GameLogic gameLogic = null;
+    private MultithreadGameLogic gameLogic = null;
     private final Handler handler = new Handler();
 
     @Override
@@ -58,8 +59,8 @@ public class SinglePlayerActivity extends AppCompatActivity {
     public void startLevel(int levelId)
     {
         setContentView(R.layout.game_screen);
-        ImageView gameScreen = findViewById(R.id.GameScreen);
-        gameLogic = new GameLogic(this, handler, gameScreen, SystemData.getLevel(levelId));
+
+        gameLogic = new MultithreadGameLogic(this, handler,SystemData.getLevel(levelId));
         gameLogic.onResume();
     }
 

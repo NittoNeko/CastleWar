@@ -18,8 +18,9 @@ public class MainActivity extends AppCompatActivity{
         public void run()
         {
             SystemData.initializeConfig(MainActivity.this);
-            SystemData.initializeBitmap(getApplicationContext());
+            SystemData.initializeBitmap(getApplicationContext().getResources());
             SystemData.initializeData();
+            SystemData.setIfOutput(true);
         }
     }
 

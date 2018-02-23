@@ -15,4 +15,14 @@
     <string name="GoButton">Go!</string>
     <string name="BackButton">Back</string>
     <string name="GameScreen">GameScreen</string>
+    <string name="Name">Name:</string>
+    <string name="Hp">HP:</string>
+    <string name="Attack">Attack:</string>
+    <string name="Defense">Defense:</string>
+    <string name="Speed">Speed:</string>
+    <string name="RightName">:Name</string>
+    <string name="RightHp">:HP</string>
+    <string name="RightAttack">:Attack</string>
+    <string name="RightDefense">:Defense</string>
+    <string name="RightSpeed">:Speed</string>
 </resources>
