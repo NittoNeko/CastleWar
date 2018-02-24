@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
 
 public class MainActivity extends AppCompatActivity{
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity{
             display.getSize(point);
             SystemData.initializeConfig(MainActivity.this.getApplicationContext(), point.x, point.y);
             SystemData.setIfOutput(true);
+            UserProfile.readFromDatabase();
         }
     }
 

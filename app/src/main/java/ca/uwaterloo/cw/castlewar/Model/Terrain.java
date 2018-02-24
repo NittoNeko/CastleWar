@@ -12,14 +12,15 @@ import ca.uwaterloo.cw.castlewar.R;
 public class Terrain extends GameObject {
     private SystemData.TerrainId id;
 
-    public Terrain(SystemData.TerrainId id, String name, Bitmap image) {
-        super(name, SystemData.TypeId.TERRAIN, image);
+    public Terrain(SystemData.TerrainId id, String name, int resource) {
+        super(name, SystemData.TypeId.TERRAIN, resource);
     }
 
     public static class Forest extends Terrain
     {
         public Forest() {
-            super(SystemData.TerrainId.FOREST, "Forest", BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man));
+            super(SystemData.TerrainId.FOREST, "Forest", R.drawable.forest_ground);
+            setY(SystemData.getGroundLine());
         }
     }
 }

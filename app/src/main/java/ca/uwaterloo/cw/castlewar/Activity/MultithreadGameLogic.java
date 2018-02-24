@@ -13,10 +13,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ca.uwaterloo.cw.castlewar.Model.Ally;
+import ca.uwaterloo.cw.castlewar.Model.Castle;
 import ca.uwaterloo.cw.castlewar.Model.Enemy;
 import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Level;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.Target;
+import ca.uwaterloo.cw.castlewar.Model.Unit;
 import ca.uwaterloo.cw.castlewar.R;
 
 /**
@@ -27,7 +30,7 @@ public class MultithreadGameLogic {
 
     public enum State
     {
-        PREPARE, MOVING, BATTLING;
+        PREPARE, MOVING, BATTLING
     }
 
     // simple condition lock
@@ -76,7 +79,14 @@ public class MultithreadGameLogic {
         {
             screen = Bitmap.createBitmap(backgroundWidth, backgroundHeight, Bitmap.Config.ARGB_8888);
             canvas = new Canvas(screen);
-            canvas.drawBitmap(level.getTerrain().getImage(), 0, 0, paint);
+            canvas.drawBitmap(level.getPortrait(), level.getX(), level.getY(), paint);
+            canvas.drawBitmap(level.getTerrain().getPortrait(), level.getTerrain().getX(), level.getTerrain().getY(), paint);
+            canvas.drawBitmap(leftCastle.getMovingImage(), leftCastle.getX(), leftCastle.getY(), paint);
+            canvas.drawBitmap(rightCastle.getMovingImage(), rightCastle.getX(), rightCastle.getY(), paint);
+            for (Ally ally : allies)
+            {
+                canvas.drawBitmap(ally.getMovingImage(), ally.getX(), ally.getY(), paint);
+            }
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -155,7 +165,9 @@ public class MultithreadGameLogic {
     private Activity activity;
     private ArrayList<Ally> allies;
     private ArrayList<Enemy> enemies;
-    private ArrayList<GameObject> drawables;
+    private Castle leftCastle;
+    private Castle rightCastle;
+    private Target target;
     private Level level;
 
     // game control
@@ -216,9 +228,15 @@ public class MultithreadGameLogic {
         this.DefenderAttack = activity.findViewById(R.id.DefenderAttack);
         this.DefenderDefense = activity.findViewById(R.id.DefenderDefense);
         this.DefenderSpeed = activity.findViewById(R.id.DefenderSpeed);
-        this.backgroundWidth = level.getTerrain().getImage().getWidth();
+        this.backgroundWidth = level.getTerrain().getPortrait().getWidth();
         this.backgroundHeight = SystemData.getScreenHeight();
         this.screenSleepTime = MILISECOND / (long) framePerSecond;
+        this.allies.add(SystemData.create(SystemData.AllyId.SWORDMAN));
+        this.leftCastle = SystemData.create(SystemData.CastleId.HOLY);
+        this.leftCastle.setX(0);
+        this.rightCastle = SystemData.create(SystemData.CastleId.EVIL);
+        this.rightCastle.getMovingImage();
+        this.rightCastle.setX(backgroundWidth - rightCastle.getMovingImage().getHeight());
     }
 
     public void onResume()

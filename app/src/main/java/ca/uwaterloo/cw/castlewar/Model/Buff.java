@@ -17,9 +17,9 @@ public class Buff extends GameObject {
     private int speed;
     private int turnLeft;
 
-    public Buff(SystemData.BuffId id, String name, Bitmap image, int attack, int defense, int speed, int turnLeft)
+    public Buff(SystemData.BuffId id, String name, int resource, int attack, int defense, int speed, int turnLeft)
     {
-        super(name, SystemData.TypeId.BUFF, image);
+        super(name, SystemData.TypeId.BUFF, resource);
         this.id = id;
         this.attack = attack;
         this.defense = defense;
@@ -47,7 +47,7 @@ public class Buff extends GameObject {
     {
         public AttackBuff()
         {
-            super(SystemData.BuffId.ATTACK, "Brave", BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+            super(SystemData.BuffId.ATTACK, "Brave", R.drawable.sword_man,
                     20, 0, 0, 3);
         }
     }
@@ -56,7 +56,7 @@ public class Buff extends GameObject {
     {
         public DefenseBuff()
         {
-            super(SystemData.BuffId.DEFENSE, "Brave", BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+            super(SystemData.BuffId.DEFENSE, "Brave", R.drawable.sword_man,
                     0, 10, 0, 3);
         }
     }
@@ -65,7 +65,7 @@ public class Buff extends GameObject {
     {
         public SpeedBuff()
         {
-            super(SystemData.BuffId.SPEED, "Brave", BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.sword_man),
+            super(SystemData.BuffId.SPEED, "Brave", R.drawable.sword_man,
                     0, 0, 5, 3);
         }
     }

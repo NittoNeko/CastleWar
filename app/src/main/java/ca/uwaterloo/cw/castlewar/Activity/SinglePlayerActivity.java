@@ -31,6 +31,7 @@ import ca.uwaterloo.cw.castlewar.R;
 public class SinglePlayerActivity extends AppCompatActivity {
     private MultithreadGameLogic gameLogic = null;
     private final Handler handler = new Handler();
+    private Bitmap levelBitmap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

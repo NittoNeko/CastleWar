@@ -1,5 +1,6 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -8,6 +9,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import ca.uwaterloo.cw.castlewar.R;
+
+import static android.graphics.Bitmap.createScaledBitmap;
 
 /**
  * Created by harri on 2018/2/15.
@@ -49,9 +52,9 @@ public class Level extends GameObject {
     private int areas;
     private int maxCost;
 
-    public Level(SystemData.LevelId id, String name, Bitmap image, ArrayList<Enemy> enemies, ArrayList<Reward> rewards, Terrain terrain, int coinRewards, int areas, int maxCost)
+    public Level(SystemData.LevelId id, String name, int resource, ArrayList<Enemy> enemies, ArrayList<Reward> rewards, Terrain terrain, int coinRewards, int areas, int maxCost)
     {
-        super(name, SystemData.TypeId.LEVEL, image);
+        super(name, SystemData.TypeId.LEVEL, resource);
         this.id = id;
         this.enemies = enemies;
         this.rewards = rewards;
@@ -90,6 +93,13 @@ public class Level extends GameObject {
         return displayableRewards;
     }
 
+    @Override
+    protected void createPortrait() {
+        Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
+        float ratio = (float) SystemData.getScreenHeight() / (float) original.getHeight();
+        setPortrait(createScaledBitmap(original, (int) (ratio * (float) original.getWidth()), SystemData.getScreenHeight(), false));
+    }
+
     public SystemData.LevelId getId() {
         return id;
     }
@@ -102,13 +112,13 @@ public class Level extends GameObject {
     {
         public Level_1_1() {
             super(SystemData.LevelId.ONE_ONE, "Level 1-1",
-                    BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.forest_background),
-                    new ArrayList<Enemy>(Arrays.asList(new Enemy[]{
+                    R.drawable.forest_background,
+                    new ArrayList<>(Arrays.asList(new Enemy[]{
                             SystemData.create(SystemData.EnemyId.SKELETON),
                             SystemData.create(SystemData.EnemyId.ZOMBIE),
                             SystemData.create(SystemData.EnemyId.SLIME)
                     })),
-                    new ArrayList<Reward>(Arrays.asList(new Reward[]{
+                    new ArrayList<>(Arrays.asList(new Reward[]{
                             new Reward(SystemData.create(SystemData.PotionId.HP), 3, 1),
                             new Reward(SystemData.create(SystemData.PotionId.HP), 1, 0)
                     })),
@@ -121,13 +131,13 @@ public class Level extends GameObject {
     {
         public Level_1_2() {
             super(SystemData.LevelId.ONE_TWO, "Level 1-2",
-                    BitmapFactory.decodeResource(SystemData.getContext().getResources(), R.drawable.forest_background),
-                    new ArrayList<Enemy>(Arrays.asList(new Enemy[]{
+                    R.drawable.forest_background,
+                    new ArrayList<>(Arrays.asList(new Enemy[]{
                             SystemData.create(SystemData.EnemyId.SKELETON),
                                     SystemData.create(SystemData.EnemyId.ZOMBIE),
                             SystemData.create(SystemData.EnemyId.SLIME)
                     })),
-                    new ArrayList<Reward>(Arrays.asList(new Reward[]{
+                    new ArrayList<>(Arrays.asList(new Reward[]{
                             new Reward(SystemData.create(SystemData.PotionId.HP), 3, 1),
                             new Reward(SystemData.create(SystemData.PotionId.HP), 1, 0)
                     })),

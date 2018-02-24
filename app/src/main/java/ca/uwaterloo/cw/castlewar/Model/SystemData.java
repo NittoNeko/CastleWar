@@ -31,14 +31,14 @@ import ca.uwaterloo.cw.castlewar.R;
 public class SystemData {
     public enum TypeId
     {
-        ALLY, ENEMY, POTION, BUFF, LEVEL, TERRAIN, TOWER, FUNCTION
+        ALLY, ENEMY, POTION, BUFF, LEVEL, TERRAIN, CASTLE, FUNCTION, COIN
     }
     public enum AllyId
     {
         SWORDMAN, ARCHER, MAGE
     }
 
-    public enum TowerId
+    public enum CastleId
     {
         HOLY, EVIL
     }
@@ -60,7 +60,7 @@ public class SystemData {
 
     public enum LevelId
     {
-        ONE_ONE,  ONE_TWO
+        ONE_ONE,  ONE_TWO, ONE_THREE, ONE_FOUR, ONE_FIVE, ONE_SIX
     }
 
     public enum TerrainId
@@ -70,6 +70,7 @@ public class SystemData {
 
     // get reference of context
     private static Context context;
+    private static BitmapFactory.Options option;
 
     // output control
     private static boolean ifOutput = false;
@@ -87,7 +88,7 @@ public class SystemData {
         context = c;
         screenWidth = x;
         screenHeight = y;
-        groundLine = (int) (screenHeight * 1.5);
+        groundLine = (int) (screenHeight * 0.75);
     }
 
     public static Ally create(AllyId id)
@@ -122,6 +123,7 @@ public class SystemData {
         if (id == BuffId.SPEED) return new Buff.SpeedBuff();
         else return null;
     }
+
     public static Terrain create(TerrainId id)
     {
         if (id == TerrainId.FOREST) return new Terrain.Forest();
@@ -132,14 +134,18 @@ public class SystemData {
     {
         if (id == LevelId.ONE_ONE) return new Level.Level_1_1();
         if (id == LevelId.ONE_TWO) return new Level.Level_1_2();
+        if (id == LevelId.ONE_THREE) return new Level.Level_1_1();
+        if (id == LevelId.ONE_FOUR) return new Level.Level_1_2();
+        if (id == LevelId.ONE_FIVE) return new Level.Level_1_1();
+        if (id == LevelId.ONE_SIX) return new Level.Level_1_2();
         else return null;
     }
 
-    private static Bitmap getScaledTerrainBitmap(Resources resources, int source)
+    public static Castle create(CastleId id)
     {
-        Bitmap original = BitmapFactory.decodeResource(resources, source);
-        float ratio = (float) screenHeight / (float) original.getHeight();
-        return Bitmap.createScaledBitmap(original, (int) (ratio * (float) original.getWidth()), screenHeight, false);
+        if (id == CastleId.HOLY) return new Castle.HolyCastle();
+        if (id == CastleId.EVIL) return new Castle.HolyCastle();
+        else return null;
     }
 
     public static int getGroundLine()
