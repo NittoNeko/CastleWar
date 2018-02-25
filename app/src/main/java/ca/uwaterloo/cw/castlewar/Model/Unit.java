@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by harri on 2018/2/14.
  */
 
-abstract public class Unit extends GameObject {
+abstract public class Unit extends CombatObject{
     private int hp;
     private int maxHp;
     private int attack;
@@ -18,19 +18,19 @@ abstract public class Unit extends GameObject {
     private int move;
     private int minRange;
     private int maxRange;
-    private int cost;
     private int currentImage;
     private int currentPosition;
     private int moveSpeed;
     private boolean switchImage;
     private boolean isLeft;
+    private Terrain.Tile tile;
     private Unit aim;
     private ArrayList<Bitmap> rightMovingImage;
     private ArrayList<Bitmap> leftMovingImage;
     private ArrayList<Buff> currentBuffs = new ArrayList<>();
 
-    public Unit(String name, SystemData.TypeId type, int resource, int hp, int maxHp, int attack, int defense, int speed, int move, int minRange, int maxRange, int cost) {
-        super(name, type, resource);
+    public Unit(Id id, String name, int resource, int hp, int maxHp, int attack, int defense, int speed, int move, int minRange, int maxRange, int cost) {
+        super(id, name, resource, cost);
         this.hp = hp;
         this.maxHp = maxHp;
         this.attack = attack;
@@ -39,7 +39,6 @@ abstract public class Unit extends GameObject {
         this.move = move;
         this.minRange = minRange;
         this.maxRange = maxRange;
-        this.cost = cost;
         this.rightMovingImage = new ArrayList<>(3);
         this.leftMovingImage = new ArrayList<>(3);
         this.aim = null;
@@ -137,10 +136,6 @@ abstract public class Unit extends GameObject {
 
     public int getMaxRange() {
         return maxRange;
-    }
-
-    public int getCost() {
-        return cost;
     }
 
     public ArrayList<Buff> getCurrentBuffs() {

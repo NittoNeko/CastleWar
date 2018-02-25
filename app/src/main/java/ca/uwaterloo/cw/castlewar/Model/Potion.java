@@ -11,26 +11,23 @@ import ca.uwaterloo.cw.castlewar.R;
  */
 
 public class Potion extends Item {
-    private SystemData.PotionId id;
     private int hpRecover;
     private Buff buff;
-    private int cost;
 
-    public Potion(SystemData.PotionId id, String name, int resource, int buyPrice, int sellPrice, int hpRecover, Buff buff, int cost)
+
+    public Potion(Id id, String name, int resource, int buyPrice, int sellPrice, Buff buff, int cost)
     {
-        super(name, SystemData.TypeId.POTION, resource, buyPrice, sellPrice);
-        this.id = id;
+        super(id, name, resource, buyPrice, sellPrice, cost);
         this.hpRecover = hpRecover;
         this.buff = buff;
-        this.cost = cost;
     }
 
     public static class HpPotion extends Potion
     {
         public HpPotion()
         {
-            super(SystemData.PotionId.HP, "Health Potion", R.drawable.sword_man,
-                    100, 50, 50, null, 1);
+            super(Id.HP_POTION, "Health Potion", R.drawable.sword_man,
+                    100, 50, null, 1);
         }
 
     }
@@ -39,8 +36,8 @@ public class Potion extends Item {
     {
         public AttackPotion()
         {
-            super(SystemData.PotionId.ATTACK, "Attack Potion",R.drawable.sword_man,
-                    300, 200, 0, null, 1);
+            super(Id.ATTACK_POTION, "Attack Potion",R.drawable.sword_man,
+                    300, 200, null, 1);
         }
     }
 
@@ -48,8 +45,8 @@ public class Potion extends Item {
     {
         public DefensePotion()
         {
-            super(SystemData.PotionId.DEFENSE, "Defense Potion", R.drawable.sword_man,
-                    200, 100, 0, null, 1);
+            super(Id.DEFENSE_POTION, "Defense Potion", R.drawable.sword_man,
+                    200, 100, null, 1);
         }
     }
 
@@ -57,8 +54,8 @@ public class Potion extends Item {
     {
         public SpeedPotion()
         {
-            super(SystemData.PotionId.SPEED, "Speed Potion",R.drawable.sword_man,
-                    100, 50, 0, null, 1);
+            super(Id.SPEED_POTION, "Speed Potion",R.drawable.sword_man,
+                    100, 50, null, 1);
         }
     }
 }

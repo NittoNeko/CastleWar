@@ -29,45 +29,6 @@ import ca.uwaterloo.cw.castlewar.R;
 */
 
 public class SystemData {
-    public enum TypeId
-    {
-        ALLY, ENEMY, POTION, BUFF, LEVEL, TERRAIN, CASTLE, FUNCTION, COIN
-    }
-    public enum AllyId
-    {
-        SWORDMAN, ARCHER, MAGE
-    }
-
-    public enum CastleId
-    {
-        HOLY, EVIL
-    }
-
-    public enum PotionId
-    {
-        HP, ATTACK, DEFENSE, SPEED
-    }
-
-    public enum BuffId
-    {
-        ATTACK, DEFENSE, SPEED
-    }
-
-    public enum EnemyId
-    {
-        SKELETON, ZOMBIE, SLIME
-    }
-
-    public enum LevelId
-    {
-        ONE_ONE,  ONE_TWO, ONE_THREE, ONE_FOUR, ONE_FIVE, ONE_SIX
-    }
-
-    public enum TerrainId
-    {
-        FOREST
-    }
-
     // get reference of context
     private static Context context;
     private static BitmapFactory.Options option;
@@ -91,61 +52,45 @@ public class SystemData {
         groundLine = (int) (screenHeight * 0.75);
     }
 
-    public static Ally create(AllyId id)
+    public static GameObject create(Id id)
     {
-        if (id == AllyId.SWORDMAN) return new Ally.SwordMan();
-        if (id == AllyId.ARCHER) return new Ally.Archer();
-        if (id == AllyId.MAGE) return new Ally.Mage();
-        else return null;
-    }
+        // ALLY
+        if (id == Id.SWORDMAN) return new Ally.SwordMan();
+        if (id == Id.ARCHER) return new Ally.Archer();
+        if (id == Id.MAGE) return new Ally.Mage();
 
-    public static Enemy create(EnemyId id)
-    {
-        if (id == EnemyId.SKELETON) return new Enemy.Skeleton();
-        if (id == EnemyId.ZOMBIE) return new Enemy.Zombie();
-        if (id == EnemyId.SLIME) return new Enemy.Slime();
-        else return null;
-    }
+        // ENEMY
+        if (id == Id.SKELETON) return new Enemy.Skeleton();
+        if (id == Id.ZOMBIE) return new Enemy.Zombie();
+        if (id == Id.SLIME) return new Enemy.Slime();
 
-    public static Potion create(PotionId id)
-    {
-        if (id == PotionId.HP) return new Potion.HpPotion();
-        if (id == PotionId.ATTACK) return new Potion.AttackPotion();
-        if (id == PotionId.DEFENSE) return new Potion.DefensePotion();
-        if (id == PotionId.SPEED) return new Potion.SpeedPotion();
-        else return null;
-    }
+        // POTION
+        if (id == Id.HP_POTION) return new Potion.HpPotion();
+        if (id == Id.ATTACK_POTION) return new Potion.AttackPotion();
+        if (id == Id.DEFENSE_POTION) return new Potion.DefensePotion();
+        if (id == Id.SPEED_POTION) return new Potion.SpeedPotion();
 
-    public static Buff create(BuffId id)
-    {
-        if (id == BuffId.ATTACK) return new Buff.AttackBuff();
-        if (id == BuffId.DEFENSE) return new Buff.DefenseBuff();
-        if (id == BuffId.SPEED) return new Buff.SpeedBuff();
-        else return null;
-    }
+        // BUFF
+        if (id == Id.ATTACK_BUFF) return new Buff.AttackBuff();
+        if (id == Id.DEFENSE_BUFF) return new Buff.DefenseBuff();
+        if (id == Id.SPEED_BUFF) return new Buff.SpeedBuff();
 
-    public static Terrain create(TerrainId id)
-    {
-        if (id == TerrainId.FOREST) return new Terrain.Forest();
-        else return null;
-    }
+        // TERRAIN
+        if (id == Id.FOREST) return new Terrain.Forest();
 
-    public static Level create(LevelId id)
-    {
-        if (id == LevelId.ONE_ONE) return new Level.Level_1_1();
-        if (id == LevelId.ONE_TWO) return new Level.Level_1_2();
-        if (id == LevelId.ONE_THREE) return new Level.Level_1_1();
-        if (id == LevelId.ONE_FOUR) return new Level.Level_1_2();
-        if (id == LevelId.ONE_FIVE) return new Level.Level_1_1();
-        if (id == LevelId.ONE_SIX) return new Level.Level_1_2();
-        else return null;
-    }
+        // LEVEL
+        if (id == Id.ONE_ONE) return new Level.Level_1_1();
+        if (id == Id.ONE_TWO) return new Level.Level_1_2();
+        if (id == Id.ONE_THREE) return new Level.Level_1_1();
+        if (id == Id.ONE_FOUR) return new Level.Level_1_2();
+        if (id == Id.ONE_FIVE) return new Level.Level_1_1();
+        if (id == Id.ONE_SIX) return new Level.Level_1_2();
 
-    public static Castle create(CastleId id)
-    {
-        if (id == CastleId.HOLY) return new Castle.HolyCastle();
-        if (id == CastleId.EVIL) return new Castle.HolyCastle();
-        else return null;
+        // CASTLE
+        if (id == Id.HOLY_CASTLE) return new Castle.HolyCastle();
+        if (id == Id.EVIL_CASTLE) return new Castle.HolyCastle();
+
+        return null;
     }
 
     public static int getGroundLine()

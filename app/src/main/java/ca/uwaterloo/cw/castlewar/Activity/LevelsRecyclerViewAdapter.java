@@ -10,8 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import ca.uwaterloo.cw.castlewar.Model.Ally;
+import ca.uwaterloo.cw.castlewar.Model.Id;
 import ca.uwaterloo.cw.castlewar.Model.Level;
+import ca.uwaterloo.cw.castlewar.Model.Potion;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
 
 public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecyclerViewAdapter.ViewHolder>{
@@ -64,7 +68,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final int freshPosition = holder.getAdapterPosition();
-        final Level level = SystemData.create(SystemData.LevelId.values()[freshPosition]);
+        final Level level = (Level) SystemData.create(Id.values()[Id.LEVEL_START.ordinal() + 1 + freshPosition]);
 
         // Assign data to view components
         holder.levelTextView.setText(level.getName());
@@ -74,7 +78,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         holder.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                singlePlayerActivity.startLevel(level);
+                singlePlayerActivity.startLevel(level, new Ally[]{new Ally.SwordMan(), new Ally.Mage(), new Ally.Archer()}, new Potion[]{new Potion.HpPotion(), new Potion.AttackPotion()});
             }
         });
     }
@@ -82,6 +86,6 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
     // Return the size of myShopItems
     @Override
     public int getItemCount() {
-        return SystemData.LevelId.values().length;
+        return UserProfile.getAvailableLevelNum();
     }
 }

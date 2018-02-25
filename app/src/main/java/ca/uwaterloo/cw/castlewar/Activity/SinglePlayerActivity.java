@@ -23,8 +23,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ca.uwaterloo.cw.castlewar.Model.Ally;
+import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.Model.Level;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.Unit;
 import ca.uwaterloo.cw.castlewar.R;
 
 
@@ -58,11 +61,17 @@ public class SinglePlayerActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void startLevel(Level level)
+    public void startLevel(final Level level, final Unit[] unitInStockPlayer1, final Item[] itemInStockPlayer1)
     {
         setContentView(R.layout.game_screen);
-        gameLogic = new MultithreadGameLogic(this, handler,level);
-        gameLogic.onResume();
+        Thread initializer = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                gameLogic = new MultithreadGameLogic(SinglePlayerActivity.this, handler,level, unitInStockPlayer1, itemInStockPlayer1);
+                gameLogic.onResume();
+            }
+        });
+        initializer.start();
     }
     public void onResume()
     {

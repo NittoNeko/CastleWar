@@ -11,7 +11,7 @@ public class Coin extends Item {
 
     public Coin()
     {
-        super("Coin", SystemData.TypeId.COIN, R.drawable.ic_launcher_background, 0, 0);
+        super(Id.COIN, "Coin", R.drawable.ic_launcher_background, 0, 0, 0);
         this.num = 0;
     }
 

@@ -8,30 +8,42 @@ import java.util.HashMap;
 
 public class UserProfile {
 
-    private static SystemData.LevelId currentLevel;
+    private static Id currentLevel;
+    private static int maxCost;
     private static final Coin COIN = new Coin();
-    private static final HashMap<SystemData.AllyId, Boolean> hasAllies = new HashMap<>(SystemData.AllyId.values().length);
-    private static final HashMap<SystemData.EnemyId, Boolean> hasEnemies  = new HashMap<>(SystemData.EnemyId.values().length);
-    private static final HashMap<SystemData.CastleId, Boolean> hasCastles  = new HashMap<>(SystemData.CastleId.values().length);
-    private static final HashMap<SystemData.PotionId, Integer> potionsNum = new HashMap<>(SystemData.PotionId.values().length);
+    private static final HashMap<Id, Boolean> hasAllies = new HashMap<>(Id.getAllyNum());
+    private static final HashMap<Id, Boolean> hasEnemies  = new HashMap<>(Id.getEnemyNum());
+    private static final HashMap<Id, Boolean> hasCastles  = new HashMap<>(Id.getCastleNum());
+    private static final HashMap<Id, Integer> potionsNum = new HashMap<>(Id.getPotionNum());
 
     public static void readFromDatabase()
     {
-        for (SystemData.AllyId id : SystemData.AllyId.values())
+        currentLevel = Id.ONE_SIX;
+        maxCost = 5;
+        for (int i = Id.ALLY_START.ordinal() + 1; i < Id.ALLY_END.ordinal(); ++i)
         {
-            hasAllies.put(id, true);
+            hasAllies.put(Id.values()[i], true);
         }
-        for (SystemData.EnemyId id : SystemData.EnemyId.values())
+        for (int i = Id.ENEMY_START.ordinal() + 1; i < Id.ENEMY_END.ordinal(); ++i)
         {
-            hasEnemies.put(id, true);
+            hasEnemies.put(Id.values()[i], true);
         }
-        for (SystemData.CastleId id : SystemData.CastleId.values())
+        for (int i = Id.POTION_START.ordinal() + 1; i < Id.POTION_END.ordinal(); ++i)
         {
-            hasCastles.put(id, true);
+            hasCastles.put(Id.values()[i], true);
         }
-        for (SystemData.PotionId id : SystemData.PotionId.values())
+        for (int i = Id.CASTLE_START.ordinal() + 1; i < Id.CASTLE_END.ordinal(); ++i)
         {
-            potionsNum.put(id, 5);
+            potionsNum.put(Id.values()[i], 5);
         }
+    }
+
+    public static int getMaxCost() {
+        return maxCost;
+    }
+
+    public static int getAvailableLevelNum()
+    {
+        return currentLevel.ordinal() - Id.LEVEL_START.ordinal();
     }
 }

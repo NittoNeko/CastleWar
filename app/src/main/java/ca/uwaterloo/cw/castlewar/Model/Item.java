@@ -6,15 +6,15 @@ import android.graphics.Bitmap;
  * Created by harri on 2018/2/15.
  */
 
-abstract public class Item extends GameObject {
-
+abstract public class Item extends CombatObject{
     private int buyPrice;
     private int sellPrice;
 
-    public Item(String name, SystemData.TypeId type, int resource, int buyPrice, int sellPrice)
+    public Item(Id id, String name, int resource, int buyPrice, int sellPrice, int cost)
     {
-        super(name, type, resource);
+        super(id, name, resource, cost);
         this.buyPrice = buyPrice;
         this.sellPrice = sellPrice;
     }
+
 }

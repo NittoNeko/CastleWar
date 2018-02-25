@@ -11,23 +11,21 @@ import java.util.ArrayList;
  */
 
 abstract public class GameObject {
+    private Id id;
     private String name;
     private String description;
     private int resource;
     private Bitmap portrait;
     private ArrayList<Bitmap> rightMovingImage;
     private ArrayList<Bitmap> leftMovingImage;
-    private SystemData.TypeId type;
     private int x;
     private int y;
 
 
-    public GameObject(String name, SystemData.TypeId type, int resource) {
+    public GameObject(Id id, String name, int resource) {
+        this.id = id;
         this.name = name;
         this.resource = resource;
-        this.type = type;
-        this.x = 0;
-        this.y = 0;
         this.portrait = null;
     }
 
@@ -59,8 +57,8 @@ abstract public class GameObject {
         this.portrait = portrait;
     }
 
-    public SystemData.TypeId getType() {
-        return type;
+    public Id getId() {
+        return id;
     }
 
     public String getName() {
