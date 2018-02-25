@@ -13,13 +13,13 @@ import static android.graphics.Bitmap.createScaledBitmap;
 
 public class Target extends GameObject {
     public Target() {
-        super(Id.TARGET_ICON,"Target", R.drawable.target);
+        super(0,"Target", R.drawable.target);
     }
 
     @Override
     protected void createPortrait() {
         Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
-        setPortrait(createScaledBitmap(original, Ally.PIXEL, Ally.PIXEL, false));
+        setPortrait(createScaledBitmap(original, Unit.PIXEL, Unit.PIXEL, false));
         setY(SystemData.getGroundLine() - getPortrait().getHeight());
     }
 }

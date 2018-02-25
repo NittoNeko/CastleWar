@@ -15,7 +15,7 @@ public class Potion extends Item {
     private Buff buff;
 
 
-    public Potion(Id id, String name, int resource, int buyPrice, int sellPrice, Buff buff, int cost)
+    public Potion(int id, String name, int resource, int buyPrice, int sellPrice, Buff buff, int cost)
     {
         super(id, name, resource, buyPrice, sellPrice, cost);
         this.hpRecover = hpRecover;
@@ -26,7 +26,7 @@ public class Potion extends Item {
     {
         public HpPotion()
         {
-            super(Id.HP_POTION, "Health Potion", R.drawable.sword_man,
+            super(Id.Item.HP_POTION.ordinal(), "Health Potion", R.drawable.sword_man,
                     100, 50, null, 1);
         }
 
@@ -36,7 +36,7 @@ public class Potion extends Item {
     {
         public AttackPotion()
         {
-            super(Id.ATTACK_POTION, "Attack Potion",R.drawable.sword_man,
+            super(Id.Item.ATTACK_POTION.ordinal(), "Attack Potion",R.drawable.sword_man,
                     300, 200, null, 1);
         }
     }
@@ -45,7 +45,7 @@ public class Potion extends Item {
     {
         public DefensePotion()
         {
-            super(Id.DEFENSE_POTION, "Defense Potion", R.drawable.sword_man,
+            super(Id.Item.DEFENSE_POTION.ordinal(), "Defense Potion", R.drawable.sword_man,
                     200, 100, null, 1);
         }
     }
@@ -54,7 +54,7 @@ public class Potion extends Item {
     {
         public SpeedPotion()
         {
-            super(Id.SPEED_POTION, "Speed Potion",R.drawable.sword_man,
+            super(Id.Item.SPEED_POTION.ordinal(), "Speed Potion",R.drawable.sword_man,
                     100, 50, null, 1);
         }
     }

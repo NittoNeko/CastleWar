@@ -7,6 +7,159 @@
     tools:context="ca.uwaterloo.cw.castlewar.Activity.SinglePlayerActivity">
 
     <LinearLayout
+        android:id="@+id/UnitMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="8dp">
+
+        <TextView
+            android:id="@+id/Cost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/Units"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ToggleButton
+                    android:id="@+id/Unit1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+
+                <ToggleButton
+                    android:id="@+id/Unit2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+
+                <ToggleButton
+                    android:id="@+id/Unit3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+
+                <ToggleButton
+                    android:id="@+id/Unit4"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+
+                <ToggleButton
+                    android:id="@+id/Unit5"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Items"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ToggleButton
+                    android:id="@+id/Item1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+
+                <ToggleButton
+                    android:id="@+id/Item2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+
+                <ToggleButton
+                    android:id="@+id/item3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+
+                <ToggleButton
+                    android:id="@+id/Item4"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+
+                <ToggleButton
+                    android:id="@+id/Item5"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:text="ToggleButton" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Function"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Reset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/Fight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/Shoot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Button" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/CombatBoard"
         android:layout_width="456dp"
         android:layout_height="253dp"
@@ -16,7 +169,7 @@
         android:background="@drawable/combat_board"
         android:orientation="horizontal"
         android:padding="40dp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -262,159 +415,5 @@
             app:srcCompat="@android:color/black" />
 
     </HorizontalScrollView>
-
-    <LinearLayout
-        android:id="@+id/UnitMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/GameScreenWrapper">
-
-        <TextView
-            android:id="@+id/Cost"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textSize="30sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/Units"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="0dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <ToggleButton
-                    android:id="@+id/Unit1"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-
-                <ToggleButton
-                    android:id="@+id/Unit2"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-
-                <ToggleButton
-                    android:id="@+id/Unit3"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-
-                <ToggleButton
-                    android:id="@+id/Unit4"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-
-                <ToggleButton
-                    android:id="@+id/Unit5"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/Items"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ToggleButton
-                    android:id="@+id/Item1"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-
-                <ToggleButton
-                    android:id="@+id/Item2"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-
-                <ToggleButton
-                    android:id="@+id/item3"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-
-                <ToggleButton
-                    android:id="@+id/Item4"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-
-                <ToggleButton
-                    android:id="@+id/Item5"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:text="ToggleButton" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/Function"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/Reset"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
-
-            <Button
-                android:id="@+id/Fight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
-
-            <Button
-                android:id="@+id/Shoot"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
-        </LinearLayout>
-
-    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

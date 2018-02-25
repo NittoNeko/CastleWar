@@ -1,32 +1,15 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import java.util.List;
-
-import ca.uwaterloo.cw.castlewar.Model.Ally;
 import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.Model.Level;
-import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.Model.Unit;
 import ca.uwaterloo.cw.castlewar.R;
 

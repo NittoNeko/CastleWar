@@ -2,14 +2,20 @@ package ca.uwaterloo.cw.castlewar.Model;
 
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.util.ArrayList;
+
+import ca.uwaterloo.cw.castlewar.R;
 
 /**
  * Created by harri on 2018/2/14.
  */
 
-abstract public class Unit extends CombatObject{
+abstract public class Unit extends GameObject{
+    public final static int ROW = 4;
+    public final static int COLUMN = 3;
+    public final static int PIXEL = 100;
     private int hp;
     private int maxHp;
     private int attack;
@@ -23,14 +29,15 @@ abstract public class Unit extends CombatObject{
     private int moveSpeed;
     private boolean switchImage;
     private boolean isLeft;
+    private int cost;
     private Terrain.Tile tile;
     private Unit aim;
     private ArrayList<Bitmap> rightMovingImage;
     private ArrayList<Bitmap> leftMovingImage;
     private ArrayList<Buff> currentBuffs = new ArrayList<>();
 
-    public Unit(Id id, String name, int resource, int hp, int maxHp, int attack, int defense, int speed, int move, int minRange, int maxRange, int cost) {
-        super(id, name, resource, cost);
+    public Unit(int id, String name, int resource, int hp, int maxHp, int attack, int defense, int speed, int move, int minRange, int maxRange, int cost) {
+        super(id, name, resource);
         this.hp = hp;
         this.maxHp = maxHp;
         this.attack = attack;
@@ -39,6 +46,7 @@ abstract public class Unit extends CombatObject{
         this.move = move;
         this.minRange = minRange;
         this.maxRange = maxRange;
+        this.cost = cost;
         this.rightMovingImage = new ArrayList<>(3);
         this.leftMovingImage = new ArrayList<>(3);
         this.aim = null;
@@ -49,7 +57,21 @@ abstract public class Unit extends CombatObject{
         this.moveSpeed = 5;
     }
 
-    abstract protected void createMovingImage();
+    @Override
+    protected void createPortrait() {
+        Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
+        setPortrait(Bitmap.createBitmap(original, 32, 0, 32, 32));
+    }
+
+    protected void createMovingImage() {
+        Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
+        addRightMovingImage(Bitmap.createBitmap(original, 0, 64, 32, 32));
+        addRightMovingImage(Bitmap.createBitmap(original, 32, 64, 32, 32));
+        addRightMovingImage(Bitmap.createBitmap(original, 64, 64, 32, 32));
+        addLeftMovingImage(Bitmap.createBitmap(original, 0, 32, 32, 32));
+        addLeftMovingImage(Bitmap.createBitmap(original, 32, 32, 32, 32));
+        addLeftMovingImage(Bitmap.createBitmap(original, 64, 32, 32, 32));
+    }
 
     public Bitmap getMovingImage()
     {
@@ -106,6 +128,22 @@ abstract public class Unit extends CombatObject{
         return currentPosition;
     }
 
+    public int getSpeed() {
+        return speed;
+    }
+
+    public int getMove() {
+        return move;
+    }
+
+    public int getMinRange() {
+        return minRange;
+    }
+
+    public int getMaxRange() {
+        return maxRange;
+    }
+
     public int getHp() {
         return hp;
     }
@@ -122,20 +160,8 @@ abstract public class Unit extends CombatObject{
         return defense;
     }
 
-    public int getSpeed() {
-        return speed;
-    }
-
-    public int getMove() {
-        return move;
-    }
-
-    public int getMinRange() {
-        return minRange;
-    }
-
-    public int getMaxRange() {
-        return maxRange;
+    public int getCost() {
+        return cost;
     }
 
     public ArrayList<Buff> getCurrentBuffs() {

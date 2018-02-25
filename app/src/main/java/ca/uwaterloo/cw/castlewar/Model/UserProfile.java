@@ -11,10 +11,10 @@ public class UserProfile {
     private static Id currentLevel;
     private static int maxCost;
     private static final Coin COIN = new Coin();
-    private static final HashMap<Id, Boolean> hasAllies = new HashMap<>(Id.getAllyNum());
-    private static final HashMap<Id, Boolean> hasEnemies  = new HashMap<>(Id.getEnemyNum());
-    private static final HashMap<Id, Boolean> hasCastles  = new HashMap<>(Id.getCastleNum());
-    private static final HashMap<Id, Integer> potionsNum = new HashMap<>(Id.getPotionNum());
+    private static final HashMap<Ally, Boolean> hasAllies = new HashMap<>(Id.getAllyNum());
+    private static final HashMap<Ally, Boolean> hasEnemies  = new HashMap<>(Id.getEnemyNum());
+    private static final HashMap<Ally, Boolean> hasCastles  = new HashMap<>(Id.getCastleNum());
+    private static final HashMap<Ally, Integer> potionsNum = new HashMap<>(Id.getPotionNum());
 
     public static void readFromDatabase()
     {
