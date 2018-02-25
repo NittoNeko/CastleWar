@@ -8,33 +8,23 @@ import java.util.HashMap;
 
 public class UserProfile {
 
-    private static Id currentLevel;
+    private static Id.Level currentLevel;
     private static int maxCost;
     private static final Coin COIN = new Coin();
-    private static final HashMap<Ally, Boolean> hasAllies = new HashMap<>(Id.getAllyNum());
-    private static final HashMap<Ally, Boolean> hasEnemies  = new HashMap<>(Id.getEnemyNum());
-    private static final HashMap<Ally, Boolean> hasCastles  = new HashMap<>(Id.getCastleNum());
-    private static final HashMap<Ally, Integer> potionsNum = new HashMap<>(Id.getPotionNum());
+    private static final HashMap<Id.Unit, Boolean> hasUnits = new HashMap<>(Id.Unit.values().length);
+    private static final HashMap<Id.Item, Integer> itemNum = new HashMap<>(Id.Item.values().length);
 
     public static void readFromDatabase()
     {
-        currentLevel = Id.ONE_SIX;
+        currentLevel = Id.Level.ONE_SIX;
         maxCost = 5;
-        for (int i = Id.ALLY_START.ordinal() + 1; i < Id.ALLY_END.ordinal(); ++i)
+        for (Id.Unit id : Id.Unit.values())
         {
-            hasAllies.put(Id.values()[i], true);
+            hasUnits.put(id, true);
         }
-        for (int i = Id.ENEMY_START.ordinal() + 1; i < Id.ENEMY_END.ordinal(); ++i)
+        for (Id.Item id : Id.Item.values())
         {
-            hasEnemies.put(Id.values()[i], true);
-        }
-        for (int i = Id.POTION_START.ordinal() + 1; i < Id.POTION_END.ordinal(); ++i)
-        {
-            hasCastles.put(Id.values()[i], true);
-        }
-        for (int i = Id.CASTLE_START.ordinal() + 1; i < Id.CASTLE_END.ordinal(); ++i)
-        {
-            potionsNum.put(Id.values()[i], 5);
+            itemNum.put(id, 5);
         }
     }
 
@@ -44,6 +34,6 @@ public class UserProfile {
 
     public static int getAvailableLevelNum()
     {
-        return currentLevel.ordinal() - Id.LEVEL_START.ordinal();
+        return currentLevel.ordinal() + 1;
     }
 }

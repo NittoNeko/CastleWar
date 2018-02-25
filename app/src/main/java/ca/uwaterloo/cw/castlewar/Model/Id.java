@@ -13,11 +13,9 @@ public class Id {
 
         // Enemy Units
         SKELETON, ZOMBIE, SLIME,
-    }
 
-    public enum Castle
-    {
-        HOLY, EVIL,
+        // Castle Units
+        HOLY_CASTLE, EVIL_CASTLE,
     }
 
     public enum Item

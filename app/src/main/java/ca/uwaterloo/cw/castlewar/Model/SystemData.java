@@ -14,6 +14,9 @@ import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 import ca.uwaterloo.cw.castlewar.Activity.MainActivity;
@@ -32,6 +35,8 @@ public class SystemData {
     // get reference of context
     private static Context context;
     private static BitmapFactory.Options option;
+    public static final ExecutorService gameThreads = Executors.newFixedThreadPool(3);
+    public static final ExecutorService oneTimeThread = Executors.newFixedThreadPool(2);
 
     // output control
     private static boolean ifOutput = false;
@@ -62,6 +67,10 @@ public class SystemData {
         if (id == Id.Unit.SKELETON.ordinal()) return new Enemy.Skeleton();
         if (id == Id.Unit.ZOMBIE.ordinal()) return new Enemy.Zombie();
         if (id == Id.Unit.SLIME.ordinal()) return new Enemy.Slime();
+
+        // CASTLE
+        if (id == Id.Unit.HOLY_CASTLE.ordinal()) return new Castle.HolyCastle();
+        if (id == Id.Unit.EVIL_CASTLE.ordinal()) return new Castle.HolyCastle();
         return null;
     }
 
@@ -100,14 +109,6 @@ public class SystemData {
         if (id == Id.Level.ONE_FOUR.ordinal()) return new Level.Level_1_2();
         if (id == Id.Level.ONE_FIVE.ordinal()) return new Level.Level_1_1();
         if (id == Id.Level.ONE_SIX.ordinal()) return new Level.Level_1_2();
-        return null;
-    }
-
-    public static Castle createCastle(int id)
-    {
-        // CASTLE
-        if (id == Id.Castle.HOLY.ordinal()) return new Castle.HolyCastle();
-        if (id == Id.Castle.EVIL.ordinal()) return new Castle.HolyCastle();
         return null;
     }
 

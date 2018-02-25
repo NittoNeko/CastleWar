@@ -11,34 +11,34 @@ import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.concurrent.ExecutionException;
+
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
 
 public class MainActivity extends AppCompatActivity{
-    private class Initializer extends Thread
-    {
-        public void run()
-        {
-            Display display = getWindowManager().getDefaultDisplay();
-            Point point = new Point();
-            display.getSize(point);
-            SystemData.initializeConfig(MainActivity.this.getApplicationContext(), point.x, point.y);
-            SystemData.setIfOutput(true);
-            UserProfile.readFromDatabase();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Initializer init = new Initializer();
-        init.start();
         try {
-            init.join();
+            SystemData.oneTimeThread.submit(new Runnable() {
+                @Override
+                public void run() {
+                    Display display = getWindowManager().getDefaultDisplay();
+                    Point point = new Point();
+                    display.getSize(point);
+                    SystemData.initializeConfig(MainActivity.this.getApplicationContext(), point.x, point.y);
+                    SystemData.setIfOutput(true);
+                    UserProfile.readFromDatabase();
+                }
+            }).get();
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
     }

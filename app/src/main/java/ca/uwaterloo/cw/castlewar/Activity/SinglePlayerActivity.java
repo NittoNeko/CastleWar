@@ -7,9 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ProgressBar;
+
+import java.util.concurrent.ExecutionException;
 
 import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.Model.Level;
+import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.Model.Unit;
 import ca.uwaterloo.cw.castlewar.R;
 
@@ -44,33 +48,30 @@ public class SinglePlayerActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void startLevel(final Level level, final Unit[] unitInStockPlayer1, final Item[] itemInStockPlayer1)
-    {
+    public void startLevel(final Level level, final Unit[] unitInStockPlayer1, final Item[] itemInStockPlayer1) throws InterruptedException, ExecutionException {
         setContentView(R.layout.game_screen);
-        Thread initializer = new Thread(new Runnable() {
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+        SystemData.oneTimeThread.submit(new Runnable() {
             @Override
             public void run() {
                 gameLogic = new MultithreadGameLogic(SinglePlayerActivity.this, handler,level, unitInStockPlayer1, itemInStockPlayer1);
                 gameLogic.onResume();
             }
-        });
-        initializer.start();
+        }).get();
+        progressBar.setVisibility(View.INVISIBLE);
     }
     public void onResume()
     {
         super.onResume();
         if (gameLogic != null)
-        {
             gameLogic.onResume();
-        }
     }
 
     public void onPause()
     {
         super.onPause();
         if(gameLogic != null)
-        {
             gameLogic.onPause();
-        }
     }
 }

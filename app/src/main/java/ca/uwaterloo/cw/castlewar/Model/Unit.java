@@ -16,24 +16,26 @@ abstract public class Unit extends GameObject{
     public final static int ROW = 4;
     public final static int COLUMN = 3;
     public final static int PIXEL = 100;
-    private int hp;
-    private int maxHp;
-    private int attack;
-    private int defense;
-    private int speed;
-    private int move;
+    private Integer hp;
+    private Integer maxHp;
+    private Integer attack;
+    private Integer defense;
+    private Integer speed;
+    private Integer move;
     private int minRange;
     private int maxRange;
-    private int currentImage;
-    private int currentPosition;
     private int moveSpeed;
-    private boolean switchImage;
+    private boolean isIndexLeft;
+    private int currentIndex;
     private boolean isLeft;
-    private int cost;
-    private Terrain.Tile tile;
+    private Integer cost;
+    private boolean isPlayer1;
+    private Terrain.Tile moveTile;
+    private Terrain.Tile actionTile;
     private Unit aim;
     private ArrayList<Bitmap> rightMovingImage;
     private ArrayList<Bitmap> leftMovingImage;
+    private int movingImageNum;
     private ArrayList<Buff> currentBuffs = new ArrayList<>();
 
     public Unit(int id, String name, int resource, int hp, int maxHp, int attack, int defense, int speed, int move, int minRange, int maxRange, int cost) {
@@ -47,14 +49,17 @@ abstract public class Unit extends GameObject{
         this.minRange = minRange;
         this.maxRange = maxRange;
         this.cost = cost;
-        this.rightMovingImage = new ArrayList<>(3);
-        this.leftMovingImage = new ArrayList<>(3);
+        this.movingImageNum = 3;
+        this.rightMovingImage = new ArrayList<>(movingImageNum);
+        this.leftMovingImage = new ArrayList<>(movingImageNum);
         this.aim = null;
-        this.currentPosition = 0;
-        this.currentImage = 0;
         this.isLeft = false;
-        this.switchImage = false;
         this.moveSpeed = 5;
+        this.isPlayer1 = true;
+        this.currentIndex = 0;
+        this.isIndexLeft = true;
+        this.moveTile = null;
+        this.actionTile = null;
     }
 
     @Override
@@ -81,9 +86,9 @@ abstract public class Unit extends GameObject{
             createMovingImage();
 
         if (isLeft)
-            return leftMovingImage.get(currentImage);
+            return leftMovingImage.get(currentIndex);
         else
-            return rightMovingImage.get(currentImage);
+            return rightMovingImage.get(currentIndex);
     }
 
     protected void addRightMovingImage(Bitmap image)
@@ -99,36 +104,40 @@ abstract public class Unit extends GameObject{
         setY(SystemData.getGroundLine() - image.getHeight());
     }
 
-    public void update()
+    // common way to take actions
+    // go as near as possible to the first enemy who is the nearest to ally castle
+    //
+    public void decideStrategy(Terrain terrain)
     {
-        // switch moving images
-        if (switchImage)
-            if (currentImage < 0)
-                currentImage = 0;
-            else if (currentImage == 0)
-            {
-                currentImage += 1;
-                switchImage = false;
-            } else
-                currentImage -= 1;
-        else if (!switchImage)
-            if (rightMovingImage.size() == 0)
-                currentImage = 0;
-            else if (currentImage >= rightMovingImage.size())
-                currentImage = rightMovingImage.size() - 1;
-            else if (currentImage == rightMovingImage.size() - 1)
-            {
-                currentImage -= 1;
-                switchImage = true;
-            } else
-                currentImage += 1;
+        // find first available enemy who is the nearest to ally castle
+
     }
 
-    public int getCurrentPosition() {
-        return currentPosition;
+
+
+    public void animate()
+    {
+        if (movingImageNum <= 1) return;
+        if (currentIndex == 0)
+            isIndexLeft = false;
+        else if (currentIndex == movingImageNum - 1)
+            isIndexLeft = true;
+
+        if (isIndexLeft)
+            currentIndex--;
+        else
+            currentIndex++;
     }
 
-    public int getSpeed() {
+    public boolean isPlayer1() {
+        return isPlayer1;
+    }
+
+    public void setPlayer1(boolean player1) {
+        isPlayer1 = player1;
+    }
+
+    synchronized public Integer getSpeed() {
         return speed;
     }
 
@@ -144,25 +153,42 @@ abstract public class Unit extends GameObject{
         return maxRange;
     }
 
-    public int getHp() {
+    synchronized public Integer getHp() {
         return hp;
     }
 
-    public int getMaxHp() {
+    public Integer getMaxHp() {
         return maxHp;
     }
 
-    public int getAttack() {
+    synchronized public Integer getAttack() {
         return attack;
     }
 
-    public int getDefense() {
+    synchronized public Integer getDefense() {
         return defense;
     }
 
-    public int getCost() {
+    synchronized public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    synchronized public void setAttack(int attack) {
+        this.attack = attack;
+    }
+
+    synchronized public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    synchronized public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public Integer getCost() {
         return cost;
     }
+
 
     public ArrayList<Buff> getCurrentBuffs() {
         return currentBuffs;

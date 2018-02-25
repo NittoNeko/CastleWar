@@ -12,18 +12,10 @@ import static android.graphics.Bitmap.createScaledBitmap;
  * Created by harri on 2018/2/14.
  */
 
-public class Castle extends GameObject {
-    private int hp;
-    private int maxHp;
-    private int attack;
-    private int defense;
-    public Castle(int id, String name, int resource, int hp, int maxHp, int attack, int defense)
-    {
-        super(id, name, resource);
-        this.hp = hp;
-        this.maxHp = maxHp;
-        this.attack = attack;
-        this.defense = defense;
+public class Castle extends Unit {
+    private final static float SIZE = 500;  // must be multiple of Unit.PIXEL
+    public Castle(int id, String name, int resource, int hp, int maxHp, int attack, int defense) {
+        super(id, name, resource, hp, maxHp, attack, defense, 0, 0,0,1, 0);
     }
 
     @Override
@@ -36,7 +28,7 @@ public class Castle extends GameObject {
     public static class HolyCastle extends Castle
     {
         public HolyCastle() {
-            super(Id.Castle.HOLY.ordinal(),"Holy Castle", R.drawable.castle,
+            super(Id.Unit.HOLY_CASTLE.ordinal(),"Holy Castle", R.drawable.castle,
                     200, 200, 50, 25);
         }
     }

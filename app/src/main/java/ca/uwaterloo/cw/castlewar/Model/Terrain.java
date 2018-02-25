@@ -16,7 +16,6 @@ import static android.graphics.Bitmap.createScaledBitmap;
 public class Terrain extends GameObject {
     public static class Tile {
         private Unit unit;
-        private Castle castle;
         private int id;
         private int x;
         private int y;
@@ -47,17 +46,13 @@ public class Terrain extends GameObject {
 
         public boolean isAvailable()
         {
-            if (unit == null && castle == null) return true;
+            if (unit == null) return true;
             else return false;
         }
 
         public void setUnit(Unit unit)
         {
             this.unit = unit;
-        }
-
-        public void setCastle(Castle castle){
-            this.castle = castle;
         }
     }
 
