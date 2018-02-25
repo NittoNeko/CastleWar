@@ -85,6 +85,7 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
 
     }
 
+
     // Return the size of myShopItems
     @Override
     public int getItemCount() {

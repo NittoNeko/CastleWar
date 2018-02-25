@@ -84,6 +84,7 @@ public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<Inve
 
     }
 
+
     // Return the size of myInventoryItems
     @Override
     public int getItemCount() {

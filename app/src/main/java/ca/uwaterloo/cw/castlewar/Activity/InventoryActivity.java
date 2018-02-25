@@ -45,7 +45,7 @@ public class InventoryActivity extends AppCompatActivity {
 
 
         // Initialize items in the shop and add them to the ArrayList
-        for (int i = Id.POTION_START.ordinal() + 1; i < Id.POTION_END.ordinal(); ++i) {
+        for (int i = Id._START.ordinal() + 1; i < Id.POTION_END.ordinal(); ++i) {
             inventoryItems.add((Item) SystemData.create(Id.values()[i]));
         }
 
