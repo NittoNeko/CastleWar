@@ -52,44 +52,62 @@ public class SystemData {
         groundLine = (int) (screenHeight * 0.75);
     }
 
-    public static GameObject create(Id id)
-    {
+    public static Unit createUnit(int id) {
         // ALLY
-        if (id == Id.SWORDMAN) return new Ally.SwordMan();
-        if (id == Id.ARCHER) return new Ally.Archer();
-        if (id == Id.MAGE) return new Ally.Mage();
+        if (id == Id.Unit.SWORDMAN.ordinal()) return new Ally.SwordMan();
+        if (id == Id.Unit.ARCHER.ordinal()) return new Ally.Archer();
+        if (id == Id.Unit.MAGE.ordinal()) return new Ally.Mage();
 
         // ENEMY
-        if (id == Id.SKELETON) return new Enemy.Skeleton();
-        if (id == Id.ZOMBIE) return new Enemy.Zombie();
-        if (id == Id.SLIME) return new Enemy.Slime();
+        if (id == Id.Unit.SKELETON.ordinal()) return new Enemy.Skeleton();
+        if (id == Id.Unit.ZOMBIE.ordinal()) return new Enemy.Zombie();
+        if (id == Id.Unit.SLIME.ordinal()) return new Enemy.Slime();
+        return null;
+    }
 
+    public static Item createItem(int id)
+    {
         // POTION
-        if (id == Id.HP_POTION) return new Potion.HpPotion();
-        if (id == Id.ATTACK_POTION) return new Potion.AttackPotion();
-        if (id == Id.DEFENSE_POTION) return new Potion.DefensePotion();
-        if (id == Id.SPEED_POTION) return new Potion.SpeedPotion();
+        if (id == Id.Item.HP_POTION.ordinal()) return new Potion.HpPotion();
+        if (id == Id.Item.ATTACK_POTION.ordinal()) return new Potion.AttackPotion();
+        if (id == Id.Item.DEFENSE_POTION.ordinal()) return new Potion.DefensePotion();
+        if (id == Id.Item.SPEED_POTION.ordinal()) return new Potion.SpeedPotion();
+        return null;
+    }
 
+    public static Buff createBuff(int id)
+    {
         // BUFF
-        if (id == Id.ATTACK_BUFF) return new Buff.AttackBuff();
-        if (id == Id.DEFENSE_BUFF) return new Buff.DefenseBuff();
-        if (id == Id.SPEED_BUFF) return new Buff.SpeedBuff();
+        if (id == Id.Buff.ATTACK.ordinal()) return new Buff.AttackBuff();
+        if (id == Id.Buff.DEFENSE.ordinal()) return new Buff.DefenseBuff();
+        if (id == Id.Buff.SPEED.ordinal()) return new Buff.SpeedBuff();
+        return null;
+    }
 
+    public static Terrain createTerrain(int id)
+    {
         // TERRAIN
-        if (id == Id.FOREST) return new Terrain.Forest();
+        if (id == Id.Terrain.FOREST.ordinal()) return new Terrain.Forest();
+        return null;
+    }
 
+    public static Level createLevel(int id)
+    {
         // LEVEL
-        if (id == Id.ONE_ONE) return new Level.Level_1_1();
-        if (id == Id.ONE_TWO) return new Level.Level_1_2();
-        if (id == Id.ONE_THREE) return new Level.Level_1_1();
-        if (id == Id.ONE_FOUR) return new Level.Level_1_2();
-        if (id == Id.ONE_FIVE) return new Level.Level_1_1();
-        if (id == Id.ONE_SIX) return new Level.Level_1_2();
+        if (id == Id.Level.ONE_ONE.ordinal()) return new Level.Level_1_1();
+        if (id == Id.Level.ONE_TWO.ordinal()) return new Level.Level_1_2();
+        if (id == Id.Level.ONE_THREE.ordinal()) return new Level.Level_1_1();
+        if (id == Id.Level.ONE_FOUR.ordinal()) return new Level.Level_1_2();
+        if (id == Id.Level.ONE_FIVE.ordinal()) return new Level.Level_1_1();
+        if (id == Id.Level.ONE_SIX.ordinal()) return new Level.Level_1_2();
+        return null;
+    }
 
+    public static Castle createCastle(int id)
+    {
         // CASTLE
-        if (id == Id.HOLY_CASTLE) return new Castle.HolyCastle();
-        if (id == Id.EVIL_CASTLE) return new Castle.HolyCastle();
-
+        if (id == Id.Castle.HOLY.ordinal()) return new Castle.HolyCastle();
+        if (id == Id.Castle.EVIL.ordinal()) return new Castle.HolyCastle();
         return null;
     }
 

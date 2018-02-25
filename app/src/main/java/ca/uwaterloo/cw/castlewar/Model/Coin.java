@@ -6,12 +6,12 @@ import ca.uwaterloo.cw.castlewar.R;
  * Created by harri on 2018/2/23.
  */
 
-public class Coin extends Item {
+public class Coin extends GameObject {
     private long num;
 
     public Coin()
     {
-        super(Id.COIN, "Coin", R.drawable.ic_launcher_background, 0, 0, 0);
+        super(0, "Coin", R.drawable.ic_launcher_background);
         this.num = 0;
     }
 

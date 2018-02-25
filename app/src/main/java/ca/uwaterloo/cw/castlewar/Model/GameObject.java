@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 
 abstract public class GameObject {
-    private Id id;
+    private int id;
     private String name;
     private String description;
     private int resource;
@@ -21,8 +21,7 @@ abstract public class GameObject {
     private int x;
     private int y;
 
-
-    public GameObject(Id id, String name, int resource) {
+    public GameObject(int id, String name, int resource) {
         this.id = id;
         this.name = name;
         this.resource = resource;
@@ -57,7 +56,7 @@ abstract public class GameObject {
         this.portrait = portrait;
     }
 
-    public Id getId() {
+    public int getId() {
         return id;
     }
 

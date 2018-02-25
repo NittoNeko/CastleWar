@@ -16,7 +16,7 @@ public class Buff extends GameObject {
     private int speed;
     private int turnLeft;
 
-    public Buff(Id id, String name, int resource, int attack, int defense, int speed, int turnLeft)
+    public Buff(int id, String name, int resource, int attack, int defense, int speed, int turnLeft)
     {
         super(id, name, resource);
         this.attack = attack;
@@ -45,7 +45,7 @@ public class Buff extends GameObject {
     {
         public AttackBuff()
         {
-            super(Id.ATTACK_BUFF, "Brave", R.drawable.sword_man,
+            super(Id.Buff.ATTACK.ordinal(), "Brave", R.drawable.sword_man,
                     20, 0, 0, 3);
         }
     }
@@ -54,7 +54,7 @@ public class Buff extends GameObject {
     {
         public DefenseBuff()
         {
-            super(Id.DEFENSE_BUFF, "Brave", R.drawable.sword_man,
+            super(Id.Buff.ATTACK.ordinal(), "Brave", R.drawable.sword_man,
                     0, 10, 0, 3);
         }
     }
@@ -63,7 +63,7 @@ public class Buff extends GameObject {
     {
         public SpeedBuff()
         {
-            super(Id.SPEED_BUFF, "Brave", R.drawable.sword_man,
+            super(Id.Buff.ATTACK.ordinal(), "Brave", R.drawable.sword_man,
                     0, 0, 5, 3);
         }
     }

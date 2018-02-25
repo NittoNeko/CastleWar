@@ -44,13 +44,13 @@ public class Level extends GameObject {
     }
 
     private Item[] items;
-    private Enemy[] enemies;
+    private Unit[] enemies;
     private Reward[] rewards;
     private Terrain terrain;
     private int coinRewards;
     private int maxCost;
 
-    public Level(Id id, String name, int resource, Item[] items, Enemy[] enemies, Reward[] rewards, Terrain terrain, int coinRewards, int areas, int maxCost)
+    public Level(int id, String name, int resource, Item[] items, Unit[] enemies, Reward[] rewards, Terrain terrain, int coinRewards, int areas, int maxCost)
     {
         super(id, name, resource);
         this.items = items;
@@ -106,7 +106,7 @@ public class Level extends GameObject {
         return items;
     }
 
-    public Enemy[] getEnemies() {
+    public Unit[] getEnemies() {
         return enemies;
     }
 
@@ -125,37 +125,36 @@ public class Level extends GameObject {
     public static class Level_1_1 extends Level
     {
         public Level_1_1() {
-            super(Id.ONE_ONE, "Level 1-1",
+            super(Id.Level.ONE_ONE.ordinal(), "Level 1-1",
                     R.drawable.forest_background,
-                    new Item[] {(Potion) SystemData.create(Id.HP_POTION)
+                    new Item[] {SystemData.createItem(Id.Item.HP_POTION.ordinal())
                     },
-                    new Enemy[]{(Enemy) SystemData.create(Id.SKELETON),
-                            (Enemy) SystemData.create(Id.ZOMBIE),
-                            (Enemy) SystemData.create(Id.SLIME)
+                    new Unit[]{SystemData.createUnit(Id.Unit.SLIME.ordinal()),
+                            SystemData.createUnit(Id.Unit.ZOMBIE.ordinal()),
+                            SystemData.createUnit(Id.Unit.SKELETON.ordinal())
                     },
-                    new Reward[]{new Reward((Potion) SystemData.create(Id.HP_POTION), 3, 1),
-                            new Reward((Potion) SystemData.create(Id.DEFENSE_POTION), 1, 0)
+                    new Reward[]{new Reward(SystemData.createItem(Id.Item.HP_POTION.ordinal()), 3, 1),
+                            new Reward(SystemData.createItem(Id.Item.DEFENSE_POTION.ordinal()), 1, 0)
                     },
-                    (Terrain) SystemData.create(Id.FOREST),
+                    SystemData.createTerrain(Id.Terrain.FOREST.ordinal()),
                     500, 5, 2);
         }
     }
 
-    public static class Level_1_2 extends Level
-    {
+    public static class Level_1_2 extends Level {
         public Level_1_2() {
-            super(Id.ONE_TWO, "Level 1-2",
+            super(Id.Level.ONE_TWO.ordinal(), "Level 1-2",
                     R.drawable.forest_background,
-                    new Item[] {(Potion) SystemData.create(Id.HP_POTION)
+                    new Item[]{SystemData.createItem(Id.Item.HP_POTION.ordinal())
                     },
-                    new Enemy[]{(Enemy) SystemData.create(Id.SKELETON),
-                            (Enemy) SystemData.create(Id.ZOMBIE),
-                            (Enemy) SystemData.create(Id.SLIME)
+                    new Unit[]{SystemData.createUnit(Id.Unit.SLIME.ordinal()),
+                            SystemData.createUnit(Id.Unit.ZOMBIE.ordinal()),
+                            SystemData.createUnit(Id.Unit.SKELETON.ordinal())
                     },
-                    new Reward[]{new Reward((Potion) SystemData.create(Id.HP_POTION), 3, 1),
-                            new Reward((Potion) SystemData.create(Id.DEFENSE_POTION), 1, 0)
+                    new Reward[]{new Reward(SystemData.createItem(Id.Item.HP_POTION.ordinal()), 3, 1),
+                            new Reward(SystemData.createItem(Id.Item.DEFENSE_POTION.ordinal()), 1, 0)
                     },
-                    (Terrain) SystemData.create(Id.FOREST),
+                    SystemData.createTerrain(Id.Terrain.FOREST.ordinal()),
                     500, 5, 2);
         }
     }

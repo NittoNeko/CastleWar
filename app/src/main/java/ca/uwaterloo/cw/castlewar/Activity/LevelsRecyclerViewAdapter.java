@@ -13,6 +13,7 @@ import ca.uwaterloo.cw.castlewar.Model.Id;
 import ca.uwaterloo.cw.castlewar.Model.Level;
 import ca.uwaterloo.cw.castlewar.Model.Potion;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.Unit;
 import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
 
@@ -66,7 +67,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         final int freshPosition = holder.getAdapterPosition();
-        final Level level = (Level) SystemData.create(Id.values()[Id.LEVEL_START.ordinal() + 1 + freshPosition]);
+        final Level level = SystemData.createLevel(freshPosition);
 
         // Assign data to view components
         holder.levelTextView.setText(level.getName());
@@ -76,7 +77,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         holder.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                singlePlayerActivity.startLevel(level, new Ally[]{new Ally.SwordMan(), new Ally.Mage(), new Ally.Archer()}, new Potion[]{new Potion.HpPotion(), new Potion.AttackPotion()});
+                singlePlayerActivity.startLevel(level, new Unit[]{new Ally.SwordMan(), new Ally.Mage(), new Ally.Archer()}, new Potion[]{new Potion.HpPotion(), new Potion.AttackPotion()});
             }
         });
     }

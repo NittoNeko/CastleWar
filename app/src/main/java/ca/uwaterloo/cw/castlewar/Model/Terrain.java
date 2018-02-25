@@ -16,6 +16,7 @@ import static android.graphics.Bitmap.createScaledBitmap;
 public class Terrain extends GameObject {
     public static class Tile {
         private Unit unit;
+        private Castle castle;
         private int id;
         private int x;
         private int y;
@@ -44,15 +45,19 @@ public class Terrain extends GameObject {
             return y;
         }
 
-        public boolean hasUnit()
+        public boolean isAvailable()
         {
-            if (unit == null) return true;
+            if (unit == null && castle == null) return true;
             else return false;
         }
 
         public void setUnit(Unit unit)
         {
             this.unit = unit;
+        }
+
+        public void setCastle(Castle castle){
+            this.castle = castle;
         }
     }
 
@@ -77,7 +82,7 @@ public class Terrain extends GameObject {
         {
             for (Tile tile : tiles)
             {
-                if (!tile.hasUnit())
+                if (!tile.isAvailable())
                     return tile;
             }
             return null;
@@ -88,7 +93,7 @@ public class Terrain extends GameObject {
             int num = 0;
             for (int i = 0; i < tileNum; ++i)
             {
-                if (!tiles[i].hasUnit()) num++;
+                if (!tiles[i].isAvailable()) num++;
             }
             return num;
         }
@@ -112,7 +117,7 @@ public class Terrain extends GameObject {
     private int battleFieldsWidth;
 
     // NOTE!!! battleFieldNum must be greater than 1
-    public Terrain(Id id, String name, int resource, int battleFieldLength, int battleFieldNum) {
+    public Terrain(int id, String name, int resource, int battleFieldLength, int battleFieldNum) {
         super(id, name, resource);
         this.battleFieldNum = battleFieldNum;
         this.battleFieldLength = battleFieldLength;
@@ -151,7 +156,7 @@ public class Terrain extends GameObject {
     public static class Forest extends Terrain
     {
         public Forest() {
-            super(Id.FOREST, "Forest", R.drawable.forest_ground, 500, 5);
+            super(Id.Terrain.FOREST.ordinal(), "Forest", R.drawable.forest_ground, 500, 5);
             setY(SystemData.getGroundLine() - 30);
         }
     }
