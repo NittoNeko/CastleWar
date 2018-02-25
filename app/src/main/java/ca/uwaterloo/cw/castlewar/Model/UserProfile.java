@@ -46,4 +46,8 @@ public class UserProfile {
     {
         return currentLevel.ordinal() - Id.LEVEL_START.ordinal();
     }
+
+    public static Coin getCOIN() {
+        return COIN;
+    }
 }

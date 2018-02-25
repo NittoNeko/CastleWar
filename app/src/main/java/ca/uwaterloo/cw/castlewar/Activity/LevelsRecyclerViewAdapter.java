@@ -1,7 +1,5 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -46,7 +44,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         ConstraintLayout levelsView = (ConstraintLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.levels, parent, false);
 
         // Get references to view components
-        TextView levelTextView = levelsView.findViewById(R.id.Levels);
+        TextView levelTextView = levelsView.findViewById(R.id.itemName);
         TextView terrainTextView = levelsView.findViewById(R.id.Terrain);
         TextView enemiesTextView = levelsView.findViewById(R.id.Enemies);
         TextView rewardsTextView = levelsView.findViewById(R.id.Rewards);

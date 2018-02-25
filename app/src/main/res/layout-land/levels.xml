@@ -49,10 +49,10 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/Levels" />
+                app:layout_constraintTop_toBottomOf="@+id/itemName" />
 
             <TextView
-                android:id="@+id/Levels"
+                android:id="@+id/itemName"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -72,7 +72,7 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/EnemyTitle"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintStart_toEndOf="@+id/Levels"
+                app:layout_constraintStart_toEndOf="@+id/itemName"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/EnemyTitle" />
 
