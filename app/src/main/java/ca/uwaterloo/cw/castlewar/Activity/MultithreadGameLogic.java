@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import ca.uwaterloo.cw.castlewar.Model.Castle;
 import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Id;
 import ca.uwaterloo.cw.castlewar.Model.Item;
@@ -206,14 +207,27 @@ public class MultithreadGameLogic {
 
             if (!isGameActive.get()) return;
 
-            // move units by its adding ordering
-            for (Unit unit : unitInCombat.get(isPlayer1))
-            {
+            // find first ready unit
+            while (true){
+                Unit unit = null;
+                unitInCombatLock.readLock().lock();
+                for (Unit iterator : unitInCombat.get(isPlayer1)){
+                    if (iterator.isReady()){
+                        unit = iterator;
+                        break;
+                    }
+                }
+                unitInCombatLock.readLock().unlock();
+                // check if all units have done
+                if (unit == null) break;
+                // decide action and move
                 unit.decideStrategy(terrain);
+                // move
                 if (unit.getMoveTile() != null){
                     unit.changeDirection(unit.getMoveTile());
                     moveAnime(unit);
                 }
+                // go to combat
                 if (unit.getActionTile() != null){
                     // set attacker and defender
                     attacker = unit;
@@ -224,18 +238,26 @@ public class MultithreadGameLogic {
                     defender.setAttacker(false);
                     combatAnime();
                 }
-                // check any one dead
-                if (){
-                    attacker.getCurrentTile().setUnit(null);
-                    unitInCombatLock.writeLock().lock();
-                    unitInCombat.get(attacker.isPlayer1()).remove(attacker);
-                    unitInCombatLock.writeLock().unlock();
+                // set done
+                unit.setReady(false);
+
+                // check death
+                unitInCombatLock.writeLock().lock();
+                for (Unit looper : unitInCombat.get(true)){
+                    if (looper.isDead()) unitInCombat.get(true).remove(looper);
                 }
-                if (defender.isDead()){
-                    defender.getCurrentTile().setUnit(null);
-                    unitInCombatLock.writeLock().lock();
-                    unitInCombat.get(defender.isPlayer1()).remove(defender);
-                    unitInCombatLock.writeLock().unlock();
+                for (Unit looper : unitInCombat.get(false)){
+                    if (looper.isDead()) unitInCombat.get(false).remove(looper);
+                }
+                unitInCombatLock.writeLock().unlock();
+
+                // check win
+                if (castle.get(true).isDead()){
+                    // add something in the future
+                    activity.onBackPressed();
+                } else if (castle.get(false).isDead()){
+                    // add something
+                    activity.onBackPressed();
                 }
             }
 
@@ -276,13 +298,26 @@ public class MultithreadGameLogic {
                 currentState.set(Id.GameState.MOVING);
                 // let units go
                 // move units by its adding ordering
-                for (Unit unit : unitInCombat.get(isPlayer1))
-                {
+                while (true){
+                    Unit unit = null;
+                    unitInCombatLock.readLock().lock();
+                    for (Unit iterator : unitInCombat.get(isPlayer1)){
+                        if (iterator.isReady()){
+                            unit = iterator;
+                            break;
+                        }
+                    }
+                    unitInCombatLock.readLock().unlock();
+                    // check if all units have done
+                    if (unit == null) break;
+                    // decide action and move
                     unit.decideStrategy(terrain);
+                    // move
                     if (unit.getMoveTile() != null){
                         unit.changeDirection(unit.getMoveTile());
                         moveAnime(unit);
                     }
+                    // go to combat
                     if (unit.getActionTile() != null){
                         // set attacker and defender
                         attacker = unit;
@@ -293,14 +328,40 @@ public class MultithreadGameLogic {
                         defender.setAttacker(false);
                         combatAnime();
                     }
-                }
+                    // set done
+                    unit.setReady(false);
 
+                    // check death
+                    unitInCombatLock.writeLock().lock();
+                    for (Unit looper : unitInCombat.get(true)){
+                        if (looper.isDead()) unitInCombat.get(true).remove(looper);
+                    }
+                    for (Unit looper : unitInCombat.get(false)){
+                        if (looper.isDead()) unitInCombat.get(false).remove(looper);
+                    }
+                    unitInCombatLock.writeLock().unlock();
+
+                    // check win
+                    if (castle.get(true).isDead()){
+                        // add something in the future
+                        activity.onBackPressed();
+                    } else if (castle.get(false).isDead()){
+                        // add something
+                        activity.onBackPressed();
+                    }
+                }
                 isPlayer1 = true;
             } else{
                 // switch player
                 switchPlayer();
             }
 
+            // reset isReady for units
+            unitInCombatLock.writeLock().lock();
+            for (Unit unit : unitInCombat.get(isPlayer1)){
+                unit.setReady(true);
+            }
+            unitInCombatLock.writeLock().unlock();
         }
 
         @Override
@@ -520,7 +581,7 @@ public class MultithreadGameLogic {
 
     private MultithreadGameLogic(Activity activity, Terrain terrain)
     {
-        this.progressBar = activity.findViewById(R.id.GameLoading);;
+        this.progressBar = activity.findViewById(R.id.GameLoading);
         this.paint.setARGB(255, 0, 0,0);
         this.paint.setStyle(Paint.Style.STROKE);
         this.paint.setStrokeWidth(10);

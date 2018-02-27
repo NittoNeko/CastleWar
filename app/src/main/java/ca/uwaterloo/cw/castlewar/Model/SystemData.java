@@ -68,7 +68,7 @@ public class SystemData {
         screenWidth = x;
         screenHeight = y;
         groundLine = (int) (screenHeight * 0.75);
-        cross = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(c.getResources(), R.drawable.cross),PIXEL,PIXEL,false);
+        cross = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(c.getResources(), R.drawable.restock),PIXEL,PIXEL,false);
     }
 
     public static Unit createUnit(int id) {

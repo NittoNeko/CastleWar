@@ -26,7 +26,7 @@ public class Potion extends Item {
     {
         public HpPotion()
         {
-            super(Id.Item.HP_POTION.ordinal(), "Health Potion", R.drawable.potion,
+            super(Id.Item.HP_POTION.ordinal(), "Health Potion", R.drawable.hp_potion,
                     100, 50, null, 1);
         }
 
@@ -36,7 +36,7 @@ public class Potion extends Item {
     {
         public AttackPotion()
         {
-            super(Id.Item.ATTACK_POTION.ordinal(), "Attack Potion",R.drawable.potion,
+            super(Id.Item.ATTACK_POTION.ordinal(), "Attack Potion",R.drawable.attack_potion,
                     300, 200, null, 1);
         }
     }
@@ -45,7 +45,7 @@ public class Potion extends Item {
     {
         public DefensePotion()
         {
-            super(Id.Item.DEFENSE_POTION.ordinal(), "Defense Potion", R.drawable.potion,
+            super(Id.Item.DEFENSE_POTION.ordinal(), "Defense Potion", R.drawable.defense_potion,
                     200, 100, null, 1);
         }
     }
@@ -54,7 +54,7 @@ public class Potion extends Item {
     {
         public SpeedPotion()
         {
-            super(Id.Item.SPEED_POTION.ordinal(), "Speed Potion",R.drawable.potion,
+            super(Id.Item.SPEED_POTION.ordinal(), "Speed Potion",R.drawable.speed_potion,
                     100, 50, null, 1);
         }
     }

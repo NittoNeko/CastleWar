@@ -78,7 +78,9 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         holder.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                singlePlayerActivity.startLevel(level, new Unit[]{new Ally.SwordMan(), new Ally.Mage(), new Ally.Archer()}, new Item[]{new Potion.HpPotion(), new Potion.AttackPotion()});
+                singlePlayerActivity.startLevel(level,
+                        new Unit[]{new Ally.SwordMan(), new Ally.Mage(), new Ally.Archer()},
+                        new Item[]{new Potion.DefensePotion(), new Potion.HpPotion(), new Potion.AttackPotion(), new Potion.SpeedPotion()});
             }
         });
     }

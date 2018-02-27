@@ -40,6 +40,7 @@ abstract public class Unit extends GameObject{
     private AtomicBoolean isLeft = new AtomicBoolean();
     public final AtomicInteger cost = new AtomicInteger();
     private boolean isPlayer1;
+    private boolean isReady;
     private Terrain.Tile currentTile;
     private Terrain.Tile moveTile;
     private Terrain.Tile actionTile;
@@ -69,6 +70,7 @@ abstract public class Unit extends GameObject{
         this.moveTile = null;
         this.actionTile = null;
         this.isAttacker = true;
+        this.isReady = true;
     }
 
     @Override
@@ -296,6 +298,14 @@ abstract public class Unit extends GameObject{
         } else {
             isLeft.set(true);
         }
+    }
+
+    public boolean isReady() {
+        return isReady;
+    }
+
+    public void setReady(boolean ready) {
+        isReady = ready;
     }
 
     public void setLeft(boolean isLeft) {
