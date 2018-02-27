@@ -2,6 +2,7 @@ package ca.uwaterloo.cw.castlewar.Activity;
 
 import android.app.Activity;
 import android.graphics.Point;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.concurrent.ExecutionException;
 
+import ca.uwaterloo.cw.castlewar.Model.Potion;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
@@ -32,7 +34,7 @@ public class MainActivity extends AppCompatActivity{
                     Point point = new Point();
                     display.getSize(point);
                     SystemData.initializeConfig(MainActivity.this.getApplicationContext(), point.x, point.y);
-                    SystemData.setIfOutput(true);
+                    SystemData.setIfOutput(false);
                     UserProfile.readFromDatabase();
                 }
             }).get();
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
     }
 
     public void enterSinglePlayer(View view) {

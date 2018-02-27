@@ -48,9 +48,12 @@ public class Level extends GameObject {
     private Reward[] rewards;
     private Terrain terrain;
     private int coinRewards;
-    private int maxCost;
+    private int maxUnit;
+    private int maxItem;
+    private int currentWave;
+    private int interval;
 
-    public Level(int id, String name, int resource, Item[] items, Unit[] enemies, Reward[] rewards, Terrain terrain, int coinRewards, int areas, int maxCost)
+    public Level(int id, String name, int resource, Item[] items, Unit[] enemies, Reward[] rewards, Terrain terrain, int coinRewards, int maxUnit, int maxItem, int interval)
     {
         super(id, name, resource);
         this.items = items;
@@ -58,8 +61,22 @@ public class Level extends GameObject {
         this.rewards = rewards;
         this.terrain = terrain;
         this.coinRewards = coinRewards;
-        this.maxCost = maxCost;
+        this.maxItem = maxItem;
+        this.maxUnit = maxUnit;
+        this.interval = interval;
+        this.currentWave = 0;
     }
+
+    public boolean isInterval(){
+        if (currentWave >= interval){
+            currentWave = 0;
+            return true;
+        } else{
+            currentWave++;
+            return false;
+        }
+    }
+
     public String getDisplayableEnemies()
     {
         String displayableEnemies = "";
@@ -118,8 +135,12 @@ public class Level extends GameObject {
         return coinRewards;
     }
 
-    public int getMaxCost() {
-        return maxCost;
+    public int getMaxUnit() {
+        return maxUnit;
+    }
+
+    public int getMaxItem() {
+        return maxItem;
     }
 
     public static class Level_1_1 extends Level
@@ -137,7 +158,7 @@ public class Level extends GameObject {
                             new Reward(SystemData.createItem(Id.Item.DEFENSE_POTION.ordinal()), 1, 0)
                     },
                     SystemData.createTerrain(Id.Terrain.FOREST.ordinal()),
-                    500, 5, 2);
+                    500, 1, 1, 3);
         }
     }
 
@@ -155,7 +176,7 @@ public class Level extends GameObject {
                             new Reward(SystemData.createItem(Id.Item.DEFENSE_POTION.ordinal()), 1, 0)
                     },
                     SystemData.createTerrain(Id.Terrain.FOREST.ordinal()),
-                    500, 5, 2);
+                    500, 2, 1,2);
         }
     }
 }

@@ -23,6 +23,7 @@ public class Castle extends Unit {
         Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
         float ratio = 500f / (float) original.getWidth();
         setPortrait(createScaledBitmap(original, 500, (int) (original.getHeight() * ratio), false));
+        setY(SystemData.getGroundLine() - getPortrait().getHeight());
     }
 
     public static class HolyCastle extends Castle

@@ -1,10 +1,17 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
+import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.renderscript.Sampler;
 
 import java.lang.String;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import ca.uwaterloo.cw.castlewar.Activity.MultithreadGameLogic;
 
 /**
  * Created by harri on 2018/2/14.
@@ -16,9 +23,7 @@ abstract public class GameObject {
     private String description;
     private int resource;
     private Bitmap portrait;
-    private ArrayList<Bitmap> rightMovingImage;
-    private ArrayList<Bitmap> leftMovingImage;
-    private int x;
+    public final AtomicInteger x = new AtomicInteger();
     private int y;
 
     public GameObject(int id, String name, int resource) {
@@ -35,7 +40,7 @@ abstract public class GameObject {
 
     protected void createPortrait()
     {
-        this.portrait = BitmapFactory.decodeResource(SystemData.getContext().getResources(), resource);
+        this.portrait = SystemData.scaleIconBitmap(BitmapFactory.decodeResource(SystemData.getContext().getResources(), resource));
     }
 
     public String getDescription()
@@ -64,16 +69,8 @@ abstract public class GameObject {
         return name;
     }
 
-    public int getX() {
-        return x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setX(int x) {
-        this.x = x;
     }
 
     public void setY(int y) {

@@ -1,5 +1,7 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.WallpaperInfo;
 import android.content.res.Resources;
@@ -7,19 +9,29 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.Context;
 import android.graphics.Point;
+import android.renderscript.Sampler;
 import android.support.annotation.Nullable;
 import android.view.Display;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.HorizontalScrollView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.logging.Handler;
 
 
 import ca.uwaterloo.cw.castlewar.Activity.MainActivity;
+import ca.uwaterloo.cw.castlewar.Activity.MultithreadGameLogic;
 import ca.uwaterloo.cw.castlewar.R;
 
 /**
@@ -34,15 +46,16 @@ import ca.uwaterloo.cw.castlewar.R;
 public class SystemData {
     // get reference of context
     private static Context context;
-    private static BitmapFactory.Options option;
     public static final ExecutorService gameThreads = Executors.newFixedThreadPool(3);
     public static final ExecutorService oneTimeThread = Executors.newFixedThreadPool(2);
+    private static android.os.Handler handler = new android.os.Handler();
+    private static Bitmap cross;
 
     // output control
     private static boolean ifOutput = false;
 
     // game setting
-    public static final int GAME_SPEED = 24;
+    public final static int PIXEL = 100;
 
     // size of the device screen
     private static int screenWidth;
@@ -55,6 +68,7 @@ public class SystemData {
         screenWidth = x;
         screenHeight = y;
         groundLine = (int) (screenHeight * 0.75);
+        cross = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(c.getResources(), R.drawable.cross),PIXEL,PIXEL,false);
     }
 
     public static Unit createUnit(int id) {
@@ -110,6 +124,19 @@ public class SystemData {
         if (id == Id.Level.ONE_FIVE.ordinal()) return new Level.Level_1_1();
         if (id == Id.Level.ONE_SIX.ordinal()) return new Level.Level_1_2();
         return null;
+    }
+
+    public static Bitmap scaleIconBitmap(Bitmap bitmap)
+    {
+        return Bitmap.createScaledBitmap(bitmap, PIXEL, PIXEL, false);
+    }
+
+    public static Bitmap getEmptyIcon(){
+        return cross;
+    }
+
+    public static void postToUi(Runnable r){
+        handler.post(r);
     }
 
     public static int getGroundLine()

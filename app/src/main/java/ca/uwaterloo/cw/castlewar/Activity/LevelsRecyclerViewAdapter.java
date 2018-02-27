@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import ca.uwaterloo.cw.castlewar.Model.Ally;
 import ca.uwaterloo.cw.castlewar.Model.Id;
+import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.Model.Level;
 import ca.uwaterloo.cw.castlewar.Model.Potion;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
@@ -77,7 +78,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         holder.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                singlePlayerActivity.startLevel(level, new Unit[]{new Ally.SwordMan(), new Ally.Mage(), new Ally.Archer()}, new Potion[]{new Potion.HpPotion(), new Potion.AttackPotion()});
+                singlePlayerActivity.startLevel(level, new Unit[]{new Ally.SwordMan(), new Ally.Mage(), new Ally.Archer()}, new Item[]{new Potion.HpPotion(), new Potion.AttackPotion()});
             }
         });
     }

@@ -20,7 +20,6 @@ import ca.uwaterloo.cw.castlewar.R;
 
 public class SinglePlayerActivity extends AppCompatActivity {
     private MultithreadGameLogic gameLogic = null;
-    private final Handler handler = new Handler();
     private Bitmap levelBitmap = null;
 
     @Override
@@ -48,18 +47,29 @@ public class SinglePlayerActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public void startLevel(final Level level, final Unit[] unitInStockPlayer1, final Item[] itemInStockPlayer1) throws InterruptedException, ExecutionException {
+    public void startLevel(final Level level, final Unit[] unitInStockPlayer1, final Item[] itemInStockPlayer1) {
         setContentView(R.layout.game_screen);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
+        ProgressBar progressBar = findViewById(R.id.GameLoading);
         progressBar.setVisibility(View.VISIBLE);
-        SystemData.oneTimeThread.submit(new Runnable() {
-            @Override
-            public void run() {
-                gameLogic = new MultithreadGameLogic(SinglePlayerActivity.this, handler,level, unitInStockPlayer1, itemInStockPlayer1);
-                gameLogic.onResume();
-            }
-        }).get();
+        try {
+            SystemData.oneTimeThread.submit(new Runnable() {
+                @Override
+                public void run() {
+                    gameLogic = new MultithreadGameLogic(SinglePlayerActivity.this, level, unitInStockPlayer1, itemInStockPlayer1);
+                }
+            }).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         progressBar.setVisibility(View.INVISIBLE);
+        gameLogic.onResume();
     }
     public void onResume()
     {

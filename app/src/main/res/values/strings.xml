@@ -25,4 +25,7 @@
     <string name="RightAttack">:Attack</string>
     <string name="RightDefense">:Defense</string>
     <string name="RightSpeed">:Speed</string>
+    <string name="EndTurn">End Turn</string>
+    <string name="Redraw">Redraw</string>
+    <string name="Draw">Draw</string>
 </resources>

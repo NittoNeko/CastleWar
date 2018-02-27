@@ -2,12 +2,14 @@ package ca.uwaterloo.cw.castlewar.Model;
 
 import android.graphics.Bitmap;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by harri on 2018/2/15.
  */
 
 abstract public class Item extends GameObject{
-    private int cost;
+    public final AtomicInteger cost = new AtomicInteger();
     private int buyPrice;
     private int sellPrice;
 
@@ -16,15 +18,11 @@ abstract public class Item extends GameObject{
         super(id, name, resource);
         this.buyPrice = buyPrice;
         this.sellPrice = sellPrice;
-        this.cost = cost;
+        this.cost.set(cost);
     }
 
     public void use()
     {
 
-    }
-
-    public int getCost() {
-        return cost;
     }
 }

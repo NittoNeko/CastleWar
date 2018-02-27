@@ -1,11 +1,21 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
 
+import android.animation.ValueAnimator;
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.renderscript.Sampler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import ca.uwaterloo.cw.castlewar.Activity.MultithreadGameLogic;
 import ca.uwaterloo.cw.castlewar.R;
 
 /**
@@ -15,24 +25,23 @@ import ca.uwaterloo.cw.castlewar.R;
 abstract public class Unit extends GameObject{
     public final static int ROW = 4;
     public final static int COLUMN = 3;
-    public final static int PIXEL = 100;
-    private Integer hp;
-    private Integer maxHp;
-    private Integer attack;
-    private Integer defense;
-    private Integer speed;
-    private Integer move;
+    public final AtomicInteger hp = new AtomicInteger();
+    public final AtomicInteger maxHp = new AtomicInteger();
+    public final AtomicInteger attack = new AtomicInteger();
+    public final AtomicInteger defense = new AtomicInteger();
+    public final AtomicInteger speed = new AtomicInteger();
+    public int move;
     private int minRange;
     private int maxRange;
-    private int moveSpeed;
     private boolean isIndexLeft;
+    private boolean isAttacker;
     private int currentIndex;
-    private boolean isLeft;
-    private Integer cost;
+    private AtomicBoolean isLeft = new AtomicBoolean();
+    public final AtomicInteger cost = new AtomicInteger();
     private boolean isPlayer1;
+    private Terrain.Tile currentTile;
     private Terrain.Tile moveTile;
     private Terrain.Tile actionTile;
-    private Unit aim;
     private ArrayList<Bitmap> rightMovingImage;
     private ArrayList<Bitmap> leftMovingImage;
     private int movingImageNum;
@@ -40,42 +49,47 @@ abstract public class Unit extends GameObject{
 
     public Unit(int id, String name, int resource, int hp, int maxHp, int attack, int defense, int speed, int move, int minRange, int maxRange, int cost) {
         super(id, name, resource);
-        this.hp = hp;
-        this.maxHp = maxHp;
-        this.attack = attack;
-        this.defense = defense;
-        this.speed = speed;
-        this.move = move;
         this.minRange = minRange;
         this.maxRange = maxRange;
-        this.cost = cost;
+        this.hp.set(hp);
+        this.maxHp.set(maxHp);
+        this.attack.set(attack);
+        this.defense.set(defense);
+        this.speed.set(speed);
+        this.move = move;
+        this.cost.set(cost);
         this.movingImageNum = 3;
         this.rightMovingImage = new ArrayList<>(movingImageNum);
         this.leftMovingImage = new ArrayList<>(movingImageNum);
-        this.aim = null;
-        this.isLeft = false;
-        this.moveSpeed = 5;
         this.isPlayer1 = true;
+        this.isLeft.set(!isPlayer1);
         this.currentIndex = 0;
         this.isIndexLeft = true;
         this.moveTile = null;
         this.actionTile = null;
+        this.isAttacker = true;
     }
 
     @Override
     protected void createPortrait() {
         Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
-        setPortrait(Bitmap.createBitmap(original, 32, 0, 32, 32));
+        int width = original.getWidth() / COLUMN;
+        int height = original.getHeight() / ROW;
+        setPortrait(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 1 * width,0,width,height)));
+        original.recycle();
     }
 
     protected void createMovingImage() {
         Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
-        addRightMovingImage(Bitmap.createBitmap(original, 0, 64, 32, 32));
-        addRightMovingImage(Bitmap.createBitmap(original, 32, 64, 32, 32));
-        addRightMovingImage(Bitmap.createBitmap(original, 64, 64, 32, 32));
-        addLeftMovingImage(Bitmap.createBitmap(original, 0, 32, 32, 32));
-        addLeftMovingImage(Bitmap.createBitmap(original, 32, 32, 32, 32));
-        addLeftMovingImage(Bitmap.createBitmap(original, 64, 32, 32, 32));
+        int width = original.getWidth() / COLUMN;
+        int height = original.getHeight() / ROW;
+        addLeftMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 0 * width,1 * height,width,height)));
+        addLeftMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 1 * width,1 * height,width,height)));
+        addLeftMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 2 * width,1 * height,width,height)));
+        addRightMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 0 * width,2 * height,width,height)));
+        addRightMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 1 * width,2 * height,width,height)));
+        addRightMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 2 * width,2 * height,width,height)));
+        original.recycle();
     }
 
     public Bitmap getMovingImage()
@@ -85,7 +99,7 @@ abstract public class Unit extends GameObject{
         else if (leftMovingImage.isEmpty())
             createMovingImage();
 
-        if (isLeft)
+        if (isLeft.get())
             return leftMovingImage.get(currentIndex);
         else
             return rightMovingImage.get(currentIndex);
@@ -104,16 +118,125 @@ abstract public class Unit extends GameObject{
         setY(SystemData.getGroundLine() - image.getHeight());
     }
 
-    // common way to take actions
-    // go as near as possible to the first enemy who is the nearest to ally castle
-    //
-    public void decideStrategy(Terrain terrain)
+    public void clearStrategy()
     {
-        // find first available enemy who is the nearest to ally castle
-
+        actionTile = null;
+        moveTile = null;
     }
 
+    // common way to take actions
+    // go as near as possible to the first enemy who is the nearest to ally castle
+    // if close enough, set aim to that
+    // if not, attack nearby enemies
+    public void decideStrategy(Terrain terrain) {
 
+        boolean isAimleft = false;
+        actionTile = null;
+        moveTile = null;
+
+        // find first enemy
+        outerloop1:
+        for (Terrain.BattleField battleField : this.isPlayer1 ? terrain.getBattleFields() : terrain.getReversedBattlefield()){
+            for (Terrain.Tile tile : this.isPlayer1 ? battleField.getTiles() : battleField.getReversedTiles()){
+                if (!tile.isAvailable()){
+                    if (tile.getUnit().isPlayer1() != isPlayer1){
+                        actionTile = tile;
+                        break outerloop1;
+                    }
+                }
+            }
+        }
+
+        // if no such target, just move forward
+        if (actionTile == null) {
+            for (Terrain.BattleField battleField : !this.isPlayer1 ? terrain.getBattleFields() : terrain.getReversedBattlefield()){
+                for (Terrain.Tile tile : this.isPlayer1 ? battleField.getTiles() : battleField.getReversedTiles()){
+                    if (tile.isAvailable()
+                            && Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.move) {
+                        moveTile = tile;
+                        return;
+                    }
+                }
+            }
+        }
+        // if exist, get its direction
+        else {
+            if (actionTile.getParentId() < this.getCurrentTile().getParentId()){
+                isAimleft = true;
+            }
+            else if (actionTile.getParentId() > this.getCurrentTile().getParentId()){
+                isAimleft = false;
+            } else{
+                if (isPlayer1) isAimleft = true;
+                else{
+                    isAimleft = false;
+                }
+            }
+        }
+
+        // find first movable and attackable tile near enemy castle
+        outerloop2:
+        for (Terrain.BattleField battleField : !this.isPlayer1 ? terrain.getBattleFields() : terrain.getReversedBattlefield()){
+            for (Terrain.Tile tile : this.isPlayer1 ? battleField.getTiles() : battleField.getReversedTiles()){
+                if (tile.isAvailable()){
+                    if (Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.move
+                            && Math.abs(actionTile.getParentId() - this.getCurrentTile().getParentId()) <= this.maxRange
+                            && Math.abs(actionTile.getParentId() - this.getCurrentTile().getParentId()) >= this.minRange){
+                        moveTile = tile;
+                        break outerloop2;
+                    }
+                }
+            }
+        }
+
+        // if no such tile, just move toward according to the direction
+        if (moveTile == null){
+            actionTile = null;
+            outerloop3:
+            for (Terrain.BattleField battleField : isAimleft ? terrain.getBattleFields() : terrain.getReversedBattlefield()){
+                for (Terrain.Tile tile : !isAimleft ? battleField.getTiles() : battleField.getReversedTiles()){
+                    if (tile.isAvailable()){
+                        if (Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.move
+                                && (isAimleft ? tile.getParentId() <= this.getCurrentTile().getParentId() : tile.getParentId() >= this.getCurrentTile().getParentId())){
+                            moveTile = tile;
+                            break outerloop3;
+                        }
+                    }
+                }
+            }
+        } else {
+            return;
+        }
+
+        // if still no such tile the unit can move to, stay and attack nearby enemy
+        // no matter if action tile exists, find nearby enemy
+        for (Terrain.BattleField battleField : this.isPlayer1 ? terrain.getBattleFields() : terrain.getReversedBattlefield()){
+            for (Terrain.Tile tile : this.isPlayer1 ? battleField.getTiles() : battleField.getReversedTiles()) {
+                if (!tile.isAvailable()){
+                    if (tile.getUnit().isPlayer1() != this.isPlayer1){
+                        if (Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.maxRange
+                                && Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) >= this.minRange){
+                            actionTile = tile;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // take in attacker and damage as input
+    // return current hp
+    public int takeDamage(Unit attacker, int damage){
+        int currentHp = this.hp.get() - damage;
+        if (currentHp < 0) currentHp = 0;
+        return currentHp;
+    }
+
+    public boolean isDead(){
+        if (hp.get() <= 0) return true;
+        else return false;
+    }
 
     public void animate()
     {
@@ -129,20 +252,24 @@ abstract public class Unit extends GameObject{
             currentIndex++;
     }
 
+    public void changeDirection(Terrain.Tile tile){
+        if (tile.getX() > this.currentTile.getX()){
+            isLeft.set(false);
+        } else {
+            isLeft.set(true);
+        }
+    }
+
+    public void setLeft(boolean isLeft) {
+        this.isLeft.set(isLeft);
+    }
+
     public boolean isPlayer1() {
         return isPlayer1;
     }
 
     public void setPlayer1(boolean player1) {
         isPlayer1 = player1;
-    }
-
-    synchronized public Integer getSpeed() {
-        return speed;
-    }
-
-    public int getMove() {
-        return move;
     }
 
     public int getMinRange() {
@@ -153,42 +280,29 @@ abstract public class Unit extends GameObject{
         return maxRange;
     }
 
-    synchronized public Integer getHp() {
-        return hp;
+    public boolean isAttacker() {
+        return isAttacker;
     }
 
-    public Integer getMaxHp() {
-        return maxHp;
+    public void setAttacker(boolean attacker) {
+        isAttacker = attacker;
     }
 
-    synchronized public Integer getAttack() {
-        return attack;
+    public Terrain.Tile getCurrentTile() {
+        return currentTile;
     }
 
-    synchronized public Integer getDefense() {
-        return defense;
+    public void setCurrentTile(Terrain.Tile currentTile) {
+        this.currentTile = currentTile;
     }
 
-    synchronized public void setHp(int hp) {
-        this.hp = hp;
+    public Terrain.Tile getMoveTile() {
+        return moveTile;
     }
 
-    synchronized public void setAttack(int attack) {
-        this.attack = attack;
+    public Terrain.Tile getActionTile() {
+        return actionTile;
     }
-
-    synchronized public void setDefense(int defense) {
-        this.defense = defense;
-    }
-
-    synchronized public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public Integer getCost() {
-        return cost;
-    }
-
 
     public ArrayList<Buff> getCurrentBuffs() {
         return currentBuffs;

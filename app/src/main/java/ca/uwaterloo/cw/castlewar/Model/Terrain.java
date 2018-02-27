@@ -19,17 +19,23 @@ public class Terrain extends GameObject {
         private int id;
         private int x;
         private int y;
-        private BattleField battleField;
+        private BattleField parent;
 
         public Tile(int id, int x, int y, BattleField battleField) {
             this.id = id;
             this.x = x;
             this.y = y;
-            this.battleField = battleField;
+            this.parent = battleField;
+            this.unit = null;
         }
 
-        public BattleField getBattleField() {
-            return battleField;
+        public BattleField getParent() {
+            return parent;
+        }
+
+        public int getParentId()
+        {
+            return parent.getId();
         }
 
         public int getId() {
@@ -50,6 +56,10 @@ public class Terrain extends GameObject {
             else return false;
         }
 
+        public Unit getUnit() {
+            return unit;
+        }
+
         public void setUnit(Unit unit)
         {
             this.unit = unit;
@@ -61,24 +71,36 @@ public class Terrain extends GameObject {
         private int length;
         private Tile[] tiles;
         private int tileNum;
+        private Terrain terrain;
 
-        public BattleField(int id, int length) {
+        public BattleField(int id, int length, Terrain terrain) {
             this.id = id;
             this.length = length;
-            this.tileNum = length / Ally.PIXEL;
+            this.tileNum = length / SystemData.PIXEL;
             this.tiles = new Tile[tileNum];
-            for (int i = 0; i < length / Ally.PIXEL; ++i)
+            this.terrain = terrain;
+            for (int i = 0; i < length / SystemData.PIXEL; ++i)
             {
-                this.tiles[i] = new Tile(i, id * length + i * Ally.PIXEL, SystemData.getGroundLine() - Ally.PIXEL, this);
+                if (id == 0) this.tiles[i] = new Tile(i, id * length / 2 + i * SystemData.PIXEL, SystemData.getGroundLine() - SystemData.PIXEL, this);
+                else if (id == terrain.battleFieldNum - 1) this.tiles[i] = new Tile(i, (id + 1) * length / 2 + i * SystemData.PIXEL, SystemData.getGroundLine() - SystemData.PIXEL, this);
+                else this.tiles[i] = new Tile(i, (id + 1) * length + i * SystemData.PIXEL, SystemData.getGroundLine() - SystemData.PIXEL, this);
             }
         }
 
-        public Tile findFirstAvailableTile()
+        public Tile[] getReversedTiles()
         {
-            for (Tile tile : tiles)
-            {
-                if (!tile.isAvailable())
+            Tile[] reverse = new Tile[tiles.length];
+            for (int i = tiles.length - 1; i >= 0; --i)
+                reverse[i] = tiles[tiles.length - i - 1];
+            return reverse;
+        }
+
+        public Tile findFirstAvailableTile(boolean isPlayer1)
+        {
+            for (Tile tile : isPlayer1 ? tiles : getReversedTiles()){
+                if (tile.isAvailable()){
                     return tile;
+                }
             }
             return null;
         }
@@ -86,9 +108,10 @@ public class Terrain extends GameObject {
         public int getAvailableTileNum()
         {
             int num = 0;
-            for (int i = 0; i < tileNum; ++i)
-            {
-                if (!tiles[i].isAvailable()) num++;
+            for (Tile tile : tiles) {
+                if (tile.isAvailable()) {
+                    num++;
+                }
             }
             return num;
         }
@@ -120,8 +143,8 @@ public class Terrain extends GameObject {
         battleFields = new BattleField[battleFieldNum];
         for (int i = 0; i < battleFieldNum; ++i)
         {
-            if (i == 0 || i == battleFieldNum - 1) battleFields[i] = new BattleField(i, battleFieldLength * 2);
-            battleFields[i] = new BattleField(i, battleFieldLength);
+            if (i == 0 || i == battleFieldNum - 1) battleFields[i] = new BattleField(i, battleFieldLength * 2, this);
+            else battleFields[i] = new BattleField(i, battleFieldLength, this);
         }
     }
 
@@ -148,11 +171,19 @@ public class Terrain extends GameObject {
         setPortrait(createScaledBitmap(original, battleFieldsWidth, (int) (ratio * SystemData.getScreenHeight()), false));
     }
 
+    public BattleField[] getReversedBattlefield()
+    {
+        BattleField[] reverse = new BattleField[battleFieldNum];
+        for (int i = battleFieldNum - 1; i >= 0; --i)
+            reverse[i] = battleFields[battleFieldNum - i - 1];
+        return reverse;
+    }
+
     public static class Forest extends Terrain
     {
         public Forest() {
             super(Id.Terrain.FOREST.ordinal(), "Forest", R.drawable.forest_ground, 500, 5);
-            setY(SystemData.getGroundLine() - 30);
+            setY(SystemData.getGroundLine() - 50);
         }
     }
 }

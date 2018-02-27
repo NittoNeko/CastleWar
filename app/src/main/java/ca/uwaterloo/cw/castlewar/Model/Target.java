@@ -12,6 +12,8 @@ import static android.graphics.Bitmap.createScaledBitmap;
  */
 
 public class Target extends GameObject {
+    private boolean visible;
+
     public Target() {
         super(0,"Target", R.drawable.target);
     }
@@ -19,7 +21,15 @@ public class Target extends GameObject {
     @Override
     protected void createPortrait() {
         Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
-        setPortrait(createScaledBitmap(original, Unit.PIXEL, Unit.PIXEL, false));
+        setPortrait(createScaledBitmap(original, SystemData.PIXEL, SystemData.PIXEL, false));
         setY(SystemData.getGroundLine() - getPortrait().getHeight());
+    }
+
+    synchronized public boolean isVisible(){
+        return visible;
+    }
+
+    synchronized public void setVisible(boolean visible){
+        this.visible = visible;
     }
 }

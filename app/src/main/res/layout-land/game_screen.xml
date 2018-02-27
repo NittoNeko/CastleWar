@@ -7,7 +7,7 @@
     tools:context="ca.uwaterloo.cw.castlewar.Activity.SinglePlayerActivity">
 
     <ProgressBar
-        android:id="@+id/ProgressBar"
+        android:id="@+id/GameLoading"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,14 +27,15 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="8dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/Cost"
+            android:id="@+id/cost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -43,8 +44,8 @@
             android:textSize="30sp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal">
 
@@ -62,40 +63,41 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <ToggleButton
+                <ImageButton
                     android:id="@+id/Unit1"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
 
-                <ToggleButton
+                <ImageButton
                     android:id="@+id/Unit2"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
 
-                <ToggleButton
+                <ImageButton
                     android:id="@+id/Unit3"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
 
-                <ToggleButton
+                <ImageButton
                     android:id="@+id/Unit4"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
 
-                <ToggleButton
+                <ImageButton
                     android:id="@+id/Unit5"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -105,42 +107,144 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <ToggleButton
+                <ImageButton
                     android:id="@+id/Item1"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
 
-                <ToggleButton
+                <ImageButton
                     android:id="@+id/Item2"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
 
-                <ToggleButton
-                    android:id="@+id/item3"
+                <ImageButton
+                    android:id="@+id/Item3"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
 
-                <ToggleButton
+                <ImageButton
                     android:id="@+id/Item4"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
 
-                <ToggleButton
+                <ImageButton
                     android:id="@+id/Item5"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_weight="1"
-                    android:text="ToggleButton" />
+                    app:srcCompat="@drawable/target" />
 
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/UnitCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/unitCost1"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/unitCost2"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/unitCost3"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView" />
+
+                <TextView
+                    android:id="@+id/unitCost4"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/unitCost5"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ItemCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/itemCost1"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/itemCost2"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/itemCost3"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/itemCost4"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/itemCost5"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_weight="1"
+                    android:text="TextView" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -151,25 +255,28 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/Reset"
+                android:id="@+id/Redraw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="Button"
+                tools:text="@string/Redraw" />
 
             <Button
-                android:id="@+id/Fight"
+                android:id="@+id/EndTurn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="Button"
+                tools:text="@string/EndTurn" />
 
             <Button
-                android:id="@+id/Shoot"
+                android:id="@+id/Draw"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="Button"
+                tools:text="@string/Draw" />
         </LinearLayout>
 
     </LinearLayout>
@@ -184,7 +291,7 @@
         android:background="@drawable/combat_board"
         android:orientation="horizontal"
         android:padding="40dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

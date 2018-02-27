@@ -37,4 +37,20 @@ public class Id {
     {
         FOREST,
     }
+
+    public enum GameState
+    {
+        PREPARE, MOVING, COMBAT
+    }
+
+    public enum Thread
+    {
+        DATA, SCREEN, ANIME
+    }
+
+    public enum CombatBoard
+    {
+        NAME, HP, ATTACK, DEFENSE, SPEED
+    }
+
 }
