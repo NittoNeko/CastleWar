@@ -80,12 +80,13 @@ public class MultithreadGameLogic {
         private HashMap<Boolean, Unit> units = new HashMap<>(2);
         private final int MAX_TURN = 5;
         private Boolean[] turns;
+        private int distance;
 
         public Combat(Unit attacker, Unit defender) {
             this.units.put(ATTACKER,attacker);
             this.units.put(DEFENDER,defender);
             this.turns = new Boolean[MAX_TURN];
-
+            this.distance = Math.abs(attacker.getCurrentTile().getParentId() - defender.getCurrentTile().getParentId());
             // initialize turns
             for (int i = 0; i < MAX_TURN; ++i) {
                 turns[i] = i % 2 == 0 ? ATTACKER : DEFENDER;
@@ -104,14 +105,18 @@ public class MultithreadGameLogic {
             // execute turns
             for (Boolean isAttacker : turns){
                 if (isAttacker != null){
-                    // prepare attack
-                    int damage = units.get(isAttacker).attack.get() - units.get(!isAttacker).defense.get();
-                    if (damage < 0) damage = 0;
+                    if (!isAttacker && units.get(!isAttacker) instanceof  Castle) continue;
+                    if (units.get(isAttacker).getMaxRange() < distance || units.get(isAttacker).getMinRange() > distance) continue;
+                    int damage;
+                    int hpAfterDamage;
 
-
+                    damage = units.get(isAttacker).attack(units.get(!isAttacker));
                     // take damage
-                    int hpAfterDamage = units.get(!isAttacker).takeDamage(units.get(isAttacker), damage);
-                    animatePost(units.get(!isAttacker).hp.get(), hpAfterDamage, units.get(!isAttacker).hp, !isAttacker ? attackerInfo.get(Id.CombatBoard.HP) : defenderInfo.get(Id.CombatBoard.HP));
+                    hpAfterDamage = hpAfterDamage = units.get(!isAttacker).takeDamage(units.get(isAttacker), damage);
+                    animatePostHp(units.get(!isAttacker).hp.get(),
+                            hpAfterDamage, units.get(!isAttacker).hp,
+                            units.get(!isAttacker).maxHp.get(),
+                            !isAttacker ? attackerInfo.get(Id.CombatBoard.HP) : defenderInfo.get(Id.CombatBoard.HP));
 
                     if (units.get(true).isDead() || units.get(false).isDead()) return;
                 }
@@ -334,7 +339,9 @@ public class MultithreadGameLogic {
                     // check death
                     unitInCombatLock.writeLock().lock();
                     for (Unit looper : unitInCombat.get(true)){
-                        if (looper.isDead()) unitInCombat.get(true).remove(looper);
+                        if (looper.isDead()) {
+                            unitInCombat.get(true).remove(looper);
+                        }
                     }
                     for (Unit looper : unitInCombat.get(false)){
                         if (looper.isDead()) unitInCombat.get(false).remove(looper);
@@ -553,11 +560,11 @@ public class MultithreadGameLogic {
     private long screenSleepTime;
     private final long MILISECOND = 1000;
     private final float SCROLL_PIXEL_PER_SECOND = 1000; // speed of screen
-    private final float PIXEL_PER_SECOND = 500; // speed of character
-    private final float VALUE_PER_SECOND = 20;  // speed of text
-    private final float ANIME_PER_SECOND = 10;  // this is the speed of sending posts to ui thread from other threads than canvas thread
+    private final float PIXEL_PER_SECOND = 750; // speed of character
+    private final float VALUE_PER_SECOND = 10;  // speed of text
+    private final float ANIME_PER_SECOND = 1;  // this is the speed of sending posts to ui thread from other threads than canvas thread
     private final float LOGIC_PER_SECOND = 30;  // this is the speed of updates of normal background thread
-    private final float CONSTANT_PER_SECOND = 15; // this is the speed of updates constant anime, music and so on
+    private final float CONSTANT_PER_SECOND = 5; // this is the speed of updates constant anime, music and so on
     private final long ANIME_SLEEP_TIME = MILISECOND / (long) ANIME_PER_SECOND;
     private final long LOGIC_SLEEP_TIME = MILISECOND / (long) LOGIC_PER_SECOND;
     private final long CONSTANT_SLEEP_TIME = MILISECOND / (long) CONSTANT_PER_SECOND;
@@ -659,7 +666,9 @@ public class MultithreadGameLogic {
         this.itemInStock.put(true, itemInStockPlayer1);
         this.itemInStock.put(false, itemInStockPlayer1);
         this.cost.put(true, UserProfile.getMaxCost());
+        this.cost.put(false, UserProfile.getMaxCost());
         this.maxCost.put(true, UserProfile.getMaxCost());
+        this.maxCost.put(false, UserProfile.getMaxCost());
         this.isPlayer1 = true;
         for (int i = 0; i < CARD_NUM; ++i){
             generateItemCard(i);
@@ -953,6 +962,42 @@ public class MultithreadGameLogic {
         }
     }
 
+    public void animatePostHp(int start, int end, final AtomicInteger value, final int maxHp, final TextView textView) {
+        boolean isPositive = end >= start ? true : false;
+        float delta = (float) Math.abs((end - start));
+        float updateTimes = delta / VALUE_PER_SECOND  * ANIME_PER_SECOND;
+        float cache = start;
+        float increment = delta / updateTimes;
+
+        while (isPositive ? cache < end : cache > end) {
+            final int copy = (int) cache;
+            value.set(copy);
+            SystemData.postToUi(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setText(value.toString() + "/" + maxHp);
+                }
+            });
+
+            cache = isPositive ? cache + increment : cache - increment;
+
+            if (isPositive ? cache > end : cache < end) {
+                cache = end;
+            }
+            try {
+                Thread.sleep(ANIME_SLEEP_TIME);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        value.set(end);
+        SystemData.postToUi(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText(value.toString() + "/" + maxHp);
+            }
+        });
+    }
 
     public void animatePost(int start, int end, final AtomicInteger value, final TextView textView) {
         boolean isPositive = end >= start ? true : false;
@@ -1004,8 +1049,8 @@ public class MultithreadGameLogic {
         while (isPositive ? cache < end : cache > end) {
             final int copy = (int) cache;
             value.set(copy);
-            if (copy > screenView.getScrollX() + SystemData.getScreenWidth() * 0.9 ||
-                    copy < screenView.getScrollX() + SystemData.getScreenWidth() * 0.1) screenFocusOn(gameObject);
+            if (copy > screenView.getScrollX() + SystemData.getScreenWidth() * 0.95 ||
+                    copy < screenView.getScrollX() + SystemData.getScreenWidth() * 0.05) screenFocusOn(gameObject);
 
             cache = isPositive ? cache + increment : cache - increment;
 
@@ -1020,8 +1065,8 @@ public class MultithreadGameLogic {
         }
 
         // last time no need to sleep, no increment, set to end directly
-        if (end > screenView.getScrollX() + SystemData.getScreenWidth() * 0.8 ||
-                end < screenView.getScrollX() + SystemData.getScreenWidth() * 0.2) screenFocusOn(gameObject);
+        if (end > screenView.getScrollX() + SystemData.getScreenWidth() * 0.95 ||
+                end < screenView.getScrollX() + SystemData.getScreenWidth() * 0.05) screenFocusOn(gameObject);
         value.set(end);
     }
 

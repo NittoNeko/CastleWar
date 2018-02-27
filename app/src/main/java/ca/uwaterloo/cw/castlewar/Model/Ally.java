@@ -19,7 +19,7 @@ abstract public class Ally extends Unit {
     public static class Archer extends Unit {
         public Archer() {
             super(Id.Unit.ARCHER.ordinal(), "Archer", R.drawable.archer,
-                    50, 50, 30, 10, 10, 2, 1, 2, 1);
+                    50, 50, 30, 10, 10, 1, 1, 1, 1);
         }
 
     }

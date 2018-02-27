@@ -265,6 +265,13 @@ abstract public class Unit extends GameObject{
         }
     }
 
+    public int attack(Unit defender){
+        // prepare attack
+        int damage = this.attack.get() - defender.defense.get();
+        if (damage < 0) damage = 0;
+        return damage;
+    }
+
     // take in attacker and damage as input
     // return current hp
     public int takeDamage(Unit attacker, int damage){
@@ -274,7 +281,10 @@ abstract public class Unit extends GameObject{
     }
 
     public boolean isDead(){
-        if (hp.get() <= 0) return true;
+        if (hp.get() <= 0) {
+            this.getCurrentTile().setUnit(null);
+            return true;
+        }
         else return false;
     }
 
