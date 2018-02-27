@@ -49,27 +49,13 @@ public class SinglePlayerActivity extends AppCompatActivity {
 
     public void startLevel(final Level level, final Unit[] unitInStockPlayer1, final Item[] itemInStockPlayer1) {
         setContentView(R.layout.game_screen);
-        ProgressBar progressBar = findViewById(R.id.GameLoading);
-        progressBar.setVisibility(View.VISIBLE);
-        try {
-            SystemData.oneTimeThread.submit(new Runnable() {
-                @Override
-                public void run() {
-                    gameLogic = new MultithreadGameLogic(SinglePlayerActivity.this, level, unitInStockPlayer1, itemInStockPlayer1);
-                }
-            }).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        progressBar.setVisibility(View.INVISIBLE);
-        gameLogic.onResume();
+        SystemData.oneTimeThread.submit(new Runnable() {
+            @Override
+            public void run() {
+                gameLogic = new MultithreadGameLogic(SinglePlayerActivity.this, level, unitInStockPlayer1, itemInStockPlayer1);
+                gameLogic.onFirstStart();
+            }
+        });
     }
     public void onResume()
     {

@@ -15,6 +15,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -179,7 +180,8 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textAlignment="center" />
 
                 <TextView
                     android:id="@+id/unitCost4"
@@ -242,7 +244,8 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textAlignment="center" />
             </LinearLayout>
 
         </LinearLayout>
@@ -259,7 +262,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button"
+                android:text="@string/Redraw"
                 tools:text="@string/Redraw" />
 
             <Button
@@ -267,7 +270,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button"
+                android:text="@string/EndTurn"
                 tools:text="@string/EndTurn" />
 
             <Button
@@ -275,7 +278,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Button"
+                android:text="@string/Draw"
                 tools:text="@string/Draw" />
         </LinearLayout>
 
@@ -298,7 +301,7 @@
 
         <LinearLayout
             android:id="@+id/AttackerTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -308,37 +311,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
+                android:text="@string/Name"
                 android:textAlignment="textEnd"
-                android:textSize="18sp"
-                tools:text="@string/Name" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/AttackerTitleHp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
+                android:text="@string/Hp"
                 android:textAlignment="textEnd"
-                android:textSize="18sp"
-                tools:text="@string/Hp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/AttackerTitleAttack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
+                android:text="@string/Attack"
                 android:textAlignment="textEnd"
-                android:textSize="18sp"
-                tools:text="@string/Attack" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/AttackerTitleDefense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
+                android:text="@string/Defense"
                 android:textAlignment="textEnd"
                 android:textSize="18sp"
                 tools:text="@string/Defense" />
@@ -348,17 +348,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
+                android:text="@string/Speed"
                 android:textAlignment="textEnd"
-                android:textSize="18sp"
-                tools:text="@string/Speed" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/Attacker"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -409,62 +408,8 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/Defender"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/DefenderName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textEnd"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/DefenderHp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textEnd"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/DefenderAttack"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textEnd"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/DefenderDefense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textEnd"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/DefenderSpeed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textEnd"
-                android:textSize="18sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/DefenderTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -474,50 +419,101 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textStart"
+                android:text="@string/Name"
+                android:textAlignment="textEnd"
                 android:textSize="18sp"
-                tools:text="@string/RightName" />
+                tools:text="@string" />
 
             <TextView
                 android:id="@+id/DefenderTitleHp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textStart"
-                android:textSize="18sp"
-                tools:text="@string/RightHp" />
+                android:text="@string/RightHp"
+                android:textAlignment="textEnd"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/DefenderTitleAttack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textStart"
+                android:text="@string/Attack"
+                android:textAlignment="textEnd"
                 android:textSize="18sp"
-                tools:text="@string/RightAttack" />
+                tools:text="@string" />
 
             <TextView
                 android:id="@+id/DefenderTitleDefense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:textAlignment="textStart"
-                android:textSize="18sp"
-                tools:text="@string/RightDefense" />
+                android:text="@string/Defense"
+                android:textAlignment="textEnd"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/DefenderTItleSpeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:text="@string/Speed"
+                android:textAlignment="textEnd"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/Defender"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/DefenderName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="18sp"
-                tools:text="@string/RightSpeed" />
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/DefenderHp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/DefenderAttack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/DefenderDefense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/DefenderSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textAlignment="textStart"
+                android:textSize="18sp" />
+
         </LinearLayout>
 
     </LinearLayout>
@@ -527,7 +523,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="false"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:visibility="invisible">
 
         <ImageView
             android:id="@+id/GameScreen"

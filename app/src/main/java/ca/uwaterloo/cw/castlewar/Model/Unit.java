@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.renderscript.Sampler;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,6 +125,42 @@ abstract public class Unit extends GameObject{
         moveTile = null;
     }
 
+    private boolean checkHasEnemy(Terrain.Tile start, Terrain.Tile end, Terrain terrain){
+        boolean isIncrease = start.getX() < end.getX();
+        for (int i = start.getParentId(); (isIncrease ? i <= end.getParentId() : i >= end.getParentId());){
+            if (i == start.getParentId()){
+                Terrain.BattleField battleField = start.getParent();
+                for (int j = start.getId(); isIncrease ? j < battleField.getTiles().length : j >= 0; ){
+                    if (!battleField.getTiles()[j].isAvailable()){
+                        if (battleField.getTiles()[j].getUnit().isPlayer1() != isPlayer1) return true;
+                    }
+                    if (isIncrease) j++;
+                    else j--;
+                }
+            } else if (i == end.getParentId()){
+                Terrain.BattleField battleField = end.getParent();
+                for (int j = end.getId(); !isIncrease ? j < battleField.getTiles().length : j >= 0; ){
+                    if (!battleField.getTiles()[j].isAvailable()){
+                        if (battleField.getTiles()[j].getUnit().isPlayer1() != isPlayer1) return true;
+                    }
+                    if (!isIncrease) j++;
+                    else j--;
+                }
+            } else{
+                Terrain.BattleField battleField = terrain.getBattleFields()[i];
+                for (int j = 0; j < battleField.getTiles().length; ++j ) {
+                    if (!battleField.getTiles()[j].isAvailable()) {
+                        if (battleField.getTiles()[j].getUnit().isPlayer1() != isPlayer1)
+                            return true;
+                    }
+                }
+            }
+            if (isIncrease) i++;
+            else i--;
+        }
+        return false;
+    }
+
     // common way to take actions
     // go as near as possible to the first enemy who is the nearest to ally castle
     // if close enough, set aim to that
@@ -152,7 +189,8 @@ abstract public class Unit extends GameObject{
             for (Terrain.BattleField battleField : !this.isPlayer1 ? terrain.getBattleFields() : terrain.getReversedBattlefield()){
                 for (Terrain.Tile tile : this.isPlayer1 ? battleField.getTiles() : battleField.getReversedTiles()){
                     if (tile.isAvailable()
-                            && Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.move) {
+                            && Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.move
+                            && !checkHasEnemy(this.currentTile, tile, terrain)) {
                         moveTile = tile;
                         return;
                     }
@@ -175,15 +213,16 @@ abstract public class Unit extends GameObject{
         }
 
         // find first movable and attackable tile near enemy castle
-        outerloop2:
         for (Terrain.BattleField battleField : !this.isPlayer1 ? terrain.getBattleFields() : terrain.getReversedBattlefield()){
             for (Terrain.Tile tile : this.isPlayer1 ? battleField.getTiles() : battleField.getReversedTiles()){
                 if (tile.isAvailable()){
                     if (Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.move
-                            && Math.abs(actionTile.getParentId() - this.getCurrentTile().getParentId()) <= this.maxRange
-                            && Math.abs(actionTile.getParentId() - this.getCurrentTile().getParentId()) >= this.minRange){
+                            && Math.abs(actionTile.getParentId() - tile.getParentId()) <= this.maxRange
+                            && Math.abs(actionTile.getParentId() - tile.getParentId()) >= this.minRange
+                            && !checkHasEnemy(this.currentTile, tile, terrain)){
                         moveTile = tile;
-                        break outerloop2;
+                        if (moveTile.getParentId() == this.getCurrentTile().getParentId()) moveTile = null;
+                        return;
                     }
                 }
             }
@@ -197,15 +236,14 @@ abstract public class Unit extends GameObject{
                 for (Terrain.Tile tile : !isAimleft ? battleField.getTiles() : battleField.getReversedTiles()){
                     if (tile.isAvailable()){
                         if (Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.move
-                                && (isAimleft ? tile.getParentId() <= this.getCurrentTile().getParentId() : tile.getParentId() >= this.getCurrentTile().getParentId())){
+                                && (isAimleft ? tile.getParentId() <= this.getCurrentTile().getParentId() : tile.getParentId() >= this.getCurrentTile().getParentId())
+                                && !checkHasEnemy(this.currentTile, tile, terrain)){
                             moveTile = tile;
                             break outerloop3;
                         }
                     }
                 }
             }
-        } else {
-            return;
         }
 
         // if still no such tile the unit can move to, stay and attack nearby enemy
