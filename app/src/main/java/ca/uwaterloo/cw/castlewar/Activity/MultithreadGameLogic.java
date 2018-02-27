@@ -473,6 +473,8 @@ public class MultithreadGameLogic {
     private ScreenCondition screenCondition = new ScreenCondition();
     private DataCondition dataCondition = new DataCondition();
     private ReentrantReadWriteLock unitInCombatLock = new ReentrantReadWriteLock();
+    private ReentrantReadWriteLock buttonLock = new ReentrantReadWriteLock();
+    private ReentrantReadWriteLock prepareDoneLock = new ReentrantReadWriteLock();
     private Random random = new Random();
     private boolean isAi;
     private boolean isPlayer1;
@@ -687,24 +689,53 @@ public class MultithreadGameLogic {
         cost.put(isPlayer1, currentCost);
     }
 
-    public void placeUnit(int position)
+    public void placeUnit(final int position)
     {
-        if (unitInDeck.get(isPlayer1)[position] == null) return;
-        Terrain.Tile tile = rearBattleField.get(isPlayer1).findFirstAvailableTile(isPlayer1);
-        Unit unit = SystemData.createUnit(unitInDeck.get(isPlayer1)[position].getId());
-        unit.x.set(rearBattleField.get(isPlayer1).getTiles()[isPlayer1 ? 2 : 7].getX());
-        unit.setPlayer1(isPlayer1);
-        unit.setLeft(!isPlayer1);
-        unit.setCurrentTile(tile);
-        tile.setUnit(unit);
-        unitInCombatLock.writeLock().lock();
-        unitInCombat.get(isPlayer1).add(unit);
-        unitInCombatLock.writeLock().unlock();
-        animateMove(unit.x.get(), tile.getX(), unit.x, unit);
+        SystemData.oneTimeThread.execute(new Runnable() {
+            @Override
+            public void run() {
+                buttonLock.writeLock().lock();
+                if (unitInDeck.get(isPlayer1)[position] == null || currentState.get() != Id.GameState.PREPARE) return;
+
+                Terrain.Tile tile = rearBattleField.get(isPlayer1).findFirstAvailableTile(isPlayer1);
+                Unit unit = SystemData.createUnit(unitInDeck.get(isPlayer1)[position].getId());
+                unit.x.set(rearBattleField.get(isPlayer1).getTiles()[isPlayer1 ? 2 : 7].getX());
+                unit.setPlayer1(isPlayer1);
+                unit.setLeft(!isPlayer1);
+                unit.setCurrentTile(tile);
+                tile.setUnit(unit);
+                if (!isAi || isPlayer1) {
+                    unitInDeck.get(isPlayer1)[position] = null;
+                    postUnitCard(position);
+                    setCostBy(-unit.cost.get());
+                    postCost();
+                }
+                unitInCombatLock.writeLock().lock();
+                unitInCombat.get(isPlayer1).add(unit);
+                unitInCombatLock.writeLock().unlock();
+                prepareDoneLock.readLock().lock();
+                buttonLock.writeLock().unlock();
+                animateMove(unit.x.get(), tile.getX(), unit.x, unit);
+                buttonLock.readLock().unlock();
+            }
+        });
     }
 
-    public void useItem(int position){
-
+    public void useItem(final int position){
+        SystemData.oneTimeThread.execute(new Runnable() {
+            @Override
+            public void run() {
+                buttonLock.writeLock().lock();
+                Item item = itemInDeck.get(isPlayer1)[position];
+                if (!isAi || isPlayer1) {
+                    itemInDeck.get(isPlayer1)[position] = null;
+                    postItemCard(position);
+                    setCostBy(-item.cost.get());
+                    postCost();
+                }
+                buttonLock.writeLock().unlock();
+            }
+        });
     }
 
     // importatn when switching players
@@ -728,38 +759,23 @@ public class MultithreadGameLogic {
             unitImageButtons[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SystemData.oneTimeThread.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            Unit unit = unitInDeck.get(isPlayer1)[position];
-                            if (cost.get(isPlayer1) >= unit.cost.get()) {
-                                placeUnit(position);
-                                unitInDeck.get(isPlayer1)[position] = null;
-                                postUnitCard(position);
-                                setCostBy(-unit.cost.get());
-                                postCost();
-                            }
-                        }
-                    });
+                    if (cost.get(isPlayer1) >= unit.cost.get()) {
+                        placeUnit(position);
+
+                    }
                 }
             });
+
 
             itemImageButtons[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SystemData.oneTimeThread.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            Item item = itemInDeck.get(isPlayer1)[position];
-                            if (cost.get(isPlayer1) >= item.cost.get()) {
-                                useItem(position);
-                                itemInDeck.get(isPlayer1)[position] = null;
-                                postItemCard(position);
-                                setCostBy(-item.cost.get());
-                                postCost();
-                            }
-                        }
-                    });
+                    if (cost.get(isPlayer1) >= item.cost.get()) {
+                        useItem(position);
+                        postItemCard(position);
+                        setCostBy(-item.cost.get());
+                        postCost();
+                    }
                 }
             });
         }

@@ -47,7 +47,7 @@ public class SystemData {
     // get reference of context
     private static Context context;
     public static final ExecutorService gameThreads = Executors.newFixedThreadPool(3);
-    public static final ExecutorService oneTimeThread = Executors.newFixedThreadPool(2);
+    public static final ExecutorService oneTimeThread = Executors.newFixedThreadPool(5);
     private static android.os.Handler handler = new android.os.Handler();
     private static Bitmap cross;
 
