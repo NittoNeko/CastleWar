@@ -63,12 +63,11 @@ public class MainActivity extends AppCompatActivity{
         startActivity(userIntent);
     }
 
-    /*public void enterInventory(View view)
-    {
+    public void enterInventory(View view) {
         // Create an intent to show a new screen passing data to it
         Intent userIntent = new Intent(this, InventoryActivity.class);
 
         // Show new screen
         startActivity(userIntent);
-    }*/
+    }
 }

@@ -40,15 +40,10 @@ public class InventoryActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // Show the status before the start
-        progressBar.setVisibility(View.VISIBLE);
-
-
         // Initialize items in the shop and add them to the ArrayList
-        for (int i = Id._START.ordinal() + 1; i < Id.POTION_END.ordinal(); ++i) {
-            inventoryItems.add((Item) SystemData.create(Id.values()[i]));
+        for (Id.Item item : Id.Item.values()){
+            inventoryItems.add(SystemData.createItem(item.ordinal()));
         }
-
 
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.inventoryItemsRecyclerView);
@@ -60,10 +55,6 @@ public class InventoryActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         RecyclerView.Adapter myAdapter = new InventoryItemsRecyclerViewAdapter(inventoryItems);
         myRecyclerView.setAdapter(myAdapter);
-
-
-        // Hide the progress bar when all items are presented
-        progressBar.setVisibility(View.INVISIBLE);
 
     }
 }

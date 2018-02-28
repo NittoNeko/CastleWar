@@ -24,7 +24,11 @@
             android:screenOrientation="landscape">
         </activity>
         <activity
-            android:name=".Activity.ShopAcitivity"
+            android:name=".Activity.ShopActivity"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity
+            android:name=".Activity.InventoryActivity"
             android:screenOrientation="landscape">
         </activity>
     </application>

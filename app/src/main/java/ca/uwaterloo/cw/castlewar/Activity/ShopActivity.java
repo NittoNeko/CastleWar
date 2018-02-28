@@ -44,10 +44,9 @@ public class ShopActivity extends AppCompatActivity {
 
 
         // Initialize items in the shop and add them to the ArrayList
-        for (int i = Id.POTION_START.ordinal() + 1; i < Id.POTION_END.ordinal(); ++i) {
-            shopItems.add((Item)SystemData.create(Id.values()[i]));
+        for (Id.Item item : Id.Item.values()){
+            shopItems.add(SystemData.createItem(item.ordinal()));
         }
-
 
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.shopItemsRecyclerView);
