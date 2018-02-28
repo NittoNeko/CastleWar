@@ -45,6 +45,7 @@ public class InventoryActivity extends AppCompatActivity {
             inventoryItems.add(SystemData.createItem(item.ordinal()));
         }
 
+
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.inventoryItemsRecyclerView);
 

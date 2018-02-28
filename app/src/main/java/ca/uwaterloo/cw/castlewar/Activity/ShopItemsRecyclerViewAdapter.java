@@ -70,6 +70,7 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+
         // Get the pair to have its data displayed at position in the list
         final Item item = myShopItems.get(position);
         final Context context = SystemData.getContext();

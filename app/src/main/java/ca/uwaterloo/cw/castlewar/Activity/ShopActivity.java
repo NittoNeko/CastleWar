@@ -35,6 +35,7 @@ public class ShopActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();

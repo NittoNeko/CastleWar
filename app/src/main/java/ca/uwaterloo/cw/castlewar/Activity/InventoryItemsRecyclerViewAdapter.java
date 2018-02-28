@@ -69,6 +69,7 @@ public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<Inve
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+
         // Get the pair to have its data displayed at position in the list
         final Item item = myInventoryItems.get(position);
         final Context context = SystemData.getContext();
