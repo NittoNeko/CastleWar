@@ -34,21 +34,25 @@ abstract public class Item extends GameObject {
         return num;
     }
 
-    public void Buy(){
+    public boolean Buy(){
         Coin coins =  UserProfile.getCOIN();
         long money = coins.getNum();
         if(money >= this.buyPrice){
             coins.setNum(money - this.buyPrice);
             this.num++;
+            return true;
         }
+        return false;
     }
 
-    public void Sell(){
+    public boolean Sell(){
         Coin coins =  UserProfile.getCOIN();
         long money = coins.getNum();
         if(this.num > 0){
             coins.setNum(money + this.buyPrice);
             this.num--;
+            return true;
         }
+        return false;
     }
 }
