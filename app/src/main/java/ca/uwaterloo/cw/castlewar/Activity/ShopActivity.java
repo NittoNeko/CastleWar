@@ -1,26 +1,30 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
+/**
+ * Created by Sparks on 2018-02-23.
+ */
+
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import ca.uwaterloo.cw.castlewar.Model.GameObject;
+import ca.uwaterloo.cw.castlewar.Model.Id;
+import ca.uwaterloo.cw.castlewar.Model.Item;
+import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.uwaterloo.cw.castlewar.R;
 
-/**
- * Created by WangY on 2018-02-04.
- */
-
-public class ShopAcitivity extends AppCompatActivity{
+public class ShopActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
-    private List<Pair<Pair<String, String>, String>> shopItems = new ArrayList<>();
+    private List<Item> shopItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +42,12 @@ public class ShopAcitivity extends AppCompatActivity{
         // Show the status before the start
         progressBar.setVisibility(View.VISIBLE);
 
+
         // Initialize items in the shop and add them to the ArrayList
-        shopItems.add(new Pair <> (new Pair <> ("A", "$100"), "file:///android_asset/ic_launcher.png"));
-        shopItems.add(new Pair <> (new Pair <> ("B", "$100"), "file:///android_asset/ic_launcher.png"));
-        shopItems.add(new Pair <> (new Pair <> ("C", "$100"), "file:///android_asset/ic_launcher.png"));
-        shopItems.add(new Pair <> (new Pair <> ("D", "$100"), "file:///android_asset/ic_launcher.png"));
-        shopItems.add(new Pair <> (new Pair <> ("E", "$100"), "file:///android_asset/ic_launcher.png"));
+        for (int i = Id.POTION_START.ordinal() + 1; i < Id.POTION_END.ordinal(); ++i) {
+            shopItems.add((Item)SystemData.create(Id.values()[i]));
+        }
+
 
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.shopItemsRecyclerView);
@@ -53,8 +57,9 @@ public class ShopAcitivity extends AppCompatActivity{
         myRecyclerView.setLayoutManager(myLayoutManager);
 
         // specify an adapter (see also next example)
-        RecyclerView.Adapter myAdapter = new ShopItemsRecyclerViewAdapter(getApplicationContext(), shopItems);
+        RecyclerView.Adapter myAdapter = new ShopItemsRecyclerViewAdapter(shopItems);
         myRecyclerView.setAdapter(myAdapter);
+
 
 
         // Hide the progress bar when all items are presented

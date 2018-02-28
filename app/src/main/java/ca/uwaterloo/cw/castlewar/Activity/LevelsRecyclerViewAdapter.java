@@ -46,7 +46,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         ConstraintLayout levelsView = (ConstraintLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.levels, parent, false);
 
         // Get references to view components
-        TextView levelTextView = levelsView.findViewById(R.id.Levels);
+        TextView levelTextView = levelsView.findViewById(R.id.itemName);
         TextView terrainTextView = levelsView.findViewById(R.id.Terrain);
         TextView enemiesTextView = levelsView.findViewById(R.id.Enemies);
         TextView rewardsTextView = levelsView.findViewById(R.id.Rewards);

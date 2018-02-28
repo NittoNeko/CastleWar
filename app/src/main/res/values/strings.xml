@@ -1,4 +1,5 @@
 <resources>
+    <string name="itemQuantity">Item Quantity</string>
     <string name="app_name">Castle War</string>
     <string name="SinglePlayer">SinglePlayer</string>
     <string name="Shop">Shop</string>

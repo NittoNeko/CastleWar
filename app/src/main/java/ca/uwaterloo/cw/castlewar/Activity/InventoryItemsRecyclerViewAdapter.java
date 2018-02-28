@@ -14,15 +14,14 @@ import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.R;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Sparks on 2018-02-23.
  */
 
-public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItemsRecyclerViewAdapter.ViewHolder>{
-    private List<Item> myShopItems;
+public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<InventoryItemsRecyclerViewAdapter.ViewHolder>{
+    private List<Item> myInventoryItems;
 
     // Provide a reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -39,23 +38,23 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
     }
 
     // Construct the ViewAdapter
-    public ShopItemsRecyclerViewAdapter(List<Item> shopItems) {
-        myShopItems= shopItems;
+    public InventoryItemsRecyclerViewAdapter(List<Item> inventoryItems) {
+        myInventoryItems= inventoryItems;
     }
 
     // Create new views
     @Override
-    public ShopItemsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public InventoryItemsRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Create a new view
-        ConstraintLayout shopItemView = (ConstraintLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.shop_item, parent, false);
+        ConstraintLayout inventoryItemView = (ConstraintLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.inventory_item, parent, false);
 
         // Get references to view components
-        TextView itemNameView = shopItemView.findViewById(R.id.itemName);
-        TextView itemDescriptionTextView = shopItemView.findViewById(R.id.itemDescription);
-        ImageView itemPictureImageView = shopItemView.findViewById(R.id.itemPicture);
-        Button itemButton = shopItemView.findViewById(R.id.itemButton);
+        TextView itemNameView = inventoryItemView.findViewById(R.id.itemName);
+        TextView itemDescriptionTextView = inventoryItemView.findViewById(R.id.itemDescription);
+        ImageView itemPictureImageView = inventoryItemView.findViewById(R.id.itemPicture);
+        Button itemButton = inventoryItemView.findViewById(R.id.itemButton);
         // Create a new ViewHolder instance and assign references to it
-        ShopItemsRecyclerViewAdapter.ViewHolder viewHolder = new ShopItemsRecyclerViewAdapter.ViewHolder(shopItemView);
+        InventoryItemsRecyclerViewAdapter.ViewHolder viewHolder = new InventoryItemsRecyclerViewAdapter.ViewHolder(inventoryItemView);
         viewHolder.itemNameTextView = itemNameView;
         viewHolder.itemDescriptionTextView = itemDescriptionTextView;
         viewHolder.itemPictureImageView = itemPictureImageView;
@@ -68,7 +67,7 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         // Get the pair to have its data displayed at position in the list
-        final Item item = myShopItems.get(position);
+        final Item item = myInventoryItems.get(position);
 
         // Assign data to view components
         holder.itemNameTextView.setText(item.getName());
@@ -77,7 +76,7 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
         holder.itemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                item.Buy();
+                item.Sell();
             }
         });
         // Load Picture to view components
@@ -86,9 +85,9 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
     }
 
 
-    // Return the size of myShopItems
+    // Return the size of myInventoryItems
     @Override
     public int getItemCount() {
-        return myShopItems.size();
+        return myInventoryItems.size();
     }
 }

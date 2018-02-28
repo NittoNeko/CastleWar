@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity{
     public void enterShop(View view)
     {
         // Create an intent to show a new screen passing data to it
-        Intent userIntent = new Intent(this, ShopAcitivity.class);
+        Intent userIntent = new Intent(this, ShopActivity.class);
 
         // Show new screen
         startActivity(userIntent);
