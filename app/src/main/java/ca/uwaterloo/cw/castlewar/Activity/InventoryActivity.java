@@ -11,11 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Id;
 import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
 
 import java.util.ArrayList;
@@ -48,6 +50,10 @@ public class InventoryActivity extends AppCompatActivity {
 
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.inventoryItemsRecyclerView);
+        // Get TextView
+        TextView myTextView = findViewById(R.id.coinNum);
+        // Save TextView for later changes
+        SystemData.setInventoryCoin(myTextView);
 
         // use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());

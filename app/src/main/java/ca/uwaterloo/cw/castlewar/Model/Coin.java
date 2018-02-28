@@ -8,7 +8,6 @@ import ca.uwaterloo.cw.castlewar.R;
 
 public class Coin extends GameObject {
     private long num;
-
     public Coin()
     {
         super(0, "Coin", R.drawable.ic_launcher_background);

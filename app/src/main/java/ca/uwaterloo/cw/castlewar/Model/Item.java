@@ -1,6 +1,7 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
 import android.graphics.Bitmap;
+import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,6 +41,8 @@ abstract public class Item extends GameObject {
         if(money >= this.buyPrice){
             coins.setNum(money - this.buyPrice);
             this.num++;
+            TextView shopCoinText = SystemData.getShopCoin();
+            shopCoinText.setText((int)(money - this.buyPrice));
             return true;
         }
         return false;
@@ -51,6 +54,8 @@ abstract public class Item extends GameObject {
         if(this.num > 0){
             coins.setNum(money + this.buyPrice);
             this.num--;
+            TextView inventoryCoinText = SystemData.getInventoryCoin();
+            inventoryCoinText.setText((int)(money + this.buyPrice));
             return true;
         }
         return false;
