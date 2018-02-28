@@ -52,15 +52,17 @@ public class ShopActivity extends AppCompatActivity {
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.shopItemsRecyclerView);
 
-        // use a linear layout manager
+        // Use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
         myRecyclerView.setLayoutManager(myLayoutManager);
 
-        // specify an adapter (see also next example)
+        // Specify an adapter (see also next example)
         RecyclerView.Adapter myAdapter = new ShopItemsRecyclerViewAdapter(shopItems);
         myRecyclerView.setAdapter(myAdapter);
 
-
+        // Custom view for coins
+        GifImageView gifImageView = (GifImageView) findViewById(R.id.GifImageView);
+        gifImageView.setGifImageResource(R.drawable.coins);
 
         // Hide the progress bar when all items are presented
         progressBar.setVisibility(View.INVISIBLE);

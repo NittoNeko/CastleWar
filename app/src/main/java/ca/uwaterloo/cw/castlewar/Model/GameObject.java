@@ -45,7 +45,7 @@ abstract public class GameObject {
 
     public String getDescription()
     {
-        return "Description";
+        return description;
     }
 
     public Bitmap getPortrait() {
