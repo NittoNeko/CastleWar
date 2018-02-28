@@ -50,6 +50,8 @@ public class SystemData {
     public static final ExecutorService oneTimeThread = Executors.newFixedThreadPool(5);
     private static android.os.Handler handler = new android.os.Handler();
     private static Bitmap cross;
+    private static TextView inventoryCoin;
+    private static TextView shopCoin;
 
     // output control
     private static boolean ifOutput = false;
@@ -131,6 +133,21 @@ public class SystemData {
         return Bitmap.createScaledBitmap(bitmap, PIXEL, PIXEL, false);
     }
 
+    public static TextView getShopCoin() {
+        return shopCoin;
+    }
+
+    public static void setShopCoin(TextView shopCoin) {
+        SystemData.shopCoin = shopCoin;
+    }
+
+    public static TextView getInventoryCoin() {
+        return inventoryCoin;
+    }
+
+    public static void setInventoryCoin(TextView inventoryCoin) {
+        SystemData.inventoryCoin = inventoryCoin;
+    }
     public static Bitmap getEmptyIcon(){
         return cross;
     }

@@ -31,7 +31,8 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="16dp" />
+                tools:layout_editor_absoluteX="16dp"
+                tools:text="Name" />
 
             <ImageView
                 android:id="@+id/itemPicture"

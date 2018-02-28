@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Id;
@@ -52,7 +53,12 @@ public class ShopActivity extends AppCompatActivity {
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.shopItemsRecyclerView);
 
-        // Use a linear layout manager
+        // Get the TextView
+        TextView myTextView = findViewById(R.id.coinNum);
+        // Save TextView for later changes
+        SystemData.setShopCoin(myTextView);
+        // use a linear layout manager
+
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
         myRecyclerView.setLayoutManager(myLayoutManager);
 
