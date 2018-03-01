@@ -54,12 +54,12 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="36dp"
             android:layout_marginTop="8dp"
-            android:text="TextView"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.077"
             app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="CoinNum" />
     </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

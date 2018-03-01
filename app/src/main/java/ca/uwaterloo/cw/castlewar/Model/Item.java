@@ -13,7 +13,6 @@ abstract public class Item extends GameObject {
     public final AtomicInteger cost = new AtomicInteger();
     private int buyPrice;
     private int sellPrice;
-    private long num;
 
     public Item(int id,String name, int resource, int buyPrice, int sellPrice, int cost)
     {
@@ -31,18 +30,14 @@ abstract public class Item extends GameObject {
         return sellPrice;
     }
 
-    public long getNum() {
-        return num;
-    }
+
 
     public boolean Buy(){
         Coin coins =  UserProfile.getCOIN();
         long money = coins.getNum();
         if(money >= this.buyPrice){
             coins.setNum(money - this.buyPrice);
-            this.num++;
-            TextView shopCoinText = SystemData.getShopCoin();
-            shopCoinText.setText((int)(money - this.buyPrice));
+            UserProfile.increaseItemNum(this.getId());
             return true;
         }
         return false;
@@ -51,11 +46,10 @@ abstract public class Item extends GameObject {
     public boolean Sell(){
         Coin coins =  UserProfile.getCOIN();
         long money = coins.getNum();
-        if(this.num > 0){
+        int num = UserProfile.getItemNum(this.getId());
+        if(num > 0){
             coins.setNum(money + this.buyPrice);
-            this.num--;
-            TextView inventoryCoinText = SystemData.getInventoryCoin();
-            inventoryCoinText.setText((int)(money + this.buyPrice));
+            UserProfile.decreaseItemNum(this.getId());
             return true;
         }
         return false;

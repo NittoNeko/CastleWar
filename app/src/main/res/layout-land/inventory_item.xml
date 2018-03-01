@@ -50,12 +50,15 @@
                 android:id="@+id/itemButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Sell"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                tools:layout_editor_absoluteY="36dp" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/itemDescription"
@@ -67,10 +70,10 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/itemButton"
-                app:layout_constraintHorizontal_bias="0.943"
+                app:layout_constraintHorizontal_bias="0.773"
                 app:layout_constraintStart_toEndOf="@+id/itemPicture"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.764"
+                app:layout_constraintVertical_bias="1.0"
                 tools:text="itemDescription" />
 
         </android.support.constraint.ConstraintLayout>

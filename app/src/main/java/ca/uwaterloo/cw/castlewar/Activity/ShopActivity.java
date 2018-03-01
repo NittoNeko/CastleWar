@@ -16,6 +16,7 @@ import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Id;
 import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
 
 import java.util.ArrayList;
@@ -31,6 +32,10 @@ public class ShopActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
+        // Initialize items in the shop and add them to the ArrayList
+        for (Id.Item item : Id.Item.values()){
+            shopItems.add(SystemData.createItem(item.ordinal()));
+        }
 
         // Private reference to the progress bar
         progressBar = findViewById(R.id.progressBar);
@@ -44,18 +49,10 @@ public class ShopActivity extends AppCompatActivity {
         // Show the status before the start
         progressBar.setVisibility(View.VISIBLE);
 
-
-        // Initialize items in the shop and add them to the ArrayList
-        for (Id.Item item : Id.Item.values()){
-            shopItems.add(SystemData.createItem(item.ordinal()));
-        }
-
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.shopItemsRecyclerView);
         // Get the TextView
         TextView myTextView = findViewById(R.id.coinNum);
-        // Save TextView for later changes
-        SystemData.setShopCoin(myTextView);
         // use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
         myRecyclerView.setLayoutManager(myLayoutManager);
