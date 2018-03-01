@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.renderscript.Sampler;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -309,6 +310,19 @@ abstract public class Unit extends GameObject{
             currentTile.setUnit(this);
             moveTile = null;
         }
+    }
+
+    public void setMoveingImage(ArrayList<Bitmap> leftMoveingImage, ArrayList<Bitmap> rightMovingImage) {
+        this.leftMovingImage = leftMoveingImage;
+        this.rightMovingImage = rightMovingImage;
+    }
+
+    public ArrayList<Bitmap> getRightMovingImage() {
+        return rightMovingImage;
+    }
+
+    public ArrayList<Bitmap> getLeftMovingImage() {
+        return leftMovingImage;
     }
 
     public void setMoveTile(Terrain.Tile moveTile) {

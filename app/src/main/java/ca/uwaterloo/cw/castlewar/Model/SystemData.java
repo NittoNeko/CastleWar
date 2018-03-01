@@ -60,7 +60,7 @@ public class SystemData {
 
     // output control
     public final static boolean gameFps = false;
-    public final static boolean gameFlow = true;
+    public final static boolean gameFlow = false;
 
     // game setting
     public static final int CARD_NUM = 5;
@@ -93,7 +93,7 @@ public class SystemData {
     {
         screenWidth = x;
         screenHeight = y;
-        groundLine = (int) (screenHeight * 0.9);
+        groundLine = (int) (screenHeight * 0.8);
         cross = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.cross),PIXEL,PIXEL,false);
     }
 

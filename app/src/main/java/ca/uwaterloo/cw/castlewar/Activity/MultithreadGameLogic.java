@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -692,6 +693,12 @@ public class MultithreadGameLogic {
         this.unitInDeck.put(false, new Unit[level.getEnemies().length]);
         this.itemInDeck.put(true, new Item[SystemData.CARD_NUM]);
         this.itemInDeck.put(false, new Item[level.getItems().length]);
+        for (Unit unit : unitInStockPlayer1){
+            unit.getMovingImage();
+        }
+        for (Unit unit : level.getEnemies()){
+            unit.getMovingImage();
+        }
         this.unitInStock.put(true, unitInStockPlayer1);
         this.unitInStock.put(false, level.getEnemies());
         this.itemInStock.put(true, itemInStockPlayer1);
@@ -701,6 +708,7 @@ public class MultithreadGameLogic {
         this.maxCost.put(true, UserProfile.getMaxCost());
         this.maxCost.put(false, UserProfile.getMaxCost());
         this.isPlayer1.set(true);
+
         for (int i = 0; i < SystemData.CARD_NUM; ++i){
             generateItemCard(i);
             generateUnitCard(i);
@@ -853,6 +861,7 @@ public class MultithreadGameLogic {
                 }
                 if (isPlayer1.get() || !isAi) {
                     if (unitInDeck.get(isPlayer1.get())[position].cost.get() > cost.get(isPlayer1.get())) {
+                        Toast.makeText(activity.getApplicationContext(),"Not Enough Cost" , Toast.LENGTH_SHORT).show();
                         buttonLock.writeLock().unlock();
                         return;
                     }
@@ -861,6 +870,7 @@ public class MultithreadGameLogic {
                 Terrain.Tile tile = rearBattleField.get(isPlayer1.get()).findFirstAvailableTile(isPlayer1.get());
                 Unit unit = SystemData.createUnit(unitInDeck.get(isPlayer1.get())[position].getId());
                 if (unit == null) return;
+                unit.getMovingImage();
                 unit.x.set(castle.get(isPlayer1.get()).getCurrentTile().getX());
                 unit.setPlayer1(isPlayer1.get());
                 unit.setLeft(!isPlayer1.get());
@@ -931,6 +941,8 @@ public class MultithreadGameLogic {
                 public void onClick(View view) {
                     if (rearBattleField.get(isPlayer1.get()).getAvailableTileNum() > 0){
                         placeUnit(position);
+                    } else{
+                        Toast.makeText(activity.getApplicationContext(),"Not Enough Slots" , Toast.LENGTH_SHORT).show();
                     }
                 }
             });

@@ -1,25 +1,26 @@
-package ca.uwaterloo.cw.castlewar.Activity;
 
-import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+        package ca.uwaterloo.cw.castlewar.Activity;
 
-import ca.uwaterloo.cw.castlewar.Model.GameObject;
-import ca.uwaterloo.cw.castlewar.Model.Item;
-import ca.uwaterloo.cw.castlewar.Model.SystemData;
-import ca.uwaterloo.cw.castlewar.Model.UserProfile;
-import ca.uwaterloo.cw.castlewar.R;
+        import android.content.Context;
+        import android.support.constraint.ConstraintLayout;
+        import android.support.v7.widget.RecyclerView;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.Button;
+        import android.widget.ImageView;
+        import android.widget.TextView;
+        import android.widget.Toast;
+
+        import ca.uwaterloo.cw.castlewar.Model.GameObject;
+        import ca.uwaterloo.cw.castlewar.Model.Item;
+        import ca.uwaterloo.cw.castlewar.Model.SystemData;
+        import ca.uwaterloo.cw.castlewar.Model.UserProfile;
+        import ca.uwaterloo.cw.castlewar.R;
 
 
 
-import java.util.List;
+        import java.util.List;
 
 /**
  * Created by Sparks on 2018-02-23.
@@ -28,7 +29,6 @@ import java.util.List;
 public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<InventoryItemsRecyclerViewAdapter.ViewHolder>{
     private List<Item> myInventoryItems;
     private TextView myTextView;
-    private long myCoins;
 
     // Provide a reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -45,10 +45,9 @@ public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<Inve
     }
 
     // Construct the ViewAdapter
-    public InventoryItemsRecyclerViewAdapter(List<Item> inventoryItems, TextView textView, long coins) {
+    public InventoryItemsRecyclerViewAdapter(List<Item> inventoryItems, TextView textView) {
         myInventoryItems= inventoryItems;
         myTextView = textView;
-        myCoins = coins;
     }
 
     // Create new views
@@ -80,17 +79,20 @@ public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<Inve
         final Context context = SystemData.getContext();
         final TextView myItemTextView = holder.itemNameTextView;
 
+
         // Assign data to view components
         holder.itemNameTextView.setText(item.getName() + " x " + UserProfile.getItemNum(item.getId()));
         holder.itemDescriptionTextView.setText(item.getDescription());
+        holder.itemPictureImageView.setBackground(SystemData.scaleDrawable(R.drawable.item_background, SystemData.PIXEL,SystemData.PIXEL,1));
+        holder.itemButton.setBackground(SystemData.scaleDrawable(R.drawable.yellow_button, SystemData.PIXEL,SystemData.PIXEL,2));
         holder.itemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(item.Sell()){
                     Toast.makeText(context,"Item Sold", Toast.LENGTH_SHORT).show();
                     myItemTextView.setText(item.getName() + " x " + UserProfile.getItemNum(item.getId()));
-                    myCoins = UserProfile.getCOIN().getNum();
-                    myTextView.setText(Long.toString(myCoins));
+                    long money = UserProfile.getCOIN().getNum();
+                    myTextView.setText(Long.toString(money));
                 } else {
                     Toast.makeText(context,"Not Enough Item" , Toast.LENGTH_SHORT).show();
                 }
