@@ -64,7 +64,7 @@ public class ShopActivity extends AppCompatActivity {
 
         // Get the WebView
         WebView myWebView = (WebView) findViewById(R.id.webView);
-        myWebView.loadUrl("file:///android_asset/anim5.gif");
+        myWebView.loadUrl("file:///android_asset/coins.gif");
 
         // use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
