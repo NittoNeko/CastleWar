@@ -42,16 +42,11 @@ public class InventoryActivity extends AppCompatActivity {
         // Construct User Profile to get amount of coins
         myCoins = UserProfile.getCOIN().getNum();
 
-        // Private reference to the progress bar
-        progressBar = findViewById(R.id.progressBar);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        // Show the status before the start
-        progressBar.setVisibility(View.VISIBLE);
 
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.inventoryItemsRecyclerView);
@@ -67,9 +62,6 @@ public class InventoryActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         RecyclerView.Adapter myAdapter = new InventoryItemsRecyclerViewAdapter(inventoryItems);
         myRecyclerView.setAdapter(myAdapter);
-
-        // Hide the progress bar when all items are presented
-        progressBar.setVisibility(View.INVISIBLE);
 
     }
 }

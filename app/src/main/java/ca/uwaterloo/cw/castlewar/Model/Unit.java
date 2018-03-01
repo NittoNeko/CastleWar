@@ -264,7 +264,7 @@ abstract public class Unit extends GameObject{
 
     // take damage
     public void takeDamage(Unit attacker){
-        int damage = this.attack.get() - this.defense.get();
+        int damage = attacker.attack.get() - this.defense.get();
         if (damage <= 0) damage = 1;
         int currentHp = this.hp.get() - damage;
         if (currentHp < 0) currentHp = 0;

@@ -30,8 +30,6 @@ abstract public class Item extends GameObject {
         return sellPrice;
     }
 
-
-
     public boolean Buy(){
         Coin coins =  UserProfile.getCOIN();
         long money = coins.getNum();

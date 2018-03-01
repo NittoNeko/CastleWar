@@ -57,21 +57,23 @@ public class SystemData {
 
     // output control
     public final static boolean gameFps = false;
-    public final static boolean gameFlow = false;
+    public final static boolean gameFlow = true;
 
     // game setting
     public static final int CARD_NUM = 5;
     public static final int DRAW_NUM = 2;
     public static final int DRAW_COST = 3;
-    public static final long MAX_FPS = 60;
+    public static final long MAX_FPS = 30;
     public static final long MIN_FPS = 5;
     public static final int PIXEL = 100;
     public static final long MILISECOND = 1000;
     public static final float SCROLL_PIXEL_PER_SECOND = 2000; // speed of screen
-    public static final int PIXEL_PER_UPDATE = 20;   // speed of character
-    public static final long VALUE_PER_SECOND = 40;  // this is speed of text
+    public static final int PIXEL_PER_UPDATE = 30;   // speed of character
+    public static final long VALUE_PER_SECOND = 25;  // this is speed of text
+    public static final float FRAME_PER_SECOND = 30;
     public static final float LOGIC_PER_SECOND = 30;  // this is the speed of updates of normal background thread
     public static final float CONSTANT_PER_SECOND = 10; // this is the speed of updates constant anime, music and so on
+    public static final long FRAME_SLEEP_TIME = MILISECOND / (long) FRAME_PER_SECOND;
     public static final long LOGIC_SLEEP_TIME = MILISECOND / (long) LOGIC_PER_SECOND;
     public static final long CONSTANT_SLEEP_TIME = MILISECOND / (long) CONSTANT_PER_SECOND;
 
