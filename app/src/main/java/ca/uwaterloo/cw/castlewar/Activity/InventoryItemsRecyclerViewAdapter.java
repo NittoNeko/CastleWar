@@ -27,6 +27,8 @@ import java.util.List;
 
 public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<InventoryItemsRecyclerViewAdapter.ViewHolder>{
     private List<Item> myInventoryItems;
+    private TextView myTextView;
+    private long myCoins;
 
     // Provide a reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -43,8 +45,10 @@ public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<Inve
     }
 
     // Construct the ViewAdapter
-    public InventoryItemsRecyclerViewAdapter(List<Item> inventoryItems) {
+    public InventoryItemsRecyclerViewAdapter(List<Item> inventoryItems, TextView textView, long coins) {
         myInventoryItems= inventoryItems;
+        myTextView = textView;
+        myCoins = coins;
     }
 
     // Create new views
@@ -74,7 +78,7 @@ public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<Inve
         // Get the pair to have its data displayed at position in the list
         final Item item = myInventoryItems.get(position);
         final Context context = SystemData.getContext();
-        final TextView myTextView = holder.itemNameTextView;
+        final TextView myItemTextView = holder.itemNameTextView;
 
         // Assign data to view components
         holder.itemNameTextView.setText(item.getName() + " x " + UserProfile.getItemNum(item.getId()));
@@ -84,7 +88,9 @@ public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<Inve
             public void onClick(View view) {
                 if(item.Sell()){
                     Toast.makeText(context,"Item Sold", Toast.LENGTH_SHORT).show();
-                    myTextView.setText(item.getName() + " x " + UserProfile.getItemNum(item.getId()));
+                    myItemTextView.setText(item.getName() + " x " + UserProfile.getItemNum(item.getId()));
+                    myCoins = UserProfile.getCOIN().getNum();
+                    myTextView.setText(Long.toString(myCoins));
                 } else {
                     Toast.makeText(context,"Not Enough Item" , Toast.LENGTH_SHORT).show();
                 }

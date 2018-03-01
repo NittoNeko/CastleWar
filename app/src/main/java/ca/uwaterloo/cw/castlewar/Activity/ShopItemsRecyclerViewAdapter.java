@@ -14,6 +14,7 @@ import android.widget.Toast;
 import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
 
 
@@ -26,6 +27,8 @@ import java.util.List;
 
 public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItemsRecyclerViewAdapter.ViewHolder>{
     private List<Item> myShopItems;
+    private TextView myTextView;
+    private long myCoins;
 
     // Provide a reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -42,8 +45,10 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
     }
 
     // Construct the ViewAdapter
-    public ShopItemsRecyclerViewAdapter(List<Item> shopItems) {
-        myShopItems= shopItems;
+    public ShopItemsRecyclerViewAdapter(List<Item> shopItems, TextView textView, long coins) {
+        myShopItems = shopItems;
+        myTextView = textView;
+        myCoins = coins;
     }
 
     // Create new views
@@ -82,6 +87,8 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
             public void onClick(View view) {
                 if(item.Buy()){
                     Toast.makeText(context,"Item Purchased", Toast.LENGTH_SHORT).show();
+                    myCoins = UserProfile.getCOIN().getNum();
+                    myTextView.setText(Long.toString(myCoins));
                 } else {
                     Toast.makeText(context,"Not Enough Money" , Toast.LENGTH_SHORT).show();
                 }

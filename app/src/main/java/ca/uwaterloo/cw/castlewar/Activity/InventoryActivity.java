@@ -51,7 +51,7 @@ public class InventoryActivity extends AppCompatActivity {
         myRecyclerView.setLayoutManager(myLayoutManager);
 
         // specify an adapter (see also next example)
-        RecyclerView.Adapter myAdapter = new InventoryItemsRecyclerViewAdapter(inventoryItems);
+        RecyclerView.Adapter myAdapter = new InventoryItemsRecyclerViewAdapter(inventoryItems, myTextView, myCoins);
         myRecyclerView.setAdapter(myAdapter);
     }
 }
