@@ -32,7 +32,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteX="52dp"
                 tools:text="Name" />
 
             <ImageView
@@ -41,11 +41,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="40dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemName" />
+                app:layout_constraintTop_toBottomOf="@+id/itemName"
+                app:layout_constraintVertical_bias="0.26" />
 
             <Button
                 android:id="@+id/itemButton"
@@ -68,10 +69,10 @@
                 android:fontFamily="@font/bubblegum_sans"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/itemButton"
-                app:layout_constraintHorizontal_bias="0.943"
+                app:layout_constraintHorizontal_bias="0.829"
                 app:layout_constraintStart_toEndOf="@+id/itemPicture"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.764"
+                app:layout_constraintVertical_bias="1.0"
                 tools:text="itemDescription" />
 
         </android.support.constraint.ConstraintLayout>
