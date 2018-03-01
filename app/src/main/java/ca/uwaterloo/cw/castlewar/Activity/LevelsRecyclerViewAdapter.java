@@ -82,8 +82,8 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         holder.terrainTextView.setText(level.getDisplayableTerrain());
         holder.enemiesTextView.setText(level.getDisplayableEnemies());
         holder.rewardsTextView.setText(level.getDisplayableRewards());
-        holder.startButton.setBackground(SystemData.scaleDrawable(R.drawable.button_right, SystemData.PIXEL, SystemData.PIXEL));
-        holder.backGround.setBackground(SystemData.scaleDrawable(R.drawable.blue_button, SystemData.getScreenWidth(), SystemData.getScreenHeight() / 4));
+        holder.startButton.setBackground(SystemData.scaleDrawable(R.drawable.button_right, SystemData.PIXEL, SystemData.PIXEL,4));
+        holder.backGround.setBackground(SystemData.scaleDrawable(R.drawable.blue_button, SystemData.getScreenWidth(), SystemData.getScreenHeight() / 4,1));
         holder.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

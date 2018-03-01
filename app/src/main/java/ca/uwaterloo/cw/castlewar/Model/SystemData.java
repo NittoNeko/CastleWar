@@ -3,6 +3,7 @@ package ca.uwaterloo.cw.castlewar.Model;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.VoiceInteractor;
 import android.app.WallpaperInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -59,7 +60,7 @@ public class SystemData {
 
     // output control
     public final static boolean gameFps = false;
-    public final static boolean gameFlow = false;
+    public final static boolean gameFlow = true;
 
     // game setting
     public static final int CARD_NUM = 5;
@@ -83,6 +84,7 @@ public class SystemData {
     private static int screenWidth;
     private static int screenHeight;
     private static int groundLine;
+    private static final int DOWNSIZE = 2;
 
     // Bitmap preset
     private static Bitmap cross;
@@ -99,10 +101,10 @@ public class SystemData {
         Random random = new Random();
         int id = random.nextInt(4);
         switch(id){
-            case 0: return scaleDrawable(R.drawable.background_desert, null, groundLine);
-            case 1: return scaleDrawable(R.drawable.background_desert_border, null, groundLine);
-            case 2: return scaleDrawable(R.drawable.background_desert_road, null, groundLine);
-            case 3: return scaleDrawable(R.drawable.background_ruin, null, groundLine);
+            case 0: return scaleDrawable(R.drawable.background_desert, null, groundLine, DOWNSIZE);
+            case 1: return scaleDrawable(R.drawable.background_desert_border, null, groundLine, DOWNSIZE);
+            case 2: return scaleDrawable(R.drawable.background_desert_road, null, groundLine,DOWNSIZE);
+            case 3: return scaleDrawable(R.drawable.background_ruin, null, groundLine,DOWNSIZE);
         }
         return null;
     }
@@ -111,10 +113,10 @@ public class SystemData {
         Random random = new Random();
         int id = random.nextInt(4);
         switch(id){
-            case 0: return scaleBitmap(R.drawable.background_mountain, backgroundWidth, null);
-            case 1: return scaleBitmap(R.drawable.background_near_lake, backgroundWidth, null);
-            case 2: return scaleBitmap(R.drawable.background_nice_lake, backgroundWidth, null);
-            case 3: return scaleBitmap(R.drawable.background_night_forest, backgroundWidth, null);
+            case 0: return scaleBitmap(R.drawable.background_mountain, backgroundWidth, null,DOWNSIZE);
+            case 1: return scaleBitmap(R.drawable.background_near_lake, backgroundWidth, null,DOWNSIZE);
+            case 2: return scaleBitmap(R.drawable.background_nice_lake, backgroundWidth, null,DOWNSIZE);
+            case 3: return scaleBitmap(R.drawable.background_night_forest, backgroundWidth, null,DOWNSIZE);
         }
         return null;
     }
@@ -178,40 +180,42 @@ public class SystemData {
         return null;
     }
 
-    public static Bitmap flipHorizontally(int resource, Integer width, Integer height){
-        Bitmap result = scaleBitmap(resource, width, height);
+    public static Bitmap flipHorizontally(int resource, Integer width, Integer height, int downsize){
+        Bitmap result = scaleBitmap(resource, width, height, downsize);
         Matrix matrix = new Matrix();
         matrix.preScale(-1.0f, 1.0f);
         return Bitmap.createBitmap(result, 0, 0, result.getWidth(), result.getHeight(), matrix, true);
     }
 
-    public static Drawable scaleDrawable(int resource, Integer width, Integer height){
-        return new BitmapDrawable(getContext().getResources(),scaleBitmap(resource, width, height));
+    public static Drawable scaleDrawable(int resource, Integer width, Integer height, int downsize){
+        return new BitmapDrawable(getContext().getResources(),scaleBitmap(resource, width, height, downsize));
     }
 
-    public static Bitmap scaleBitmap(int resource, Integer width, Integer height){
-        if (width == null && height == null) return null;
-        else if (width == null){
-            Bitmap original = BitmapFactory.decodeResource(context.getResources(), resource);
+    public static Bitmap scaleBitmap(int resource, Integer width, Integer height, int downsize){
+        BitmapFactory.Options option = new BitmapFactory.Options();
+        option.inSampleSize = downsize;
+        if (width == null && height == null) {
+            return BitmapFactory.decodeResource(context.getResources(), resource, option);
+        } else if (width == null){
+            Bitmap original = BitmapFactory.decodeResource(context.getResources(), resource, option);
             float ratio = (float) height / (float) original.getHeight();
-            return Bitmap.createScaledBitmap(original, (int) (original.getWidth() * ratio), height, false);
+            return Bitmap.createScaledBitmap(original, (int) (original.getWidth() * ratio), height, true);
         } else if (height == null){
-            Bitmap original = BitmapFactory.decodeResource(context.getResources(), resource);
+            Bitmap original = BitmapFactory.decodeResource(context.getResources(), resource, option);
             float ratio = (float) width / (float)original.getWidth();
-            return Bitmap.createScaledBitmap(original, width,  (int) (original.getHeight() * ratio), false);
+            return Bitmap.createScaledBitmap(original, width,  (int) (original.getHeight() * ratio), true);
         }
 
-        return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), resource), width, height, false);
+        return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), resource, option), width, height, true);
     }
 
-    public static Bitmap scaleIconBitmap(int resource)
-    {
-        return scaleBitmap(resource, PIXEL, PIXEL);
+    public static Bitmap scaleIconBitmap(int resource, int downsize) {
+        return scaleBitmap(resource, PIXEL, PIXEL, downsize);
     }
 
     public static Bitmap scaleIconBitmap(Bitmap bitmap)
     {
-        return Bitmap.createScaledBitmap(bitmap, PIXEL, PIXEL, false);
+        return Bitmap.createScaledBitmap(bitmap, PIXEL, PIXEL, true);
     }
 
     public static Bitmap getEmptyIcon(){

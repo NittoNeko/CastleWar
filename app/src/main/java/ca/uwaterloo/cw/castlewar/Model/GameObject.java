@@ -42,7 +42,7 @@ abstract public class GameObject {
 
     protected void createPortrait()
     {
-        this.portrait = SystemData.scaleIconBitmap(resource);
+        this.portrait = SystemData.scaleIconBitmap(resource, 4);
     }
 
     public String getDescription()

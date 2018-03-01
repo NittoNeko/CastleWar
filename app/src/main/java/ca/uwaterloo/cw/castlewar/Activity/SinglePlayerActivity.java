@@ -1,6 +1,7 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -17,25 +18,25 @@ import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.Model.Level;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
 import ca.uwaterloo.cw.castlewar.Model.Unit;
+import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
 
 
 public class SinglePlayerActivity extends AppCompatActivity {
     private MultithreadGameLogic gameLogic = null;
-    private Bitmap levelBitmap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singleplayer);
-
-        ImageView imageView = findViewById(R.id.LevelBackground);
-        imageView.setImageBitmap(SystemData.scaleBitmap(R.drawable.plane_yellow, SystemData.getScreenWidth(), SystemData.getScreenHeight()));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        ImageView imageView = findViewById(R.id.LevelBackground);
+        imageView.setImageBitmap(SystemData.scaleBitmap(R.drawable.plane_yellow, SystemData.getScreenWidth(), SystemData.getScreenHeight(),8));
 
         // Get the RecyclerView instance
         RecyclerView levelsRecyclerView = findViewById(R.id.LevelsRecyclerView);
@@ -62,6 +63,8 @@ public class SinglePlayerActivity extends AppCompatActivity {
                 gameLogic.onFirstStart();
             }
         });
+
+
     }
     public void onResume()
     {

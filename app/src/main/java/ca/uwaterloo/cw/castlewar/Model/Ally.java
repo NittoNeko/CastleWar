@@ -24,16 +24,16 @@ abstract public class Ally extends Unit {
 
         @Override
         public void createMovingImage() {
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_000, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_001, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_002, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_003, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_004, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_000, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_001, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_002, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_003, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_004, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_000, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_001, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_002, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_003, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.archer_run_004, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_000, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_001, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_002, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_003, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.archer_run_004, SystemData.PIXEL, SystemData.PIXEL,4));
         }
     }
 
@@ -44,16 +44,16 @@ abstract public class Ally extends Unit {
         }
         @Override
         public void createMovingImage() {
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_000, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_001, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_002, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_003, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_004, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_000, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_001, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_002, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_003, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_004, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_000, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_001, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_002, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_003, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.mage_run_004, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_000, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_001, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_002, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_003, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.mage_run_004, SystemData.PIXEL, SystemData.PIXEL,4));
         }
     }
 
@@ -64,16 +64,16 @@ abstract public class Ally extends Unit {
         }
         @Override
         public void createMovingImage() {
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_000, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_001, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_002, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_003, SystemData.PIXEL, SystemData.PIXEL));
-            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_004, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_000, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_001, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_002, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_003, SystemData.PIXEL, SystemData.PIXEL));
-            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_004, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_000, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_001, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_002, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_003, SystemData.PIXEL, SystemData.PIXEL,4));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.swordman_run_004, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_000, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_001, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_002, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_003, SystemData.PIXEL, SystemData.PIXEL,4));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.swordman_run_004, SystemData.PIXEL, SystemData.PIXEL,4));
         }
     }
 }

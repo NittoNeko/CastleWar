@@ -25,13 +25,13 @@
 
     <LinearLayout
         android:id="@+id/CombatBoard"
-        android:layout_width="456dp"
-        android:layout_height="253dp"
+        android:layout_width="503dp"
+        android:layout_height="288dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        android:padding="40dp"
+        android:padding="30dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -358,6 +358,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
+        android:padding="20dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -369,6 +370,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/bubblegum_sans"
+            android:paddingTop="5dp"
             android:text="TextView"
             android:textAlignment="center"
             android:textSize="30sp" />
@@ -494,6 +496,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -503,6 +506,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -512,6 +516,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -521,6 +526,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -530,6 +536,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
             </LinearLayout>
@@ -547,6 +554,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -556,6 +564,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -565,6 +574,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -574,6 +584,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -583,6 +594,7 @@
                     android:layout_height="25dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/bubblegum_sans"
+                    android:paddingTop="5dp"
                     android:text="TextView"
                     android:textAlignment="center" />
             </LinearLayout>

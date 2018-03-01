@@ -686,7 +686,6 @@ public class MultithreadGameLogic {
 
     public MultithreadGameLogic(Activity activity, Level level, Unit[] unitInStockPlayer1, Item[] itemInStockPlayer1) {
         this(activity, level.getTerrain());
-        this.unitMenu.setBackground(SystemData.scaleDrawable(R.drawable.plane_yellow, null, SystemData.getScreenHeight() / 2));
         this.isAi = true;
         this.level = level;
         this.unitInDeck.put(true, new Unit[SystemData.CARD_NUM]);
@@ -742,7 +741,24 @@ public class MultithreadGameLogic {
         SystemData.postToUi(new Runnable() {
             @Override
             public void run() {
-                combatBoard.setBackground(SystemData.scaleDrawable(R.drawable.combat_board, SystemData.getScreenWidth(), null));
+                combatBoard.setBackground(SystemData.scaleDrawable(R.drawable.combat_board, SystemData.getScreenWidth(), null, 4));
+                unitMenu.setBackground(SystemData.scaleDrawable(R.drawable.plane_yellow, null, SystemData.getScreenHeight() / 2, 4));
+                activity.findViewById(R.id.EndTurn).setBackground(SystemData.scaleDrawable(R.drawable.blue_button,null,SystemData.PIXEL, 1));
+                activity.findViewById(R.id.Redraw).setBackground(SystemData.scaleDrawable(R.drawable.blue_button,null,SystemData.PIXEL, 1));
+                activity.findViewById(R.id.Draw).setBackground(SystemData.scaleDrawable(R.drawable.blue_button,null,SystemData.PIXEL, 1));
+                activity.findViewById(R.id.cost).setBackground(SystemData.scaleDrawable(R.drawable.button_blue_long,null,SystemData.PIXEL, 4));
+                for (ImageButton imageButton : unitImageButtons){
+                    imageButton.setBackground(SystemData.scaleDrawable(R.drawable.square_blue_button, SystemData.PIXEL, SystemData.PIXEL, 1));
+                }
+                for (ImageButton imageButton : itemImageButtons){
+                    imageButton.setBackground(SystemData.scaleDrawable(R.drawable.square_blue_button, SystemData.PIXEL, SystemData.PIXEL, 1));
+                }
+                for (TextView textView : unitCostTexts){
+                    textView.setBackground(SystemData.scaleDrawable(R.drawable.button_blue_small, SystemData.PIXEL, SystemData.PIXEL, 4));
+                }
+                for (TextView textView : itemCostTexts){
+                    textView.setBackground(SystemData.scaleDrawable(R.drawable.button_blue_small, SystemData.PIXEL, SystemData.PIXEL, 4));
+                }
             }
         });
     }
