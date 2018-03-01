@@ -16,6 +16,7 @@ import java.io.InputStream;
  * Created by WangY on 2018-02-28.
  */
 
+
 public class GifImageView extends View {
     private InputStream myInputStream;
     private Movie myMovie;
