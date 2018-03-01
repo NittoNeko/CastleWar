@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,7 +54,7 @@ public class SystemData {
     public static final ExecutorService gameThreads = Executors.newFixedThreadPool(3);
     public static final ExecutorService oneTimeThread = Executors.newFixedThreadPool(5);
     private static android.os.Handler handler = new android.os.Handler();
-    private static Bitmap cross;
+
 
     // output control
     public final static boolean gameFps = false;
@@ -82,12 +83,39 @@ public class SystemData {
     private static int screenHeight;
     private static int groundLine;
 
+    // Bitmap preset
+    private static Bitmap cross;
+
     public static void initializeConfig(int x, int y)
     {
         screenWidth = x;
         screenHeight = y;
-        groundLine = (int) (screenHeight * 0.75);
+        groundLine = (int) (screenHeight * 0.9);
         cross = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.cross),PIXEL,PIXEL,false);
+    }
+
+    public static Drawable getRandomTitleBackground(){
+        Random random = new Random();
+        int id = random.nextInt(4);
+        switch(id){
+            case 0: return scaleDrawable(R.drawable.background_desert, null, groundLine);
+            case 1: return scaleDrawable(R.drawable.background_desert_border, null, groundLine);
+            case 2: return scaleDrawable(R.drawable.background_desert_road, null, groundLine);
+            case 3: return scaleDrawable(R.drawable.background_ruin, null, groundLine);
+        }
+        return null;
+    }
+
+    public static Bitmap getRandomGameBackground(int backgroundWidth){
+        Random random = new Random();
+        int id = random.nextInt(4);
+        switch(id){
+            case 0: return scaleBitmap(R.drawable.background_mountain, backgroundWidth, null);
+            case 1: return scaleBitmap(R.drawable.background_near_lake, backgroundWidth, null);
+            case 2: return scaleBitmap(R.drawable.background_nice_lake, backgroundWidth, null);
+            case 3: return scaleBitmap(R.drawable.background_night_forest, backgroundWidth, null);
+        }
+        return null;
     }
 
     public static void setContext(Context c){
@@ -150,10 +178,10 @@ public class SystemData {
     }
 
     public static Drawable scaleDrawable(int resource, Integer width, Integer height){
-        return new BitmapDrawable(getContext().getResources(),scaleIconBitmap(resource, width, height));
+        return new BitmapDrawable(getContext().getResources(),scaleBitmap(resource, width, height));
     }
 
-    public static Bitmap scaleIconBitmap(int resource, Integer width, Integer height){
+    public static Bitmap scaleBitmap(int resource, Integer width, Integer height){
         if (width == null && height == null) return null;
         else if (width == null){
             Bitmap original = BitmapFactory.decodeResource(context.getResources(), resource);
@@ -168,9 +196,9 @@ public class SystemData {
         return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), resource), width, height, false);
     }
 
-    public static Bitmap scaleIconBitmap(Bitmap bitmap)
+    public static Bitmap scaleIconBitmap(int resource)
     {
-        return Bitmap.createScaledBitmap(bitmap, PIXEL, PIXEL, false);
+        return scaleBitmap(resource, PIXEL, PIXEL);
     }
 
     public static Bitmap getEmptyIcon(){

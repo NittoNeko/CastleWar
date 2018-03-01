@@ -28,20 +28,14 @@ public class InventoryActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private List<Item> inventoryItems = new ArrayList<>();
-    private long myCoins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_inventory);
         // Initialize items in the shop and add them to the ArrayList
         for (Id.Item item : Id.Item.values()){
             inventoryItems.add(SystemData.createItem(item.ordinal()));
         }
-
-        // Construct User Profile to get amount of coins
-        myCoins = UserProfile.getCOIN().getNum();
-
     }
 
     @Override
@@ -50,11 +44,8 @@ public class InventoryActivity extends AppCompatActivity {
 
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.inventoryItemsRecyclerView);
-
         // Get TextView
         TextView myTextView = findViewById(R.id.coinNum);
-        myTextView.setText(Long.toString(myCoins));
-
         // use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
         myRecyclerView.setLayoutManager(myLayoutManager);
@@ -62,6 +53,5 @@ public class InventoryActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         RecyclerView.Adapter myAdapter = new InventoryItemsRecyclerViewAdapter(inventoryItems);
         myRecyclerView.setAdapter(myAdapter);
-
     }
 }

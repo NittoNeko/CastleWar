@@ -45,7 +45,7 @@ public class Buff extends GameObject {
     {
         public AttackBuff()
         {
-            super(Id.Buff.ATTACK.ordinal(), "Brave", R.drawable.sword_man,
+            super(Id.Buff.ATTACK.ordinal(), "Brave", R.drawable.cross,
                     20, 0, 0, 3);
         }
     }
@@ -54,7 +54,7 @@ public class Buff extends GameObject {
     {
         public DefenseBuff()
         {
-            super(Id.Buff.ATTACK.ordinal(), "Brave", R.drawable.sword_man,
+            super(Id.Buff.ATTACK.ordinal(), "Brave", R.drawable.cross,
                     0, 10, 0, 3);
         }
     }
@@ -63,7 +63,7 @@ public class Buff extends GameObject {
     {
         public SpeedBuff()
         {
-            super(Id.Buff.ATTACK.ordinal(), "Brave", R.drawable.sword_man,
+            super(Id.Buff.ATTACK.ordinal(), "Brave", R.drawable.cross,
                     0, 0, 5, 3);
         }
     }

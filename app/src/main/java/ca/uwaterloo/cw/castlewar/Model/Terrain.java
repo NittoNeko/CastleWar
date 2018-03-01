@@ -133,17 +133,20 @@ public class Terrain extends GameObject {
     private int battleFieldLength;
     private int battleFieldNum;
     private int battleFieldsWidth;
+    private int castleLength;
 
     // NOTE!!! battleFieldNum must be greater than 1
     public Terrain(int id, String name, int resource, int battleFieldLength, int battleFieldNum) {
         super(id, name, resource);
         this.battleFieldNum = battleFieldNum;
         this.battleFieldLength = battleFieldLength;
-        this.battleFieldsWidth = battleFieldLength * (battleFieldNum + 2);
+        this.castleLength = (int) Castle.SIZE;
+        int extraLength = castleLength + battleFieldLength;
+        this.battleFieldsWidth = battleFieldLength * battleFieldNum + 2 * castleLength;
         battleFields = new BattleField[battleFieldNum];
         for (int i = 0; i < battleFieldNum; ++i)
         {
-            if (i == 0 || i == battleFieldNum - 1) battleFields[i] = new BattleField(i, battleFieldLength * 2, this);
+            if (i == 0 || i == battleFieldNum - 1) battleFields[i] = new BattleField(i, extraLength, this);
             else battleFields[i] = new BattleField(i, battleFieldLength, this);
         }
     }
@@ -182,7 +185,7 @@ public class Terrain extends GameObject {
     public static class Forest extends Terrain
     {
         public Forest() {
-            super(Id.Terrain.FOREST.ordinal(), "Forest", R.drawable.forest_ground, 500, 5);
+            super(Id.Terrain.FOREST.ordinal(), "Forest", R.drawable.forest_ground, 500, 4);
             setY(SystemData.getGroundLine() - 50);
         }
     }

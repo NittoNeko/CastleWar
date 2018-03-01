@@ -10,6 +10,7 @@ import android.view.View;
 import android.content.Intent;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -44,6 +45,14 @@ public class MainActivity extends AppCompatActivity{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        ImageView title = findViewById(R.id.GameTitleImage);
+        title.setBackground(SystemData.getRandomTitleBackground());
     }
 
     public void enterSinglePlayer(View view) {

@@ -75,24 +75,11 @@ abstract public class Unit extends GameObject{
 
     @Override
     protected void createPortrait() {
-        Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
-        int width = original.getWidth() / COLUMN;
-        int height = original.getHeight() / ROW;
-        setPortrait(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 1 * width,0,width,height)));
-        original.recycle();
+
     }
 
     public void createMovingImage() {
-        Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
-        int width = original.getWidth() / COLUMN;
-        int height = original.getHeight() / ROW;
-        addLeftMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 0 * width,1 * height,width,height)));
-        addLeftMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 1 * width,1 * height,width,height)));
-        addLeftMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 2 * width,1 * height,width,height)));
-        addRightMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 0 * width,2 * height,width,height)));
-        addRightMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 1 * width,2 * height,width,height)));
-        addRightMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 2 * width,2 * height,width,height)));
-        original.recycle();
+
     }
 
     public Bitmap getMovingImage()

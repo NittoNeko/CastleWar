@@ -452,7 +452,7 @@ public class MultithreadGameLogic {
         {
             screen = Bitmap.createBitmap(backgroundWidth, backgroundHeight, Bitmap.Config.ARGB_8888);
             canvas = new Canvas(screen);
-            canvas.drawBitmap(level.getPortrait(), level.x.get(), level.getY(), paint);
+            canvas.drawBitmap(background, 0, backgroundY, paint);
             canvas.drawBitmap(level.getTerrain().getPortrait(), level.getTerrain().x.get(), level.getTerrain().getY(), paint);
             canvas.drawBitmap(castle.get(true).getPortrait(), castle.get(true).x.get(), castle.get(true).getY(), paint);
             canvas.drawBitmap(castle.get(false).getPortrait(), castle.get(false).x.get(), castle.get(false).getY(), paint);
@@ -607,9 +607,13 @@ public class MultithreadGameLogic {
     private HorizontalScrollView screenView;
     private ProgressBar progressBar;
     private AtomicBoolean hasScroll = new AtomicBoolean();
+    private Bitmap background;
+    private int backgroundY;
 
     private MultithreadGameLogic(Activity activity, Terrain terrain)
     {
+        this.background = SystemData.getRandomGameBackground(terrain.getBattleFieldsWidth());
+        this.backgroundY = (SystemData.getScreenHeight() - background.getHeight()) / 2;
         this.hasScroll.set(true);
         this.progressBar = activity.findViewById(R.id.GameLoading);
         this.paint.setARGB(255, 0, 0,0);
@@ -664,13 +668,13 @@ public class MultithreadGameLogic {
         this.castle.get(true).setPlayer1(true);
         this.castle.get(false).setPlayer1(false);
         this.castle.get(false).x.set(backgroundWidth - castle.get(false).getPortrait().getWidth());
-        int leftCastlePosition = castle.get(true).getPortrait().getWidth() / SystemData.PIXEL / 2;
-        int rightCastlePosition = castle.get(false).getPortrait().getWidth() / SystemData.PIXEL * 3 / 2;
-        for (int i = 0; i < castle.get(true).getPortrait().getWidth() / SystemData.PIXEL; ++i){
+        int leftCastlePosition = Castle.SIZE / SystemData.PIXEL / 2;
+        int rightCastlePosition = Castle.SIZE / SystemData.PIXEL / 2 + terrain.getBattleFieldLength() / SystemData.PIXEL;
+        for (int i = 0; i < Castle.SIZE / SystemData.PIXEL; ++i){
             this.rearBattleField.get(true).getTiles()[i].setUnit(castle.get(true));
             if (i == leftCastlePosition) this.castle.get(true).setCurrentTile(this.rearBattleField.get(true).getTiles()[i]);
         }
-        for (int i = rearBattleField.get(false).getTiles().length - 1; i >= castle.get(false).getPortrait().getWidth() / SystemData.PIXEL; --i){
+        for (int i = rearBattleField.get(false).getTiles().length - 1; i >= Castle.SIZE / SystemData.PIXEL / 2 + terrain.getBattleFieldLength() / SystemData.PIXEL; --i){
             this.rearBattleField.get(false).getTiles()[i].setUnit(castle.get(false));
             if (i == rightCastlePosition) this.castle.get(false).setCurrentTile(this.rearBattleField.get(false).getTiles()[i]);
         }

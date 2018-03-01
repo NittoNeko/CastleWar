@@ -18,7 +18,7 @@ abstract public class Ally extends Unit {
 
     public static class Archer extends Unit {
         public Archer() {
-            super(Id.Unit.ARCHER.ordinal(), "Archer", R.drawable.archer,
+            super(Id.Unit.ARCHER.ordinal(), "Archer", R.drawable.cross,
                     80, 80, 25, 10, 10, 1, 1, 1, 1);
         }
 
@@ -26,14 +26,14 @@ abstract public class Ally extends Unit {
 
     public static class Mage extends Unit {
         public Mage() {
-            super(Id.Unit.MAGE.ordinal(), "Mage", R.drawable.mage,
+            super(Id.Unit.MAGE.ordinal(), "Mage", R.drawable.cross,
                     50, 50, 30, 0, 0, 1, 1, 1, 2);
         }
     }
 
     public static class SwordMan extends Unit {
         public SwordMan() {
-            super(Id.Unit.SWORDMAN.ordinal(), "Sword Man", R.drawable.sword_man,
+            super(Id.Unit.SWORDMAN.ordinal(), "Sword Man", R.drawable.cross,
                     100, 100, 30, 20, 5, 1, 0, 0, 1);
         }
     }

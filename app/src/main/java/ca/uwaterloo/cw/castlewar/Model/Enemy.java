@@ -18,7 +18,7 @@ public class Enemy extends Unit {
     public static class Skeleton extends Unit
     {
         public Skeleton() {
-            super(Id.Unit.SKELETON.ordinal(), "Skeleton", R.drawable.sword_man,
+            super(Id.Unit.SKELETON.ordinal(), "Skeleton", R.drawable.cross,
                     80, 80, 30, 10, 5, 1, 0, 0, 1);
         }
     }
@@ -26,7 +26,7 @@ public class Enemy extends Unit {
     public static class Slime extends Unit
     {
         public Slime() {
-            super(Id.Unit.SLIME.ordinal(), "Slime",R.drawable.archer,
+            super(Id.Unit.SLIME.ordinal(), "Slime",R.drawable.cross,
                     10, 10, 20, 50, 10, 2, 0, 1, 1);
         }
     }
@@ -34,7 +34,7 @@ public class Enemy extends Unit {
     public static class Zombie extends Unit
     {
         public Zombie() {
-            super(Id.Unit.ZOMBIE.ordinal(), "Zombie",R.drawable.mage,
+            super(Id.Unit.ZOMBIE.ordinal(), "Zombie",R.drawable.cross,
                     100, 100, 20, 15, 3, 1, 0, 0, 1);
         }
     }
