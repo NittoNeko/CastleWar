@@ -73,13 +73,8 @@ abstract public class Unit extends GameObject{
         this.moveSpeed = SystemData.PIXEL_PER_UPDATE;
     }
 
-    @Override
-    protected void createPortrait() {
-
-    }
-
-    public void createMovingImage() {
-
+    public void createMovingImage(){
+        // no operation yet
     }
 
     public Bitmap getMovingImage()

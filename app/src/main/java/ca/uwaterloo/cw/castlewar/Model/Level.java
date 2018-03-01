@@ -152,9 +152,9 @@ public class Level extends GameObject {
                     0,
                     new Item[] {SystemData.createItem(Id.Item.HP_POTION.ordinal())
                     },
-                    new Unit[]{SystemData.createUnit(Id.Unit.SLIME.ordinal()),
-                            SystemData.createUnit(Id.Unit.ZOMBIE.ordinal()),
-                            SystemData.createUnit(Id.Unit.SKELETON.ordinal())
+                    new Unit[]{SystemData.createUnit(Id.Unit.BANDIT.ordinal()),
+                            SystemData.createUnit(Id.Unit.THEIF.ordinal()),
+                            SystemData.createUnit(Id.Unit.RANGER.ordinal())
                     },
                     new Reward[]{new Reward(SystemData.createItem(Id.Item.HP_POTION.ordinal()), 3, 1),
                             new Reward(SystemData.createItem(Id.Item.DEFENSE_POTION.ordinal()), 1, 0)
@@ -170,9 +170,9 @@ public class Level extends GameObject {
                     0,
                     new Item[]{SystemData.createItem(Id.Item.HP_POTION.ordinal())
                     },
-                    new Unit[]{SystemData.createUnit(Id.Unit.SLIME.ordinal()),
-                            SystemData.createUnit(Id.Unit.ZOMBIE.ordinal()),
-                            SystemData.createUnit(Id.Unit.SKELETON.ordinal())
+                    new Unit[]{SystemData.createUnit(Id.Unit.BANDIT.ordinal()),
+                            SystemData.createUnit(Id.Unit.THEIF.ordinal()),
+                            SystemData.createUnit(Id.Unit.RANGER.ordinal())
                     },
                     new Reward[]{new Reward(SystemData.createItem(Id.Item.HP_POTION.ordinal()), 3, 1),
                             new Reward(SystemData.createItem(Id.Item.DEFENSE_POTION.ordinal()), 1, 0)

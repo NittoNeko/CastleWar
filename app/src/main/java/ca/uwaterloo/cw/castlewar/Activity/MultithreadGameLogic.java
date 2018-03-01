@@ -681,10 +681,12 @@ public class MultithreadGameLogic {
         this.costPerTurn.put(true, BASIC_RECOVERY);
         this.costPerTurn.put(false, BASIC_RECOVERY);
         initializeImages();
+
     }
 
     public MultithreadGameLogic(Activity activity, Level level, Unit[] unitInStockPlayer1, Item[] itemInStockPlayer1) {
         this(activity, level.getTerrain());
+        this.unitMenu.setBackground(SystemData.scaleDrawable(R.drawable.plane_yellow, null, SystemData.getScreenHeight() / 2));
         this.isAi = true;
         this.level = level;
         this.unitInDeck.put(true, new Unit[SystemData.CARD_NUM]);

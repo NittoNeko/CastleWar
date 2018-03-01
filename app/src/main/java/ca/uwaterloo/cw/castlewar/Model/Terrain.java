@@ -81,9 +81,9 @@ public class Terrain extends GameObject {
             this.terrain = terrain;
             for (int i = 0; i < length / SystemData.PIXEL; ++i)
             {
-                if (id == 0) this.tiles[i] = new Tile(i, id * length / 2 + i * SystemData.PIXEL, SystemData.getGroundLine() - SystemData.PIXEL, this);
-                else if (id == terrain.battleFieldNum - 1) this.tiles[i] = new Tile(i, (id + 1) * length / 2 + i * SystemData.PIXEL, SystemData.getGroundLine() - SystemData.PIXEL, this);
-                else this.tiles[i] = new Tile(i, (id + 1) * length + i * SystemData.PIXEL, SystemData.getGroundLine() - SystemData.PIXEL, this);
+                if (id == 0) this.tiles[i] = new Tile(i,  i * SystemData.PIXEL, SystemData.getGroundLine() - SystemData.PIXEL, this);
+                else if (id == terrain.battleFieldNum - 1) this.tiles[i] = new Tile(i, id * (length - Castle.SIZE) + Castle.SIZE + i * SystemData.PIXEL, SystemData.getGroundLine() - SystemData.PIXEL, this);
+                else this.tiles[i] = new Tile(i, id * length + Castle.SIZE + i * SystemData.PIXEL, SystemData.getGroundLine() - SystemData.PIXEL, this);
             }
         }
 

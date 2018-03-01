@@ -12,7 +12,7 @@ public class Id {
 
 
         // Enemy Units
-        SKELETON, ZOMBIE, SLIME,
+        BANDIT, THEIF, RANGER,
 
         // Castle Units
         HOLY_CASTLE, EVIL_CASTLE,

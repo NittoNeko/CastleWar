@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -27,6 +28,9 @@ public class SinglePlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singleplayer);
+
+        ImageView imageView = findViewById(R.id.LevelBackground);
+        imageView.setImageBitmap(SystemData.scaleBitmap(R.drawable.plane_yellow, SystemData.getScreenWidth(), SystemData.getScreenHeight()));
     }
 
     @Override

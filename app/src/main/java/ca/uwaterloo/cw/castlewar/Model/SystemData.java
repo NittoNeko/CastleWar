@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.Context;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -129,9 +130,9 @@ public class SystemData {
         if (id == Id.Unit.MAGE.ordinal()) return new Ally.Mage();
 
         // ENEMY
-        if (id == Id.Unit.SKELETON.ordinal()) return new Enemy.Skeleton();
-        if (id == Id.Unit.ZOMBIE.ordinal()) return new Enemy.Zombie();
-        if (id == Id.Unit.SLIME.ordinal()) return new Enemy.Slime();
+        if (id == Id.Unit.BANDIT.ordinal()) return new Enemy.Bandit();
+        if (id == Id.Unit.THEIF.ordinal()) return new Enemy.Theif();
+        if (id == Id.Unit.RANGER.ordinal()) return new Enemy.Ranger();
 
         // CASTLE
         if (id == Id.Unit.HOLY_CASTLE.ordinal()) return new Castle.HolyCastle();
@@ -177,6 +178,13 @@ public class SystemData {
         return null;
     }
 
+    public static Bitmap flipHorizontally(int resource, Integer width, Integer height){
+        Bitmap result = scaleBitmap(resource, width, height);
+        Matrix matrix = new Matrix();
+        matrix.preScale(-1.0f, 1.0f);
+        return Bitmap.createBitmap(result, 0, 0, result.getWidth(), result.getHeight(), matrix, true);
+    }
+
     public static Drawable scaleDrawable(int resource, Integer width, Integer height){
         return new BitmapDrawable(getContext().getResources(),scaleBitmap(resource, width, height));
     }
@@ -199,6 +207,11 @@ public class SystemData {
     public static Bitmap scaleIconBitmap(int resource)
     {
         return scaleBitmap(resource, PIXEL, PIXEL);
+    }
+
+    public static Bitmap scaleIconBitmap(Bitmap bitmap)
+    {
+        return Bitmap.createScaledBitmap(bitmap, PIXEL, PIXEL, false);
     }
 
     public static Bitmap getEmptyIcon(){

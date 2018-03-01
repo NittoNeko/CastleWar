@@ -15,27 +15,66 @@ public class Enemy extends Unit {
         super(id, name,resource, hp, maxHp, attack, defense, speed, move, minRange, maxRange, cost);
     }
 
-    public static class Skeleton extends Unit
+    public static class Bandit extends Unit
     {
-        public Skeleton() {
-            super(Id.Unit.SKELETON.ordinal(), "Skeleton", R.drawable.cross,
+        public Bandit() {
+            super(Id.Unit.BANDIT.ordinal(), "Bandit", R.drawable.bandit_icon,
                     80, 80, 30, 10, 5, 1, 0, 0, 1);
         }
-    }
-
-    public static class Slime extends Unit
-    {
-        public Slime() {
-            super(Id.Unit.SLIME.ordinal(), "Slime",R.drawable.cross,
-                    10, 10, 20, 50, 10, 2, 0, 1, 1);
+        @Override
+        public void createMovingImage() {
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.bandit_run_000, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.bandit_run_001, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.bandit_run_002, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.bandit_run_003, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.bandit_run_004, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.bandit_run_000, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.bandit_run_001, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.bandit_run_002, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.bandit_run_003, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.bandit_run_004, SystemData.PIXEL, SystemData.PIXEL));
         }
     }
 
-    public static class Zombie extends Unit
+    public static class Theif extends Unit
     {
-        public Zombie() {
-            super(Id.Unit.ZOMBIE.ordinal(), "Zombie",R.drawable.cross,
-                    100, 100, 20, 15, 3, 1, 0, 0, 1);
+        public Theif() {
+            super(Id.Unit.THEIF.ordinal(), "Theif",R.drawable.theif_icon,
+                    50, 50, 40, 10, 10, 2, 0, 0, 1);
+        }
+        @Override
+        public void createMovingImage() {
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.theif_run_000, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.theif_run_001, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.theif_run_002, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.theif_run_003, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.theif_run_004, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.theif_run_000, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.theif_run_001, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.theif_run_002, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.theif_run_003, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.theif_run_004, SystemData.PIXEL, SystemData.PIXEL));
+        }
+    }
+
+    public static class Ranger extends Unit
+    {
+        public Ranger() {
+            super(Id.Unit.RANGER.ordinal(), "Ranger",R.drawable.ranger_icon,
+                    40, 40, 30, 10, 5, 1, 1, 1, 1);
+        }
+        @Override
+        public void createMovingImage() {
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.ranger_run_000, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.ranger_run_001, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.ranger_run_002, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.ranger_run_003, SystemData.PIXEL, SystemData.PIXEL));
+            addRightMovingImage(SystemData.scaleBitmap(R.drawable.ranger_run_004, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.ranger_run_000, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.ranger_run_001, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.ranger_run_002, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.ranger_run_003, SystemData.PIXEL, SystemData.PIXEL));
+            addLeftMovingImage(SystemData.flipHorizontally(R.drawable.ranger_run_004, SystemData.PIXEL, SystemData.PIXEL));
         }
     }
 }

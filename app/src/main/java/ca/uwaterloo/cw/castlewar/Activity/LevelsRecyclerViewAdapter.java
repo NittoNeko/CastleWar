@@ -1,11 +1,15 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
+import android.media.Image;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import ca.uwaterloo.cw.castlewar.Model.Ally;
@@ -27,7 +31,8 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         public TextView terrainTextView;
         public TextView enemiesTextView;
         public TextView rewardsTextView;
-        public Button startButton;
+        public ImageButton startButton;
+        public CardView backGround;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -50,7 +55,8 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         TextView terrainTextView = levelsView.findViewById(R.id.Terrain);
         TextView enemiesTextView = levelsView.findViewById(R.id.Enemies);
         TextView rewardsTextView = levelsView.findViewById(R.id.Rewards);
-        Button startButton = levelsView.findViewById(R.id.GoButton);
+        ImageButton startButton = levelsView.findViewById(R.id.GoButton);
+        CardView background = levelsView.findViewById(R.id.LevelBackground);
 
         // Create a new ViewHolder instance and assign references to it
         LevelsRecyclerViewAdapter.ViewHolder viewHolder = new LevelsRecyclerViewAdapter.ViewHolder(levelsView);
@@ -59,6 +65,7 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         viewHolder.enemiesTextView = enemiesTextView;
         viewHolder.rewardsTextView = rewardsTextView;
         viewHolder.startButton = startButton;
+        viewHolder.backGround = background;
 
         return viewHolder;
     }
@@ -75,6 +82,8 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         holder.terrainTextView.setText(level.getDisplayableTerrain());
         holder.enemiesTextView.setText(level.getDisplayableEnemies());
         holder.rewardsTextView.setText(level.getDisplayableRewards());
+        holder.startButton.setBackground(SystemData.scaleDrawable(R.drawable.button_right, SystemData.PIXEL, SystemData.PIXEL));
+        holder.backGround.setBackground(SystemData.scaleDrawable(R.drawable.blue_button, SystemData.getScreenWidth(), SystemData.getScreenHeight() / 4));
         holder.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
