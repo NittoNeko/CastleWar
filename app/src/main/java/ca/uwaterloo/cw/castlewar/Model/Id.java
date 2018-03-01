@@ -50,7 +50,10 @@ public class Id {
 
     public enum CombatBoard
     {
-        NAME, HP, ATTACK, DEFENSE, SPEED
+        NAME, HP, MAXHP, ATTACK, DEFENSE, SPEED
     }
 
+    public enum Player{
+        ONE, TWO
+    }
 }

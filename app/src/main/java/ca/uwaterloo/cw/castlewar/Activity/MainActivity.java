@@ -9,6 +9,7 @@ import android.view.Display;
 import android.view.View;
 import android.content.Intent;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -33,8 +34,8 @@ public class MainActivity extends AppCompatActivity{
                     Display display = getWindowManager().getDefaultDisplay();
                     Point point = new Point();
                     display.getSize(point);
-                    SystemData.initializeConfig(MainActivity.this.getApplicationContext(), point.x, point.y);
-                    SystemData.setIfOutput(false);
+                    SystemData.setContext(getApplicationContext());
+                    SystemData.initializeConfig(point.x, point.y);
                     UserProfile.readFromDatabase();
                 }
             }).get();
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
     }
 
     public void enterSinglePlayer(View view) {

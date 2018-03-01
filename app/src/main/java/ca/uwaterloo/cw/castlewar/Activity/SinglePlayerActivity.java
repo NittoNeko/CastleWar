@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.concurrent.ExecutionException;
 
@@ -49,7 +50,8 @@ public class SinglePlayerActivity extends AppCompatActivity {
 
     public void startLevel(final Level level, final Unit[] unitInStockPlayer1, final Item[] itemInStockPlayer1) {
         setContentView(R.layout.game_screen);
-        SystemData.oneTimeThread.submit(new Runnable() {
+        SystemData.setContext(getApplicationContext());
+        SystemData.oneTimeThread.execute(new Runnable() {
             @Override
             public void run() {
                 gameLogic = new MultithreadGameLogic(SinglePlayerActivity.this, level, unitInStockPlayer1, itemInStockPlayer1);

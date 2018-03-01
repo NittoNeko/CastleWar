@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.renderscript.Sampler;
 import android.support.annotation.Nullable;
 import android.view.Display;
@@ -34,6 +36,8 @@ import ca.uwaterloo.cw.castlewar.Activity.MainActivity;
 import ca.uwaterloo.cw.castlewar.Activity.MultithreadGameLogic;
 import ca.uwaterloo.cw.castlewar.R;
 
+import static android.graphics.Bitmap.createScaledBitmap;
+
 /**
  * Created by harri on 2018/2/14.
  */
@@ -52,23 +56,40 @@ public class SystemData {
     private static Bitmap cross;
 
     // output control
-    private static boolean ifOutput = false;
+    public final static boolean gameFps = false;
+    public final static boolean gameFlow = false;
 
     // game setting
-    public final static int PIXEL = 100;
+    public static final int CARD_NUM = 5;
+    public static final int DRAW_NUM = 2;
+    public static final int DRAW_COST = 3;
+    public static final long MAX_FPS = 60;
+    public static final long MIN_FPS = 5;
+    public static final int PIXEL = 100;
+    public static final long MILISECOND = 1000;
+    public static final float SCROLL_PIXEL_PER_SECOND = 2000; // speed of screen
+    public static final int PIXEL_PER_UPDATE = 20;   // speed of character
+    public static final long VALUE_PER_SECOND = 40;  // this is speed of text
+    public static final float LOGIC_PER_SECOND = 30;  // this is the speed of updates of normal background thread
+    public static final float CONSTANT_PER_SECOND = 10; // this is the speed of updates constant anime, music and so on
+    public static final long LOGIC_SLEEP_TIME = MILISECOND / (long) LOGIC_PER_SECOND;
+    public static final long CONSTANT_SLEEP_TIME = MILISECOND / (long) CONSTANT_PER_SECOND;
 
     // size of the device screen
     private static int screenWidth;
     private static int screenHeight;
     private static int groundLine;
 
-    public static void initializeConfig(Context c, int x, int y)
+    public static void initializeConfig(int x, int y)
     {
-        context = c;
         screenWidth = x;
         screenHeight = y;
         groundLine = (int) (screenHeight * 0.75);
-        cross = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(c.getResources(), R.drawable.cross),PIXEL,PIXEL,false);
+        cross = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.cross),PIXEL,PIXEL,false);
+    }
+
+    public static void setContext(Context c){
+        context = c;
     }
 
     public static Unit createUnit(int id) {
@@ -126,6 +147,25 @@ public class SystemData {
         return null;
     }
 
+    public static Drawable scaleDrawable(int resource, Integer width, Integer height){
+        return new BitmapDrawable(getContext().getResources(),scaleIconBitmap(resource, width, height));
+    }
+
+    public static Bitmap scaleIconBitmap(int resource, Integer width, Integer height){
+        if (width == null && height == null) return null;
+        else if (width == null){
+            Bitmap original = BitmapFactory.decodeResource(context.getResources(), resource);
+            float ratio = (float) height / (float) original.getHeight();
+            return Bitmap.createScaledBitmap(original, (int) (original.getWidth() * ratio), height, false);
+        } else if (height == null){
+            Bitmap original = BitmapFactory.decodeResource(context.getResources(), resource);
+            float ratio = (float) width / (float)original.getWidth();
+            return Bitmap.createScaledBitmap(original, width,  (int) (original.getHeight() * ratio), false);
+        }
+
+        return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(context.getResources(), resource), width, height, false);
+    }
+
     public static Bitmap scaleIconBitmap(Bitmap bitmap)
     {
         return Bitmap.createScaledBitmap(bitmap, PIXEL, PIXEL, false);
@@ -150,14 +190,6 @@ public class SystemData {
 
     public static int getScreenHeight() {
         return screenHeight;
-    }
-
-    public static void setIfOutput(boolean ifOutput) {
-        SystemData.ifOutput = ifOutput;
-    }
-
-    public static boolean isIfOutput() {
-        return ifOutput;
     }
 
     public static Context getContext()

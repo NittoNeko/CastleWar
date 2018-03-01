@@ -22,7 +22,9 @@ abstract public class GameObject {
     private String name;
     private String description;
     private int resource;
+    private int currentIndex;
     private Bitmap portrait;
+    private ArrayList<Bitmap> movingImage;
     public final AtomicInteger x = new AtomicInteger();
     private int y;
 
@@ -31,6 +33,7 @@ abstract public class GameObject {
         this.name = name;
         this.resource = resource;
         this.portrait = null;
+        this.currentIndex = 0;
     }
 
     protected void setDescription(String description)
@@ -40,7 +43,7 @@ abstract public class GameObject {
 
     protected void createPortrait()
     {
-        this.portrait = SystemData.scaleIconBitmap(BitmapFactory.decodeResource(SystemData.getContext().getResources(), resource));
+        this.portrait = SystemData.scaleIconBitmap(resource, SystemData.PIXEL, SystemData.PIXEL);
     }
 
     public String getDescription()
