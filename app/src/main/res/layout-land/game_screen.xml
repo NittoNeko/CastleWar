@@ -49,36 +49,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Name"
                 android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/AttackerTitleHp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Hp"
                 android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/AttackerTitleAttack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Attack"
                 android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/AttackerTitleDefense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Defense"
                 android:textAlignment="textEnd"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 tools:text="@string/Defense" />
 
             <TextView
@@ -86,9 +94,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Speed"
                 android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -103,9 +113,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,8 +130,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
+                    android:fontFamily="@font/coming_soon"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
+                    android:textStyle="bold"
                     tools:text="@string/Number" />
 
                 <TextView
@@ -127,15 +141,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
+                    android:fontFamily="@font/coming_soon"
                     android:text="@string/slash"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/AttackerMaxHp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
+                    android:fontFamily="@font/coming_soon"
                     android:textSize="18sp"
+                    android:textStyle="bold"
                     tools:text="@string/Number" />
 
             </LinearLayout>
@@ -145,27 +163,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/AttackerDefense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/AttackerSpeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -181,45 +205,55 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Name"
                 android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/DefenderTitleHp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Hp"
                 android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/DefenderTitleAttack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Attack"
                 android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/DefenderTitleDefense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Defense"
                 android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/DefenderTItleSpeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="@string/Speed"
                 android:textAlignment="textEnd"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -234,9 +268,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -249,8 +285,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
+                    android:fontFamily="@font/coming_soon"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
+                    android:textStyle="bold"
                     tools:text="@string/Number" />
 
                 <TextView
@@ -258,15 +296,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
+                    android:fontFamily="@font/coming_soon"
                     android:text="@string/slash"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/DefenderMaxHp"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
+                    android:fontFamily="@font/coming_soon"
                     android:textSize="18sp"
+                    android:textStyle="bold"
                     tools:text="@string/Number" />
 
             </LinearLayout>
@@ -276,27 +318,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/DefenderDefense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/DefenderSpeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/coming_soon"
                 android:text="TextView"
                 android:textAlignment="textStart"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -320,6 +368,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/bubblegum_sans"
             android:text="TextView"
             android:textAlignment="center"
             android:textSize="30sp" />
@@ -444,6 +493,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -452,6 +502,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -460,6 +511,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -468,6 +520,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -476,6 +529,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
             </LinearLayout>
@@ -492,6 +546,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -500,6 +555,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -508,6 +564,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -516,6 +573,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
 
@@ -524,6 +582,7 @@
                     android:layout_width="50dp"
                     android:layout_height="25dp"
                     android:layout_weight="1"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:text="TextView"
                     android:textAlignment="center" />
             </LinearLayout>
@@ -542,6 +601,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/bubblegum_sans"
                 android:text="@string/Redraw"
                 tools:text="@string/Redraw" />
 
@@ -550,6 +610,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/bubblegum_sans"
                 android:text="@string/EndTurn"
                 tools:text="@string/EndTurn" />
 
@@ -558,6 +619,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/bubblegum_sans"
                 android:text="@string/Draw"
                 tools:text="@string/Draw" />
         </LinearLayout>

@@ -36,7 +36,7 @@ abstract public class Item extends GameObject {
         Coin coins =  UserProfile.getCOIN();
         long money = coins.getNum();
         if(money >= this.buyPrice){
-            coins.setNum(money - this.buyPrice);
+            coins.setNum(money - getBuyPrice());
             UserProfile.increaseItemNum(this.getId());
             return true;
         }
@@ -48,7 +48,7 @@ abstract public class Item extends GameObject {
         long money = coins.getNum();
         int num = UserProfile.getItemNum(this.getId());
         if(num > 0){
-            coins.setNum(money + this.buyPrice);
+            coins.setNum(money + getSellPrice());
             UserProfile.decreaseItemNum(this.getId());
             return true;
         }
