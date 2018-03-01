@@ -66,7 +66,7 @@ public class ShopActivity extends AppCompatActivity {
         myRecyclerView.setLayoutManager(myLayoutManager);
 
         // specify an adapter (see also next example)
-        RecyclerView.Adapter myAdapter = new ShopItemsRecyclerViewAdapter(shopItems);
+        RecyclerView.Adapter myAdapter = new ShopItemsRecyclerViewAdapter(shopItems, myTextView, myCoins);
         myRecyclerView.setAdapter(myAdapter);
 
         // Hide the progress bar when all items are presented
