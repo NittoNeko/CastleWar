@@ -36,9 +36,8 @@ public class InventoryActivity extends AppCompatActivity {
         for (Id.Item item : Id.Item.values()){
             inventoryItems.add(SystemData.createItem(item.ordinal()));
         }
-        setContentView(R.layout.activity_inventory);
-        // Private reference to the progress bar
-        progressBar = findViewById(R.id.progressBar);
+        // Construct User Profile to get amount of coins
+        myCoins = UserProfile.getCOIN().getNum();
     }
 
     @Override
@@ -56,7 +55,5 @@ public class InventoryActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         RecyclerView.Adapter myAdapter = new InventoryItemsRecyclerViewAdapter(inventoryItems);
         myRecyclerView.setAdapter(myAdapter);
-
-
     }
 }

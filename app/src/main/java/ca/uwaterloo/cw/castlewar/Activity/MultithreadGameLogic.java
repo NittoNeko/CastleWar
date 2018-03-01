@@ -92,13 +92,15 @@ public class MultithreadGameLogic {
 
         // return result
         public boolean fight() {
+            if (currentTurn >= MAX_TURN) return true;
             // update turn
             Boolean isAttacker = turns[currentTurn];
             this.currentTurn++;
 
             // execute turn
             if (isAttacker != null) {
-                if (!isAttacker && units.get(!isAttacker) instanceof Castle) return false;
+                if (!isAttacker && defender instanceof Castle) return false;
+                if (isAttacker && attacker instanceof Castle) return false;
                 if (units.get(isAttacker).getMaxRange() < distance || units.get(isAttacker).getMinRange() > distance) return false;
 
                 // take damage
@@ -106,7 +108,7 @@ public class MultithreadGameLogic {
             }
 
             // check death or turn number
-            if (attacker.isDead() || defender.isDead() || currentTurn >= MAX_TURN) return true;
+            if (attacker.isDead() || defender.isDead()) return true;
             return false;
         }
     }
@@ -123,11 +125,11 @@ public class MultithreadGameLogic {
             for (final Id.CombatBoard iterator : Id.CombatBoard.values()) {
                 if (iterator == Id.CombatBoard.NAME) continue;
                 if (before.get(isAttacker).get(iterator).intValue() != after.get(isAttacker).get(iterator).intValue()) {
+                    final Integer intBefore = before.get(isAttacker).get(iterator);
+                    final Integer intAfter = after.get(isAttacker).get(iterator);
                     SystemData.postToUi(new Runnable() {
                         @Override
                         public void run() {
-                            Integer intBefore = before.get(isAttacker).get(iterator);
-                            Integer intAfter = after.get(isAttacker).get(iterator);
                             Integer distance = Math.abs(intBefore.intValue() - intAfter.intValue());
                             final ValueAnimator animator = ValueAnimator.ofInt(intBefore, intAfter);
                             long animeDuration = distance * SystemData.MILISECOND / SystemData.VALUE_PER_SECOND;
@@ -139,12 +141,6 @@ public class MultithreadGameLogic {
                                 public void onAnimationUpdate(final ValueAnimator valueAnimator) {
                                     final String string = valueAnimator.getAnimatedValue().toString();
                                     info.get(iterator).setText(string);
-                                }
-                            });
-                            animator.addListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animator) {
-                                    anime.remove(animator);
                                 }
                             });
                             animator.start();
@@ -203,30 +199,31 @@ public class MultithreadGameLogic {
             if (currentState.get() == Id.GameState.PREPARE) {
                 if (isAi && !isPlayer1.get()) {
                     if (SystemData.gameFlow) System.out.println("Ai'turn");
-                    ArrayList<Future<?>> waitForUnit = new ArrayList<>();
                     if (level.isInterval()) {
                         while (rearBattleField.get(isPlayer1.get()).getAvailableTileNum() > 0) {
-                            waitForUnit.add(placeUnit(random.nextInt(level.getEnemies().length)));
+                            try {
+                                placeUnit(random.nextInt(level.getEnemies().length)).get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
                             if (SystemData.gameFlow) System.out.println("summon enemy");
                         }
                     } else {
                         for (int i = 0; i < level.getMaxUnit(); ++i) {
                             if (rearBattleField.get(isPlayer1.get()).getAvailableTileNum() > 0) {
-                                waitForUnit.add(placeUnit(random.nextInt(level.getEnemies().length)));
+                                try {
+                                    placeUnit(random.nextInt(level.getEnemies().length)).get();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                } catch (ExecutionException e) {
+                                    e.printStackTrace();
+                                }
                                 if (SystemData.gameFlow) System.out.println("summon enemy");
                             } else {
                                 break;
                             }
-                        }
-                    }
-                    // wait for unit generation
-                    for (Future<?> iterator : waitForUnit){
-                        try {
-                            iterator.get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
                         }
                     }
                     // fight
@@ -246,7 +243,6 @@ public class MultithreadGameLogic {
                         postCost();
                         currentState.set(Id.GameState.PREPARE);
 
-
                         // reset isReady for units
                         unitInCombatLock.readLock().lock();
                         for (Unit unit : unitInCombat.get(isPlayer1.get())) {
@@ -258,7 +254,12 @@ public class MultithreadGameLogic {
                     } else {
                         if (SystemData.gameFlow) System.out.println("selected, decide strategy");
                         screenFocusOn(currentUnit);
-                        currentUnit.decideStrategy(terrain);
+                        if (currentUnit.getCurrentTile() == null){
+                            currentUnit = null;
+                            return;
+                        } else {
+                            currentUnit.decideStrategy(terrain);
+                        }
                     }
                 }
                 if (currentUnit.getMoveTile() == null) {
@@ -266,6 +267,10 @@ public class MultithreadGameLogic {
                     // go to combat
                     if (currentUnit.getActionTile() != null) {
                         if (SystemData.gameFlow) System.out.println("have action tile");
+                        attacker = currentUnit.isPlayer1() ? currentUnit : currentUnit.getActionTile().getUnit();
+                        defender = currentUnit.isPlayer1() ? currentUnit.getActionTile().getUnit() : currentUnit;
+                        attacker.changeDirection(defender.getCurrentTile());
+                        defender.changeDirection(attacker.getCurrentTile());
                         // targeting
                         if (!target.isVisible()) {
                             if (SystemData.gameFlow) System.out.println("start targeting");
@@ -280,10 +285,6 @@ public class MultithreadGameLogic {
                                 if (SystemData.gameFlow) System.out.println("finish targeting, switch to combat");
                                 // before go to combat
                                 target.setVisible(false);
-                                attacker = currentUnit;
-                                defender = currentUnit.getActionTile().getUnit();
-                                attacker.changeDirection(defender.getCurrentTile());
-                                defender.changeDirection(attacker.getCurrentTile());
                                 combat = new Combat(attacker, defender);
                                 SystemData.postToUi(new Runnable() {
                                     @Override
@@ -329,7 +330,7 @@ public class MultithreadGameLogic {
 
                         // cause delay between turns
                         try {
-                            Thread.sleep(1000);
+                            Thread.sleep(100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -345,6 +346,12 @@ public class MultithreadGameLogic {
                         playAnime(defenderInfo, false);
                     } else {
                         if (SystemData.gameFlow) System.out.println("waiting for animation");
+                        // check if running
+                        Iterator<ValueAnimator> iterator = anime.iterator();
+                        while (iterator.hasNext()){
+                            ValueAnimator animator = iterator.next();
+                            if (!animator.isRunning()) iterator.remove();
+                        }
                     }
                 }
             }
@@ -355,7 +362,6 @@ public class MultithreadGameLogic {
             while (iterator.hasNext()) {
                 Unit holder = iterator.next();
                 if (holder.isDead()) {
-                    holder.getCurrentTile().setUnit(null);
                     iterator.remove();
                 }
             }
@@ -363,7 +369,6 @@ public class MultithreadGameLogic {
             while (iterator.hasNext()) {
                 Unit holder = iterator.next();
                 if (holder.isDead()) {
-                    holder.getCurrentTile().setUnit(null);
                     iterator.remove();
                 }
             }
@@ -372,10 +377,20 @@ public class MultithreadGameLogic {
             // check win
             if (castle.get(true).isDead()) {
                 // add something in the future
-                activity.onBackPressed();
+                SystemData.postToUi(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.onBackPressed();
+                    }
+                });
             } else if (castle.get(false).isDead()) {
                 // add something
-                activity.onBackPressed();
+                SystemData.postToUi(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.onBackPressed();
+                    }
+                });
             }
         }
 
@@ -462,21 +477,22 @@ public class MultithreadGameLogic {
             SystemData.postToUi(new Runnable() {
                 @Override
                 public void run() {
-                    if (currentState.get() != Id.GameState.COMBAT) gameScreen.setImageBitmap(screen);
+                    //if (currentState.get() != Id.GameState.COMBAT)
+                    gameScreen.setImageBitmap(screen);
                     // set visibility
                     if (currentState.get() == Id.GameState.PREPARE){
-                        if (unitMenu.getVisibility() == View.INVISIBLE) {
+                        if (unitMenu.getVisibility() == View.GONE) {
                             if (isPlayer1.get() || !isAi){
                                 unitMenu.setVisibility(View.VISIBLE);
                             }
                         }
-                        if (combatBoard.getVisibility() == View.VISIBLE) combatBoard.setVisibility(View.INVISIBLE);
+                        if (combatBoard.getVisibility() == View.VISIBLE) combatBoard.setVisibility(View.GONE);
                     } else if (currentState.get() == Id.GameState.COMBAT) {
-                        if (unitMenu.getVisibility() == View.VISIBLE) unitMenu.setVisibility(View.INVISIBLE);
-                        if (combatBoard.getVisibility() == View.INVISIBLE) combatBoard.setVisibility(View.VISIBLE);
+                        if (unitMenu.getVisibility() == View.VISIBLE) unitMenu.setVisibility(View.GONE);
+                        if (combatBoard.getVisibility() == View.GONE) combatBoard.setVisibility(View.VISIBLE);
                     } else if (currentState.get() == Id.GameState.MOVING){
-                        if (unitMenu.getVisibility() == View.VISIBLE) unitMenu.setVisibility(View.INVISIBLE);
-                        if (combatBoard.getVisibility() == View.VISIBLE) combatBoard.setVisibility(View.INVISIBLE);
+                        if (unitMenu.getVisibility() == View.VISIBLE) unitMenu.setVisibility(View.GONE);
+                        if (combatBoard.getVisibility() == View.VISIBLE) combatBoard.setVisibility(View.GONE);
                     }
 
                     if (SystemData.gameFps) System.out.println("after ui set before wake: " + SystemClock.uptimeMillis());
@@ -508,9 +524,6 @@ public class MultithreadGameLogic {
                     e.printStackTrace();
                 }
                 if (!isGameActive.get()) return;
-                if (SystemData.gameFps) System.out.println("before time: " + (realSleepTime - screenSleepTime));
-                if (SystemData.gameFps) System.out.println("now time: " + SystemClock.uptimeMillis());
-                if (SystemData.gameFps) System.out.println("sleep time: " + screenSleepTime);
                 realSleepTime -= SystemClock.uptimeMillis();
                 if (SystemData.gameFps) System.out.println("real sleep time: " + realSleepTime);
                     if (realSleepTime > 0)
@@ -816,20 +829,19 @@ public class MultithreadGameLogic {
                     buttonLock.writeLock().unlock();
                     return;
                 }
-                if (isPlayer1.get() || !isAi){
+                if (isPlayer1.get() || !isAi) {
                     if (unitInDeck.get(isPlayer1.get())[position].cost.get() > cost.get(isPlayer1.get())) {
                         buttonLock.writeLock().unlock();
                         return;
                     }
                 }
-
+                if (rearBattleField.get(isPlayer1.get()).getAvailableTileNum() <= 0) return;
                 Terrain.Tile tile = rearBattleField.get(isPlayer1.get()).findFirstAvailableTile(isPlayer1.get());
                 Unit unit = SystemData.createUnit(unitInDeck.get(isPlayer1.get())[position].getId());
                 if (unit == null) return;
                 unit.x.set(castle.get(isPlayer1.get()).getCurrentTile().getX());
                 unit.setPlayer1(isPlayer1.get());
                 unit.setLeft(!isPlayer1.get());
-                unit.setCurrentTile(castle.get(isPlayer1.get()).getCurrentTile());
                 unit.setMoveTile(tile);
                 tile.setUnit(unit);
                 if (!isAi || isPlayer1.get()) {
@@ -895,7 +907,9 @@ public class MultithreadGameLogic {
             unitImageButtons[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    placeUnit(position);
+                    if (rearBattleField.get(isPlayer1.get()).getAvailableTileNum() > 0){
+                        placeUnit(position);
+                    }
                 }
             });
 
@@ -954,7 +968,7 @@ public class MultithreadGameLogic {
         else if (x > backgroundWidth - SystemData.getScreenWidth()) x = backgroundWidth - SystemData.getScreenWidth();
         final int copy = x;
         final float scrollTime = Math.abs(screenView.getScrollX() - copy) * SystemData.MILISECOND / SystemData.SCROLL_PIXEL_PER_SECOND;
-        if (Math.abs(screenView.getScrollX() - copy) < SystemData.getScreenWidth() * 0.3) return;
+        if (Math.abs(screenView.getScrollX() - copy) < SystemData.getScreenWidth() * 0.1) return;
         hasScroll.set(false);
         SystemData.postToUi(new Runnable() {
             @Override
@@ -989,7 +1003,7 @@ public class MultithreadGameLogic {
         SystemData.postToUi(new Runnable() {
             @Override
             public void run() {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 screenView.setVisibility(View.VISIBLE);
             }
         });

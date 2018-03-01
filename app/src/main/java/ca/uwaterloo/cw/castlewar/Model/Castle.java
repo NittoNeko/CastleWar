@@ -30,7 +30,7 @@ public class Castle extends Unit {
     {
         public HolyCastle() {
             super(Id.Unit.HOLY_CASTLE.ordinal(),"Holy Castle", R.drawable.castle,
-                    200, 200, 50, 25);
+                    200, 200, 0, 15);
         }
     }
 }
