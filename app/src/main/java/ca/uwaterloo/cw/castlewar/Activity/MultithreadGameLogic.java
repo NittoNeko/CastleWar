@@ -254,7 +254,12 @@ public class MultithreadGameLogic {
                     } else {
                         if (SystemData.gameFlow) System.out.println("selected, decide strategy");
                         screenFocusOn(currentUnit);
-                        currentUnit.decideStrategy(terrain);
+                        if (currentUnit.getCurrentTile() == null){
+                            currentUnit = null;
+                            return;
+                        } else {
+                            currentUnit.decideStrategy(terrain);
+                        }
                     }
                 }
                 if (currentUnit.getMoveTile() == null) {
@@ -262,6 +267,10 @@ public class MultithreadGameLogic {
                     // go to combat
                     if (currentUnit.getActionTile() != null) {
                         if (SystemData.gameFlow) System.out.println("have action tile");
+                        attacker = currentUnit.isPlayer1() ? currentUnit : currentUnit.getActionTile().getUnit();
+                        defender = currentUnit.isPlayer1() ? currentUnit.getActionTile().getUnit() : currentUnit;
+                        attacker.changeDirection(defender.getCurrentTile());
+                        defender.changeDirection(attacker.getCurrentTile());
                         // targeting
                         if (!target.isVisible()) {
                             if (SystemData.gameFlow) System.out.println("start targeting");
@@ -276,10 +285,6 @@ public class MultithreadGameLogic {
                                 if (SystemData.gameFlow) System.out.println("finish targeting, switch to combat");
                                 // before go to combat
                                 target.setVisible(false);
-                                attacker = currentUnit.isPlayer1() ? currentUnit : currentUnit.getActionTile().getUnit();
-                                defender = currentUnit.isPlayer1() ? currentUnit.getActionTile().getUnit() : currentUnit;
-                                attacker.changeDirection(defender.getCurrentTile());
-                                defender.changeDirection(attacker.getCurrentTile());
                                 combat = new Combat(attacker, defender);
                                 SystemData.postToUi(new Runnable() {
                                     @Override
@@ -837,7 +842,6 @@ public class MultithreadGameLogic {
                 unit.x.set(castle.get(isPlayer1.get()).getCurrentTile().getX());
                 unit.setPlayer1(isPlayer1.get());
                 unit.setLeft(!isPlayer1.get());
-                unit.setCurrentTile(castle.get(isPlayer1.get()).getCurrentTile());
                 unit.setMoveTile(tile);
                 tile.setUnit(unit);
                 if (!isAi || isPlayer1.get()) {
@@ -964,7 +968,7 @@ public class MultithreadGameLogic {
         else if (x > backgroundWidth - SystemData.getScreenWidth()) x = backgroundWidth - SystemData.getScreenWidth();
         final int copy = x;
         final float scrollTime = Math.abs(screenView.getScrollX() - copy) * SystemData.MILISECOND / SystemData.SCROLL_PIXEL_PER_SECOND;
-        if (Math.abs(screenView.getScrollX() - copy) < SystemData.getScreenWidth() * 0.3) return;
+        if (Math.abs(screenView.getScrollX() - copy) < SystemData.getScreenWidth() * 0.1) return;
         hasScroll.set(false);
         SystemData.postToUi(new Runnable() {
             @Override

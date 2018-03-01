@@ -180,6 +180,7 @@ abstract public class Unit extends GameObject{
                 if (!tile.isAvailable()){
                     if (tile.getUnit().isPlayer1() != isPlayer1){
                         actionTile = tile;
+                        if (actionTile.getUnit() instanceof  Castle) actionTile = actionTile.getUnit().getCurrentTile();
                         break outerloop1;
                     }
                 }
@@ -194,6 +195,7 @@ abstract public class Unit extends GameObject{
                             && Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.move
                             && !checkHasEnemy(this.currentTile, tile, terrain)) {
                         moveTile = tile;
+                        if (moveTile.getParentId() == this.getCurrentTile().getParentId()) moveTile = null;
                         return;
                     }
                 }
@@ -238,6 +240,7 @@ abstract public class Unit extends GameObject{
                                 && (isAimleft ? tile.getParentId() <= this.getCurrentTile().getParentId() : tile.getParentId() >= this.getCurrentTile().getParentId())
                                 && !checkHasEnemy(this.currentTile, tile, terrain)){
                             moveTile = tile;
+                            if (moveTile.getParentId() == this.getCurrentTile().getParentId()) moveTile = null;
                             break outerloop3;
                         }
                     }
@@ -254,6 +257,7 @@ abstract public class Unit extends GameObject{
                         if (Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.maxRange
                                 && Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) >= this.minRange){
                             actionTile = tile;
+                            if (actionTile.getUnit() instanceof  Castle) actionTile = actionTile.getUnit().getCurrentTile();
                             return;
                         }
                     }
@@ -315,7 +319,7 @@ abstract public class Unit extends GameObject{
             else x.set(x.get() - moveSpeed);
         } else{
             // if not just initialized
-            if (!(currentTile.getUnit() instanceof  Castle)){
+            if (currentTile != null){
                 currentTile.setUnit(null);
             }
             // finish move
