@@ -11,11 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Id;
 import ca.uwaterloo.cw.castlewar.Model.Item;
 import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
 
 import java.util.ArrayList;
@@ -26,11 +28,19 @@ public class InventoryActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private List<Item> inventoryItems = new ArrayList<>();
+    private long myCoins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
+        // Initialize items in the shop and add them to the ArrayList
+        for (Id.Item item : Id.Item.values()){
+            inventoryItems.add(SystemData.createItem(item.ordinal()));
+        }
+
+        // Construct User Profile to get amount of coins
+        myCoins = UserProfile.getCOIN().getNum();
 
         // Private reference to the progress bar
         progressBar = findViewById(R.id.progressBar);
@@ -40,13 +50,15 @@ public class InventoryActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // Initialize items in the shop and add them to the ArrayList
-        for (Id.Item item : Id.Item.values()){
-            inventoryItems.add(SystemData.createItem(item.ordinal()));
-        }
+        // Show the status before the start
+        progressBar.setVisibility(View.VISIBLE);
 
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.inventoryItemsRecyclerView);
+
+        // Get TextView
+        TextView myTextView = findViewById(R.id.coinNum);
+        myTextView.setText(Long.toString(myCoins));
 
         // use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -55,6 +67,9 @@ public class InventoryActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         RecyclerView.Adapter myAdapter = new InventoryItemsRecyclerViewAdapter(inventoryItems);
         myRecyclerView.setAdapter(myAdapter);
+
+        // Hide the progress bar when all items are presented
+        progressBar.setVisibility(View.INVISIBLE);
 
     }
 }

@@ -1,5 +1,6 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
+import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,10 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Item;
+import ca.uwaterloo.cw.castlewar.Model.SystemData;
+import ca.uwaterloo.cw.castlewar.Model.UserProfile;
 import ca.uwaterloo.cw.castlewar.R;
+
 
 
 import java.util.List;
@@ -66,17 +71,24 @@ public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<Inve
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+
         // Get the pair to have its data displayed at position in the list
         final Item item = myInventoryItems.get(position);
+        final Context context = SystemData.getContext();
+        final TextView myTextView = holder.itemNameTextView;
 
         // Assign data to view components
-        holder.itemNameTextView.setText(item.getName());
-        holder.itemButton.setText(Integer.toString((int)item.getNum()));
+        holder.itemNameTextView.setText(item.getName() + " x " + UserProfile.getItemNum(item.getId()));
         holder.itemDescriptionTextView.setText(item.getDescription());
         holder.itemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                item.Sell();
+                if(item.Sell()){
+                    Toast.makeText(context,"Item Sold", Toast.LENGTH_SHORT).show();
+                    myTextView.setText(item.getName() + " x " + UserProfile.getItemNum(item.getId()));
+                } else {
+                    Toast.makeText(context,"Not Enough Item" , Toast.LENGTH_SHORT).show();
+                }
             }
         });
         // Load Picture to view components

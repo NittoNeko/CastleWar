@@ -1,6 +1,7 @@
 package ca.uwaterloo.cw.castlewar.Model;
 
 import android.graphics.Bitmap;
+import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,7 +13,6 @@ abstract public class Item extends GameObject {
     public final AtomicInteger cost = new AtomicInteger();
     private int buyPrice;
     private int sellPrice;
-    private long num;
 
     public Item(int id,String name, int resource, int buyPrice, int sellPrice, int cost)
     {
@@ -30,25 +30,28 @@ abstract public class Item extends GameObject {
         return sellPrice;
     }
 
-    public long getNum() {
-        return num;
-    }
 
-    public void Buy(){
+
+    public boolean Buy(){
         Coin coins =  UserProfile.getCOIN();
         long money = coins.getNum();
         if(money >= this.buyPrice){
             coins.setNum(money - this.buyPrice);
-            this.num++;
+            UserProfile.increaseItemNum(this.getId());
+            return true;
         }
+        return false;
     }
 
-    public void Sell(){
+    public boolean Sell(){
         Coin coins =  UserProfile.getCOIN();
         long money = coins.getNum();
-        if(this.num > 0){
+        int num = UserProfile.getItemNum(this.getId());
+        if(num > 0){
             coins.setNum(money + this.buyPrice);
-            this.num--;
+            UserProfile.decreaseItemNum(this.getId());
+            return true;
         }
+        return false;
     }
 }
