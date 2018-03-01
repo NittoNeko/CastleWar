@@ -28,6 +28,7 @@ public class Potion extends Item {
         {
             super(Id.Item.HP_POTION.ordinal(), "Health Potion", R.drawable.hp_potion,
                     100, 50, null, 1);
+            this.setDescription("The HP Portion costs 100 coins to buy, and gives 50 coins after selling, it can heal and increase your HP to maximum.");
         }
 
     }
@@ -38,6 +39,7 @@ public class Potion extends Item {
         {
             super(Id.Item.ATTACK_POTION.ordinal(), "Attack Potion",R.drawable.attack_potion,
                     300, 200, null, 1);
+            this.setDescription("The Attack Potion costs 300 coins to buy, and gives 200 coins after selling, it can increase your character's attack ability.");
         }
     }
 
@@ -47,6 +49,7 @@ public class Potion extends Item {
         {
             super(Id.Item.DEFENSE_POTION.ordinal(), "Defense Potion", R.drawable.defense_potion,
                     200, 100, null, 1);
+            this.setDescription("The Defense Potion costs 200 coins to buy, and give 100 coins after selling, it can increase your character's defense ability.");
         }
     }
 
@@ -56,6 +59,7 @@ public class Potion extends Item {
         {
             super(Id.Item.SPEED_POTION.ordinal(), "Speed Potion",R.drawable.speed_potion,
                     100, 50, null, 1);
+            this.setDescription("The Speed Potion costs 100 coins to buy, and give 50 coins after selling, it can increase your character's speed.");
         }
     }
 }
