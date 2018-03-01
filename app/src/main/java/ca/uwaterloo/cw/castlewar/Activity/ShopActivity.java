@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import ca.uwaterloo.cw.castlewar.Model.Coin;
 import ca.uwaterloo.cw.castlewar.Model.GameObject;
 import ca.uwaterloo.cw.castlewar.Model.Id;
 import ca.uwaterloo.cw.castlewar.Model.Item;
@@ -27,6 +28,7 @@ public class ShopActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private List<Item> shopItems = new ArrayList<>();
+    private long myCoins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,9 @@ public class ShopActivity extends AppCompatActivity {
         for (Id.Item item : Id.Item.values()){
             shopItems.add(SystemData.createItem(item.ordinal()));
         }
+
+        // Construct User Profile to get amount of coins
+        myCoins = UserProfile.getCOIN().getNum();
 
         // Private reference to the progress bar
         progressBar = findViewById(R.id.progressBar);
@@ -51,8 +56,11 @@ public class ShopActivity extends AppCompatActivity {
 
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.shopItemsRecyclerView);
+
         // Get the TextView
         TextView myTextView = findViewById(R.id.coinNum);
+        myTextView.setText(Long.toString(myCoins));
+
         // use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
         myRecyclerView.setLayoutManager(myLayoutManager);
@@ -60,8 +68,6 @@ public class ShopActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         RecyclerView.Adapter myAdapter = new ShopItemsRecyclerViewAdapter(shopItems);
         myRecyclerView.setAdapter(myAdapter);
-
-
 
         // Hide the progress bar when all items are presented
         progressBar.setVisibility(View.INVISIBLE);
