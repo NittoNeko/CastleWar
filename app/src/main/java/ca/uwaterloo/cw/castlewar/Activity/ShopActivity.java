@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -62,9 +63,8 @@ public class ShopActivity extends AppCompatActivity {
         TextView myTextView = findViewById(R.id.coinNum);
         myTextView.setText(Long.toString(myCoins));
 
-        // Get the WebView
-        WebView myWebView = (WebView) findViewById(R.id.webView);
-        myWebView.loadUrl("file:///android_asset/coins.gif");
+        // Get the ImageView
+        ImageView myImageView = (ImageView) findViewById(R.id.imageView);
 
         // use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
