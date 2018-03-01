@@ -45,8 +45,6 @@ public class InventoryActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
-
         // Get the RecyclerView instance
         RecyclerView myRecyclerView = (RecyclerView) findViewById(R.id.inventoryItemsRecyclerView);
         // Get TextView
