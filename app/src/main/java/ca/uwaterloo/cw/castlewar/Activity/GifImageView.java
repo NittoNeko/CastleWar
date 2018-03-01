@@ -4,9 +4,12 @@ import android.view.View;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Movie;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
@@ -82,4 +85,6 @@ public class GifImageView extends View {
         myInputStream = myContext.getResources().openRawResource(id);
         init();
     }
+
+
 }
