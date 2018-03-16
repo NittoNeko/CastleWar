@@ -28,6 +28,7 @@
 public class InventoryActivity extends AppCompatActivity {
 
     private List<Item> inventoryItems = new ArrayList<>();
+    private long myCoins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class InventoryActivity extends AppCompatActivity {
         TextView myTextView = findViewById(R.id.coinNum);
         long money = UserProfile.getCOIN().getNum();
         myTextView.setText(Long.toString(money));
+
         // use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
         myRecyclerView.setLayoutManager(myLayoutManager);
@@ -61,6 +63,8 @@ public class InventoryActivity extends AppCompatActivity {
         RecyclerView.Adapter myAdapter = new InventoryItemsRecyclerViewAdapter(inventoryItems, myTextView);
         myRecyclerView.setAdapter(myAdapter);
 
+        // Hide the progress bar when all items are presented
+        progressBar.setVisibility(View.INVISIBLE);
 
     }
 }

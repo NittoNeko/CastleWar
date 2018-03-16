@@ -29,6 +29,7 @@ public class ShopActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private List<Item> shopItems = new ArrayList<>();
+    private long myCoins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,9 @@ public class ShopActivity extends AppCompatActivity {
         for (Id.Item item : Id.Item.values()){
             shopItems.add(SystemData.createItem(item.ordinal()));
         }
+
+        // Construct User Profile to get amount of coins
+        myCoins = UserProfile.getCOIN().getNum();
 
         // Private reference to the progress bar
         progressBar = findViewById(R.id.progressBar);
@@ -58,8 +62,10 @@ public class ShopActivity extends AppCompatActivity {
 
         // Get the TextView
         TextView myTextView = findViewById(R.id.coinNum);
+
         long money = UserProfile.getCOIN().getNum();
         myTextView.setText(Long.toString(money));
+
         // use a linear layout manager
         RecyclerView.LayoutManager myLayoutManager = new LinearLayoutManager(getApplicationContext());
         myRecyclerView.setLayoutManager(myLayoutManager);
