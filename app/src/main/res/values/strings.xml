@@ -29,4 +29,6 @@
     <string name="EndTurn">End Turn</string>
     <string name="Redraw">Redraw</string>
     <string name="Draw">Draw</string>
+    <string name="slash">/</string>
+    <string name="Number">99</string>
 </resources>

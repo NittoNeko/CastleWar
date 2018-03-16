@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.renderscript.Sampler;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -31,11 +32,11 @@ abstract public class Unit extends GameObject{
     public final AtomicInteger attack = new AtomicInteger();
     public final AtomicInteger defense = new AtomicInteger();
     public final AtomicInteger speed = new AtomicInteger();
+    private final int moveSpeed;
     public int move;
     private int minRange;
     private int maxRange;
     private boolean isIndexLeft;
-    private boolean isAttacker;
     private int currentIndex;
     private AtomicBoolean isLeft = new AtomicBoolean();
     public final AtomicInteger cost = new AtomicInteger();
@@ -69,30 +70,12 @@ abstract public class Unit extends GameObject{
         this.isIndexLeft = true;
         this.moveTile = null;
         this.actionTile = null;
-        this.isAttacker = true;
         this.isReady = true;
+        this.moveSpeed = SystemData.PIXEL_PER_UPDATE;
     }
 
-    @Override
-    protected void createPortrait() {
-        Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
-        int width = original.getWidth() / COLUMN;
-        int height = original.getHeight() / ROW;
-        setPortrait(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 1 * width,0,width,height)));
-        original.recycle();
-    }
-
-    protected void createMovingImage() {
-        Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
-        int width = original.getWidth() / COLUMN;
-        int height = original.getHeight() / ROW;
-        addLeftMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 0 * width,1 * height,width,height)));
-        addLeftMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 1 * width,1 * height,width,height)));
-        addLeftMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 2 * width,1 * height,width,height)));
-        addRightMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 0 * width,2 * height,width,height)));
-        addRightMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 1 * width,2 * height,width,height)));
-        addRightMovingImage(SystemData.scaleIconBitmap(Bitmap.createBitmap(original, 2 * width,2 * height,width,height)));
-        original.recycle();
+    public void createMovingImage(){
+        // no operation yet
     }
 
     public Bitmap getMovingImage()
@@ -180,6 +163,7 @@ abstract public class Unit extends GameObject{
                 if (!tile.isAvailable()){
                     if (tile.getUnit().isPlayer1() != isPlayer1){
                         actionTile = tile;
+                        if (actionTile.getUnit() instanceof  Castle) actionTile = actionTile.getUnit().getCurrentTile();
                         break outerloop1;
                     }
                 }
@@ -194,17 +178,15 @@ abstract public class Unit extends GameObject{
                             && Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.move
                             && !checkHasEnemy(this.currentTile, tile, terrain)) {
                         moveTile = tile;
+                        if (moveTile.getParentId() == this.getCurrentTile().getParentId()) moveTile = null;
                         return;
                     }
                 }
             }
-        }
-        // if exist, get its direction
-        else {
+        } else {
             if (actionTile.getParentId() < this.getCurrentTile().getParentId()){
                 isAimleft = true;
-            }
-            else if (actionTile.getParentId() > this.getCurrentTile().getParentId()){
+            } else if (actionTile.getParentId() > this.getCurrentTile().getParentId()){
                 isAimleft = false;
             } else{
                 if (isPlayer1) isAimleft = true;
@@ -241,6 +223,7 @@ abstract public class Unit extends GameObject{
                                 && (isAimleft ? tile.getParentId() <= this.getCurrentTile().getParentId() : tile.getParentId() >= this.getCurrentTile().getParentId())
                                 && !checkHasEnemy(this.currentTile, tile, terrain)){
                             moveTile = tile;
+                            if (moveTile.getParentId() == this.getCurrentTile().getParentId()) moveTile = null;
                             break outerloop3;
                         }
                     }
@@ -257,6 +240,7 @@ abstract public class Unit extends GameObject{
                         if (Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) <= this.maxRange
                                 && Math.abs(tile.getParentId() - this.getCurrentTile().getParentId()) >= this.minRange){
                             actionTile = tile;
+                            if (actionTile.getUnit() instanceof  Castle) actionTile = actionTile.getUnit().getCurrentTile();
                             return;
                         }
                     }
@@ -265,19 +249,13 @@ abstract public class Unit extends GameObject{
         }
     }
 
-    public int attack(Unit defender){
-        // prepare attack
-        int damage = this.attack.get() - defender.defense.get();
-        if (damage < 0) damage = 0;
-        return damage;
-    }
-
-    // take in attacker and damage as input
-    // return current hp
-    public int takeDamage(Unit attacker, int damage){
+    // take damage
+    public void takeDamage(Unit attacker){
+        int damage = attacker.attack.get() - this.defense.get();
+        if (damage <= 0) damage = 1;
         int currentHp = this.hp.get() - damage;
         if (currentHp < 0) currentHp = 0;
-        return currentHp;
+        hp.set(currentHp);
     }
 
     public boolean isDead(){
@@ -310,6 +288,51 @@ abstract public class Unit extends GameObject{
         }
     }
 
+    public void move(){
+        if (moveTile == null) return;
+        if (moveTile.getX() > x.get()){
+            // finish move
+            if (isLeft.get()) isLeft.set(false);
+            if (x.get() + moveSpeed > moveTile.getX()) x.set(moveTile.getX());
+            else x.set(x.get() + moveSpeed);
+        } else if (moveTile.getX() < x.get()){
+            // finish move
+            if (!isLeft.get()) isLeft.set(true);
+            if (x.get() - moveSpeed < moveTile.getX()) x.set(moveTile.getX());
+            else x.set(x.get() - moveSpeed);
+        } else{
+            // if not just initialized
+            if (currentTile != null){
+                currentTile.setUnit(null);
+            }
+            // finish move
+            currentTile = moveTile;
+            currentTile.setUnit(this);
+            moveTile = null;
+        }
+    }
+
+    public void setMoveingImage(ArrayList<Bitmap> leftMoveingImage, ArrayList<Bitmap> rightMovingImage) {
+        this.leftMovingImage = leftMoveingImage;
+        this.rightMovingImage = rightMovingImage;
+    }
+
+    public ArrayList<Bitmap> getRightMovingImage() {
+        return rightMovingImage;
+    }
+
+    public ArrayList<Bitmap> getLeftMovingImage() {
+        return leftMovingImage;
+    }
+
+    public void setMoveTile(Terrain.Tile moveTile) {
+        this.moveTile = moveTile;
+    }
+
+    public void setActionTile(Terrain.Tile actionTile) {
+        this.actionTile = actionTile;
+    }
+
     public boolean isReady() {
         return isReady;
     }
@@ -336,14 +359,6 @@ abstract public class Unit extends GameObject{
 
     public int getMaxRange() {
         return maxRange;
-    }
-
-    public boolean isAttacker() {
-        return isAttacker;
-    }
-
-    public void setAttacker(boolean attacker) {
-        isAttacker = attacker;
     }
 
     public Terrain.Tile getCurrentTile() {

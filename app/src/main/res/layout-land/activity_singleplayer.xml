@@ -6,37 +6,24 @@
     android:layout_height="match_parent"
     tools:context="ca.uwaterloo.cw.castlewar.Activity.SinglePlayerActivity">
 
-    <Button
-        android:id="@+id/BackButton"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="75dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:onClick="onBackPressed"
-        android:text="@string/BackButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/BackButton" />
+    <ImageView
+        android:id="@+id/LevelBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/LevelsRecyclerView"
-        android:layout_width="576dp"
-        android:layout_height="305dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/BackButton"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/levels" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
 
 </android.support.constraint.ConstraintLayout>

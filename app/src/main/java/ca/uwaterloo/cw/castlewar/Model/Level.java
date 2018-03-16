@@ -112,8 +112,10 @@ public class Level extends GameObject {
         Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
         float ratio = (float) terrain.getBattleFieldsWidth() / (float) original.getWidth();
         setPortrait(createScaledBitmap(original, terrain.getBattleFieldsWidth(), (int) (original.getHeight() * ratio), false));
-        setY((SystemData.getScreenHeight() - getPortrait().getHeight()) / 2);
+
     }
+
+
 
     public Terrain getTerrain() {
         return terrain;
@@ -147,12 +149,12 @@ public class Level extends GameObject {
     {
         public Level_1_1() {
             super(Id.Level.ONE_ONE.ordinal(), "Level 1-1",
-                    R.drawable.forest_background,
+                    0,
                     new Item[] {SystemData.createItem(Id.Item.HP_POTION.ordinal())
                     },
-                    new Unit[]{SystemData.createUnit(Id.Unit.SLIME.ordinal()),
-                            SystemData.createUnit(Id.Unit.ZOMBIE.ordinal()),
-                            SystemData.createUnit(Id.Unit.SKELETON.ordinal())
+                    new Unit[]{SystemData.createUnit(Id.Unit.BANDIT.ordinal()),
+                            SystemData.createUnit(Id.Unit.THEIF.ordinal()),
+                            SystemData.createUnit(Id.Unit.RANGER.ordinal())
                     },
                     new Reward[]{new Reward(SystemData.createItem(Id.Item.HP_POTION.ordinal()), 3, 1),
                             new Reward(SystemData.createItem(Id.Item.DEFENSE_POTION.ordinal()), 1, 0)
@@ -165,12 +167,12 @@ public class Level extends GameObject {
     public static class Level_1_2 extends Level {
         public Level_1_2() {
             super(Id.Level.ONE_TWO.ordinal(), "Level 1-2",
-                    R.drawable.forest_background,
+                    0,
                     new Item[]{SystemData.createItem(Id.Item.HP_POTION.ordinal())
                     },
-                    new Unit[]{SystemData.createUnit(Id.Unit.SLIME.ordinal()),
-                            SystemData.createUnit(Id.Unit.ZOMBIE.ordinal()),
-                            SystemData.createUnit(Id.Unit.SKELETON.ordinal())
+                    new Unit[]{SystemData.createUnit(Id.Unit.BANDIT.ordinal()),
+                            SystemData.createUnit(Id.Unit.THEIF.ordinal()),
+                            SystemData.createUnit(Id.Unit.RANGER.ordinal())
                     },
                     new Reward[]{new Reward(SystemData.createItem(Id.Item.HP_POTION.ordinal()), 3, 1),
                             new Reward(SystemData.createItem(Id.Item.DEFENSE_POTION.ordinal()), 1, 0)

@@ -13,7 +13,7 @@ import static android.graphics.Bitmap.createScaledBitmap;
  */
 
 public class Castle extends Unit {
-    private final static float SIZE = 500;  // must be multiple of Unit.PIXEL
+    public final static int SIZE = 300;  // must be multiple of Unit.PIXEL
     public Castle(int id, String name, int resource, int hp, int maxHp, int attack, int defense) {
         super(id, name, resource, hp, maxHp, attack, defense, 0, 0,0,1, 0);
     }
@@ -21,8 +21,8 @@ public class Castle extends Unit {
     @Override
     protected void createPortrait() {
         Bitmap original = BitmapFactory.decodeResource(SystemData.getContext().getResources(), getResource());
-        float ratio = 500f / (float) original.getWidth();
-        setPortrait(createScaledBitmap(original, 500, (int) (original.getHeight() * ratio), false));
+        float ratio = (float)SIZE / (float) original.getWidth();
+        setPortrait(createScaledBitmap(original, SIZE, (int) (original.getHeight() * ratio), false));
         setY(SystemData.getGroundLine() - getPortrait().getHeight());
     }
 
@@ -30,7 +30,7 @@ public class Castle extends Unit {
     {
         public HolyCastle() {
             super(Id.Unit.HOLY_CASTLE.ordinal(),"Holy Castle", R.drawable.castle,
-                    200, 200, 50, 25);
+                    200, 200, 0, 15);
         }
     }
 }

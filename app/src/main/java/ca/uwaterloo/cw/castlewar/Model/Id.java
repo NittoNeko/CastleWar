@@ -12,7 +12,7 @@ public class Id {
 
 
         // Enemy Units
-        SKELETON, ZOMBIE, SLIME,
+        BANDIT, THEIF, RANGER,
 
         // Castle Units
         HOLY_CASTLE, EVIL_CASTLE,
@@ -50,7 +50,10 @@ public class Id {
 
     public enum CombatBoard
     {
-        NAME, HP, ATTACK, DEFENSE, SPEED
+        NAME, HP, MAXHP, ATTACK, DEFENSE, SPEED
     }
 
+    public enum Player{
+        ONE, TWO
+    }
 }

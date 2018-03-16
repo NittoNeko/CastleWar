@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/LevelBackground"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -22,31 +23,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
+            <ImageButton
                 android:id="@+id/GoButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/GoButton"
-                android:textAlignment="center"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/GoButton" />
+                app:layout_constraintVertical_bias="0.333" />
 
             <TextView
                 android:id="@+id/Terrain"
                 android:layout_width="100dp"
                 android:layout_height="25dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:fontFamily="@font/bubblegum_sans"
                 android:scrollHorizontally="false"
                 android:text="@string/Terrain"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/background_light"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/itemName" />
@@ -56,11 +57,14 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/bubblegum_sans"
                 android:scrollHorizontally="false"
                 android:text="@string/Levels"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/background_light"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,9 +73,12 @@
                 android:layout_width="75dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/bubblegum_sans"
                 android:text="@string/EnemyTitle"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/background_light"
+                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/itemName"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="@string/EnemyTitle" />
@@ -80,11 +87,13 @@
                 android:id="@+id/RewardTitle"
                 android:layout_width="75dp"
                 android:layout_height="25dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:fontFamily="@font/bubblegum_sans"
                 android:text="@string/RewardTitle"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/background_light"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/Terrain"
                 app:layout_constraintTop_toBottomOf="@+id/EnemyTitle"
@@ -94,7 +103,7 @@
                 android:layout_width="300dp"
                 android:layout_height="25dp"
                 android:layout_marginEnd="72dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -108,9 +117,12 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:scrollHorizontally="true"
                     android:text="@string/Enemies"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/background_light"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.099"
@@ -123,7 +135,7 @@
             <HorizontalScrollView
                 android:layout_width="300dp"
                 android:layout_height="25dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:layout_marginEnd="72dp"
                 android:scrollbars="none"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -137,9 +149,12 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/bubblegum_sans"
                     android:scrollHorizontally="true"
                     android:text="@string/Rewards"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/background_light"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/RewardTitle"
                     app:layout_constraintTop_toTopOf="@id/Enemies" />

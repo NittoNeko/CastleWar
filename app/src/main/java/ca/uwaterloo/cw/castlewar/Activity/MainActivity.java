@@ -2,6 +2,7 @@ package ca.uwaterloo.cw.castlewar.Activity;
 
 import android.app.Activity;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.view.Display;
 import android.view.View;
 import android.content.Intent;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,7 +28,6 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         try {
             SystemData.oneTimeThread.submit(new Runnable() {
                 @Override
@@ -33,8 +35,8 @@ public class MainActivity extends AppCompatActivity{
                     Display display = getWindowManager().getDefaultDisplay();
                     Point point = new Point();
                     display.getSize(point);
-                    SystemData.initializeConfig(MainActivity.this.getApplicationContext(), point.x, point.y);
-                    SystemData.setIfOutput(false);
+                    SystemData.setContext(getApplicationContext());
+                    SystemData.initializeConfig(point.x, point.y);
                     UserProfile.readFromDatabase();
                 }
             }).get();
@@ -43,7 +45,17 @@ public class MainActivity extends AppCompatActivity{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        findViewById(R.id.SinglePlayer).setBackground(SystemData.scaleDrawable(R.drawable.blue_button,null,null,1));
+        findViewById(R.id.Shop).setBackground(SystemData.scaleDrawable(R.drawable.blue_button,null,null,1));
+        findViewById(R.id.Inventory).setBackground(SystemData.scaleDrawable(R.drawable.blue_button,null,null,1));
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        ImageView title = findViewById(R.id.GameTitleImage);
+        title.setBackground(SystemData.getRandomTitleBackground());
     }
 
     public void enterSinglePlayer(View view) {
