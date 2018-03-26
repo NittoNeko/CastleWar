@@ -12,10 +12,9 @@
         import android.widget.TextView;
         import android.widget.Toast;
 
-        import ca.uwaterloo.cw.castlewar.Model.GameObject;
-        import ca.uwaterloo.cw.castlewar.Model.Item;
-        import ca.uwaterloo.cw.castlewar.Model.SystemData;
-        import ca.uwaterloo.cw.castlewar.Model.UserProfile;
+        import ca.uwaterloo.cw.castlewar.Item.Item;
+        import ca.uwaterloo.cw.castlewar.Base.System;
+        import ca.uwaterloo.cw.castlewar.Base.User;
         import ca.uwaterloo.cw.castlewar.R;
 
 
@@ -76,26 +75,29 @@ public class InventoryItemsRecyclerViewAdapter extends RecyclerView.Adapter<Inve
 
         // Get the pair to have its data displayed at position in the list
         final Item item = myInventoryItems.get(position);
-        final Context context = SystemData.getContext();
+        final Context context = System.context();
         final TextView myItemTextView = holder.itemNameTextView;
 
 
         // Assign data to view components
-        holder.itemNameTextView.setText(item.getName() + " x " + UserProfile.getItemNum(item.getId()));
+        String string = item.getName() + " (Level " + Integer.toString(item.getLevel()) + ")";
+        holder.itemNameTextView.setText(string);
         holder.itemDescriptionTextView.setText(item.getDescription());
-        holder.itemPictureImageView.setBackground(SystemData.scaleDrawable(R.drawable.item_background, SystemData.PIXEL,SystemData.PIXEL,1));
-        holder.itemButton.setBackground(SystemData.scaleDrawable(R.drawable.yellow_button, SystemData.PIXEL,SystemData.PIXEL,2));
+        holder.itemPictureImageView.setBackground(System.scaleDrawable(R.drawable.item_background, 200,200,1));
+        holder.itemButton.setBackground(System.scaleDrawable(R.drawable.yellow_button, 200,200,2));
         holder.itemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
                 if(item.Sell()){
                     Toast.makeText(context,"Item Sold", Toast.LENGTH_SHORT).show();
-                    myItemTextView.setText(item.getName() + " x " + UserProfile.getItemNum(item.getId()));
-                    long money = UserProfile.getCOIN().getNum();
+                    myItemTextView.setText(item.getName() + " x " + User.getItemNum(item.getId()));
+                    long money = User.getCOIN().getNum();
                     myTextView.setText(Long.toString(money));
                 } else {
                     Toast.makeText(context,"Not Enough Item" , Toast.LENGTH_SHORT).show();
                 }
+                */
             }
         });
         // Load Picture to view components

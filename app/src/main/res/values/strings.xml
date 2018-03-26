@@ -31,4 +31,5 @@
     <string name="Draw">Draw</string>
     <string name="slash">/</string>
     <string name="Number">99</string>
+    <string name="Difficulty">Difficulty:</string>
 </resources>

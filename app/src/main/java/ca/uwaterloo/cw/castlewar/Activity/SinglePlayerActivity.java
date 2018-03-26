@@ -1,29 +1,23 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import java.util.concurrent.ExecutionException;
-
-import ca.uwaterloo.cw.castlewar.Model.Item;
-import ca.uwaterloo.cw.castlewar.Model.Level;
-import ca.uwaterloo.cw.castlewar.Model.SystemData;
-import ca.uwaterloo.cw.castlewar.Model.Unit;
-import ca.uwaterloo.cw.castlewar.Model.UserProfile;
+import ca.uwaterloo.cw.castlewar.Base.System;
+import ca.uwaterloo.cw.castlewar.Base.User;
+import ca.uwaterloo.cw.castlewar.Item.Item;
+import ca.uwaterloo.cw.castlewar.Game.Level;
+import ca.uwaterloo.cw.castlewar.Game.GameManager;
+import ca.uwaterloo.cw.castlewar.Unit.Unit;
 import ca.uwaterloo.cw.castlewar.R;
 
 
 public class SinglePlayerActivity extends AppCompatActivity {
-    private MultithreadGameLogic gameLogic = null;
+    private GameManager gameManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +30,7 @@ public class SinglePlayerActivity extends AppCompatActivity {
         super.onStart();
 
         ImageView imageView = findViewById(R.id.LevelBackground);
-        imageView.setImageBitmap(SystemData.scaleBitmap(R.drawable.plane_yellow, SystemData.getScreenWidth(), SystemData.getScreenHeight(),8));
+        imageView.setImageBitmap(System.scaleBitmap(R.drawable.plane_yellow, System.getScreenWidth(), System.getScreenHeight(),8));
 
         // Get the RecyclerView instance
         RecyclerView levelsRecyclerView = findViewById(R.id.LevelsRecyclerView);
@@ -55,12 +49,11 @@ public class SinglePlayerActivity extends AppCompatActivity {
 
     public void startLevel(final Level level, final Unit[] unitInStockPlayer1, final Item[] itemInStockPlayer1) {
         setContentView(R.layout.game_screen);
-        SystemData.setContext(getApplicationContext());
-        SystemData.oneTimeThread.execute(new Runnable() {
+        System.oneTimeThread.execute(new Runnable() {
             @Override
             public void run() {
-                gameLogic = new MultithreadGameLogic(SinglePlayerActivity.this, level, unitInStockPlayer1, itemInStockPlayer1);
-                gameLogic.onFirstStart();
+                gameManager = new GameManager(SinglePlayerActivity.this, level);
+                gameManager.onFirstStart();
             }
         });
 
@@ -69,14 +62,25 @@ public class SinglePlayerActivity extends AppCompatActivity {
     public void onResume()
     {
         super.onResume();
-        if (gameLogic != null)
-            gameLogic.onResume();
+        if (gameManager != null)
+            gameManager.onResume();
     }
 
     public void onPause()
     {
         super.onPause();
-        if(gameLogic != null)
-            gameLogic.onPause();
+        if(gameManager != null)
+            gameManager.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        for (Unit unit : User.currentLawfuls()) {
+            unit.getSprite().freeAll();
+        }
+        for (Unit unit : User.currentChaotics()) {
+            unit.getSprite().freeAll();
+        }
     }
 }

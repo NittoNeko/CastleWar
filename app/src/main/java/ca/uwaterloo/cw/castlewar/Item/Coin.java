@@ -1,5 +1,6 @@
-package ca.uwaterloo.cw.castlewar.Model;
+package ca.uwaterloo.cw.castlewar.Item;
 
+import ca.uwaterloo.cw.castlewar.Base.GameObject;
 import ca.uwaterloo.cw.castlewar.R;
 
 /**
@@ -10,7 +11,7 @@ public class Coin extends GameObject {
     private long num;
     public Coin()
     {
-        super(0, "Coin", R.drawable.ic_launcher_background);
+        super(0, "Coin","Currency", R.drawable.ic_launcher_background);
         this.num = 0;
     }
 

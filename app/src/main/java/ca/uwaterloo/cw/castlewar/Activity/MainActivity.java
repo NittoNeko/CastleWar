@@ -1,25 +1,16 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
-import android.app.Activity;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.content.Intent;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import java.util.concurrent.ExecutionException;
 
-import ca.uwaterloo.cw.castlewar.Model.Potion;
-import ca.uwaterloo.cw.castlewar.Model.SystemData;
-import ca.uwaterloo.cw.castlewar.Model.UserProfile;
+import ca.uwaterloo.cw.castlewar.Base.System;
+import ca.uwaterloo.cw.castlewar.Base.User;
 import ca.uwaterloo.cw.castlewar.R;
 
 public class MainActivity extends AppCompatActivity{
@@ -28,16 +19,13 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final Handler handler = new Handler();
         try {
-            SystemData.oneTimeThread.submit(new Runnable() {
+            System.oneTimeThread.submit(new Runnable() {
                 @Override
                 public void run() {
-                    Display display = getWindowManager().getDefaultDisplay();
-                    Point point = new Point();
-                    display.getSize(point);
-                    SystemData.setContext(getApplicationContext());
-                    SystemData.initializeConfig(point.x, point.y);
-                    UserProfile.readFromDatabase();
+                    System.initialize(getWindowManager(), handler);
+                    User.initialize();
                 }
             }).get();
         } catch (InterruptedException e) {
@@ -45,9 +33,9 @@ public class MainActivity extends AppCompatActivity{
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        findViewById(R.id.SinglePlayer).setBackground(SystemData.scaleDrawable(R.drawable.blue_button,null,null,1));
-        findViewById(R.id.Shop).setBackground(SystemData.scaleDrawable(R.drawable.blue_button,null,null,1));
-        findViewById(R.id.Inventory).setBackground(SystemData.scaleDrawable(R.drawable.blue_button,null,null,1));
+        findViewById(R.id.SinglePlayer).setBackground(System.scaleDrawable(R.drawable.blue_button,null,null,1));
+        findViewById(R.id.Shop).setBackground(System.scaleDrawable(R.drawable.blue_button,null,null,1));
+        findViewById(R.id.Inventory).setBackground(System.scaleDrawable(R.drawable.blue_button,null,null,1));
     }
 
     @Override
@@ -55,7 +43,7 @@ public class MainActivity extends AppCompatActivity{
         super.onStart();
 
         ImageView title = findViewById(R.id.GameTitleImage);
-        title.setBackground(SystemData.getRandomTitleBackground());
+        title.setBackground(System.getRandomTitleBackground());
     }
 
     public void enterSinglePlayer(View view) {
