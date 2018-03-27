@@ -11,6 +11,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -23,6 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.share.model.ShareVideo;
+import com.facebook.share.model.ShareVideoContent;
+import com.facebook.share.widget.ShareDialog;
 
 import org.w3c.dom.Text;
 
@@ -49,6 +54,8 @@ import ca.uwaterloo.cw.castlewar.Item.Item;
 import ca.uwaterloo.cw.castlewar.Base.User;
 import ca.uwaterloo.cw.castlewar.R;
 import ca.uwaterloo.cw.castlewar.Unit.Unit;
+
+import static com.facebook.FacebookSdk.getCacheDir;
 
 
 /**
@@ -630,7 +637,18 @@ public class GameManager {
         facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ShareDialog shareDialog = new ShareDialog(activity);
+                Uri videoFileUri = Uri.parse("file://" + getCacheDir().getAbsolutePath() + "/gameplay.mp4");
+                ShareVideo video = new ShareVideo.Builder()
+                        .setLocalUrl(videoFileUri)
+                        .build();
+                ShareVideoContent content = new ShareVideoContent.Builder()
+                        .setContentTitle("My combat Videos")
+                        .setContentDescription("Time to show my true skill")
+                        .setVideo(video)
+                        .build();
+                if(shareDialog.canShow(ShareVideoContent.class)){
+                    shareDialog.show(content);
             }
         });
     }
