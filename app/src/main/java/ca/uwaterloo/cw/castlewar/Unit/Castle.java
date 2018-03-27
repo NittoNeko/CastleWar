@@ -20,7 +20,7 @@ public class Castle extends Unit {
     public static final int SIZE = 300;
 
     public Castle(int id, String name, String description, int resource, Status status) {
-        super(id, name, description, resource, status,null,null, Id.Direction.RIGHT);
+        super(id, name, description, resource, status,null,null, Id.Direction.RIGHT, Id.Attack.HIT);
         this.getSprite().disableUnit();
         this.getSprite().addResources(null, null, resource);
         this.getSprite().setConfig(SIZE, SIZE, 4);

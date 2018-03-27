@@ -27,7 +27,7 @@ public class Damage {
         float damage = (attack * attackMultiplier - defense * defenseMultiplier) * resistance;
         if (damage <= 0) damage = 0;
         damage += (int) pircing * resistance;
-        if (damage <= 0) damage = 0;
+        if (damage <= 0) damage = 1;
         return (int) damage;
     }
 
