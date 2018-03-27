@@ -21,47 +21,42 @@ import ca.uwaterloo.cw.castlewar.Structure.Id;
 
 public class Sprite {
     private Atomic.Id<Id.Direction> indexFlow;
-    private Atomic.Id<Id.Image> currentImage;
     private Atomic.Id<Id.Direction> direction;
+    private Id.Direction initialDirection;
     private Integer width;
     private Integer height;
     private int downsize;
     private AtomicInteger x;
     private AtomicInteger y;
     private int portraitResource;
-    private HashMap<Id.Direction, Bitmap> portrait;
-    private HashMap<Id.Image, AtomicInteger> horizonIndex;
-    private HashMap<Id.Image, HashMap<Id.Direction, ArrayList<Bitmap>>> horizonBitmaps;
-    private HashMap<Id.Image, ArrayList<Integer>> horizonResources;
+    private int moveResource;
+    private int combatResource;
+    private Bitmap portrait;
+    private HashMap<Id.Direction, Bitmap> combat;
+    private AtomicInteger moveIndex;
+    private HashMap<Id.Direction, ArrayList<Bitmap>> move;
+    private boolean isUnit;
 
     public Sprite(int portraitResource) {
         this.x = new AtomicInteger(0);
         this.y = new AtomicInteger(0);
-        this.horizonBitmaps = null;
-        this.horizonResources = null;
         this.portraitResource = portraitResource;
         this.width = 100;
         this.height = 100;
         this.downsize = 4;
-        this.portrait = new HashMap<>();
+        this.isUnit = false;
+        this.initialDirection = Id.Direction.RIGHT;
         this.indexFlow = new Atomic.Id<>(Id.Direction.RIGHT);
-        this.currentImage = new Atomic.Id<>(Id.Image.PORTRAIT);
         this.direction = new Atomic.Id<>(Id.Direction.RIGHT);
-    }
-
-    public void switchImage(Id.Image image) {
-        this.currentImage.set(image);
     }
 
     public void clone(Sprite source){
         this.x.set(source.x.get());
         this.y.set(source.y.get());
         this.portrait = source.portrait;
-        this.horizonBitmaps = source.horizonBitmaps;
-        this.horizonIndex = new HashMap<>();
-        for (Id.Image image : Id.Image.values()) {
-            horizonIndex.put(image, new AtomicInteger(0));
-        }
+        this.combat = source.combat;
+        this.move = source.move;
+        this.moveIndex = new AtomicInteger(0);
     }
 
     // set how big the bitmap should be
@@ -73,78 +68,99 @@ public class Sprite {
         if (height == null || height > 0) this.height = height;
     }
 
-    // image.PORTRAIT should not be added
-    public void addResources(Id.Image image, ArrayList<Integer> resources) {
-        if (image == Id.Image.PORTRAIT) return;
-        if (horizonResources == null) horizonResources = new HashMap<>();
-        horizonResources.put(image, resources);
+    public void addResources(Integer portraitResource, Integer moveResource, Integer combatResource) {
+        if (portraitResource != null) this.portraitResource = portraitResource;
+        if (moveResource != null) this.moveResource = moveResource;
+        if (combatResource != null) this.combatResource = combatResource;
     }
 
     // ALL initialization methods should NOT be called often
     // only once when initializing a new game
     // when generating new units, use copy moving image instead
-    public void initializeBitmaps(Id.Image image){
-        // check resources added
-        if (horizonIndex == null) horizonIndex = new HashMap<>();
-        if (horizonIndex.get(image) == null) horizonIndex.put(image, new AtomicInteger(0));
-        if (horizonResources == null || horizonResources.get(image) == null) return;
-        if (horizonBitmaps == null) horizonBitmaps = new HashMap<>();
-        if (horizonBitmaps.get(image) == null) horizonBitmaps.put(image, new HashMap<Id.Direction, ArrayList<Bitmap>>());
-
-        horizonBitmaps.get(image).put(Id.Direction.LEFT, new ArrayList<Bitmap>());
-        horizonBitmaps.get(image).put(Id.Direction.RIGHT, new ArrayList<Bitmap>());
-        for (int resource : horizonResources.get(image)){
-            this.horizonBitmaps.get(image).get(Id.Direction.RIGHT).add(System.scaleBitmap(resource, this.width, this.height, this.downsize));
-        }
-        for (Bitmap bitmap : this.horizonBitmaps.get(image).get(Id.Direction.RIGHT)){
-            this.horizonBitmaps.get(image).get(Id.Direction.LEFT).add(System.flipHorizontally(bitmap));
-        }
+    public void initializeAll(){
+        initializePortrait();
+        initializeMove();
+        initializeCombat();
     }
 
-    // extract current bitmap
+    private void initializeCombat() {
+        this.setConfig(500, 500, 1);
+        this.combat = new HashMap<>();
+
+        this.combat.put(initialDirection, System.scaleBitmap(this.combatResource, this.width, this.height, this.downsize));
+        this.combat.put(initialDirection.getOpponent(), System.flipHorizontally(this.combat.get(initialDirection)));
+    }
+
+    private void initializeMove() {
+        this.move = new HashMap<>();
+        this.move.put(Id.Direction.LEFT, new ArrayList<Bitmap>());
+        this.move.put(Id.Direction.RIGHT, new ArrayList<Bitmap>());
+        this.setConfig(Tile.SIZE, Tile.SIZE, 1);
+        int row = 8;
+        int column = 12;
+        Bitmap original = System.scaleBitmap(moveResource, null, null, 1);
+        int width = original.getWidth() / column;
+        int height = original.getHeight() / row;
+
+        this.move.get(Id.Direction.LEFT).add(System.scaleBitmap(Bitmap.createBitmap(original, 0 * width, 1 * height, width, height), this.width, this.height, this.downsize));
+        this.move.get(Id.Direction.LEFT).add(System.scaleBitmap(Bitmap.createBitmap(original, 1 * width, 1 * height,  width, height), this.width, this.height, this.downsize));
+        this.move.get(Id.Direction.LEFT).add(System.scaleBitmap(Bitmap.createBitmap(original, 2 * width, 1 * height, width, height), this.width, this.height, this.downsize));
+
+        this.move.get(Id.Direction.RIGHT).add(System.scaleBitmap(Bitmap.createBitmap(original, 0 * width, 2 * height, width, height), this.width, this.height, this.downsize));
+        this.move.get(Id.Direction.RIGHT).add(System.scaleBitmap(Bitmap.createBitmap(original, 1 * width, 2 * height,  width, height), this.width, this.height, this.downsize));
+        this.move.get(Id.Direction.RIGHT).add(System.scaleBitmap(Bitmap.createBitmap(original, 2 * width, 2  * height, width, height), this.width, this.height, this.downsize));
+    }
+
+    // extract current move bitmap
     public Bitmap getBitmap() {
-        if (this.currentImage.get() == Id.Image.PORTRAIT) return getPortrait();
-        if (horizonBitmaps.get(this.currentImage.get()) == null) initializeBitmaps(this.currentImage.get());
-        return horizonBitmaps.get(this.currentImage.get()).get(direction.get()).get(horizonIndex.get(this.currentImage.get()).get());
+        if (this.move == null) return getPortrait();
+        return move.get(direction.get()).get(this.moveIndex.get());
     }
 
-    public ArrayList<Bitmap> getBitmaps(Id.Image image, Id.Direction direction) {
-        if (this.currentImage.get() == Id.Image.PORTRAIT) return null;
-        if (horizonBitmaps.get(this.currentImage.get()) == null) initializeBitmaps(this.currentImage.get());
-        return horizonBitmaps.get(image).get(direction);
-    }
-
-    public void initializePortrait(Id.Direction direction){
-        if (direction == Id.Direction.RIGHT) {
-            this.portrait.put(direction, System.scaleBitmap(portraitResource, this.width, this.height, this.downsize));
+    private void initializePortrait(){
+        if (isUnit) {
+            int row = 2;
+            int column = 4;
+            Bitmap original = System.scaleBitmap(this.portraitResource, null, null, 1);
+            int width = original.getWidth() / column;
+            int height = original.getHeight() / row;
+            this.portrait = System.scaleBitmap(Bitmap.createBitmap(original, 0, 0, width, height), this.width, this.height, this.downsize);
         } else {
-            this.portrait.put(direction, System.flipHorizontally(portraitResource, this.width, this.height, this.downsize));
+            this.portrait = System.scaleBitmap(this.portraitResource, this.width,  this.height, this.downsize);
         }
-    }
-
-    public Bitmap getPortrait(Id.Direction direction) {
-        if (portrait.get(direction) == null) initializePortrait(direction);
-        return portrait.get(direction);
     }
 
     public Bitmap getPortrait() {
-        if (portrait.get(direction.get()) == null) initializePortrait(direction.get());
-        return portrait.get(direction.get());
+        if (portrait == null) initializePortrait();
+        return portrait;
+    }
+
+    public Bitmap getCombat(Id.Direction direction) {
+        if (combat == null) initializeCombat();
+        return combat.get(direction);
     }
 
     public void freeAll() {
-        if (horizonBitmaps == null) return;
-        for (Id.Image image : Id.Image.values()) {
-            if (horizonBitmaps.get(image) == null) continue;
-            for (Id.Direction direction : Id.Direction.values()) {
-                if (horizonBitmaps.get(image).get(direction) == null) continue;
-                for (Bitmap bitmap : horizonBitmaps.get(image).get(direction)) {
-                    if (bitmap == null) continue;
-                    bitmap.recycle();
-                }
-            }
+        if (combat != null) {
+            this.combat.get(Id.Direction.LEFT).recycle();
+            this.combat.get(Id.Direction.RIGHT).recycle();
+            this.combat = null;
         }
-        horizonBitmaps = null;
+
+        if (move != null) {
+            for (Bitmap bitmap : move.get(Id.Direction.LEFT)) {
+                bitmap.recycle();
+            }
+            for (Bitmap bitmap : move.get(Id.Direction.RIGHT)) {
+                bitmap.recycle();
+            }
+            this.move = null;
+        }
+
+        if (this.portrait != null) {
+            this.portrait.recycle();
+            this.portrait = null;
+        }
     }
 
     public int getY() {
@@ -164,15 +180,13 @@ public class Sprite {
     }
 
     public void switchBitmap() {
-        Id.Image image = this.currentImage.get();
-        if (image == Id.Image.PORTRAIT) return;
-        int currentIndex = this.horizonIndex.get(image).get();
-        int length = horizonBitmaps.get(image).size();
+        int currentIndex = this.moveIndex.get();
+        int size = this.move.get(this.direction.get()).size();
 
-        if (length <= 1) return;
+        if (size <= 1) return;
         if (currentIndex == 0)
             indexFlow.set(Id.Direction.RIGHT);
-        else if (currentIndex == length - 1)
+        else if (currentIndex == size - 1)
             indexFlow.set(Id.Direction.LEFT);
 
         if (indexFlow.get() == Id.Direction.LEFT)
@@ -180,11 +194,23 @@ public class Sprite {
         else
             currentIndex += 1;
 
-        this.horizonIndex.get(image).set(currentIndex);
+        this.moveIndex.set(currentIndex);
     }
 
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(this.getBitmap(), this.getX(), this.getY(), paint);
+        canvas.drawBitmap(portrait, x.get(), y.get(), paint);
+    }
+
+    public void setInitialDirection(Id.Direction initialDirection) {
+        this.initialDirection = initialDirection;
+    }
+
+    public void enableUnit() {
+        this.isUnit = true;
+    }
+
+    public void disableUnit() {
+        this.isUnit = false;
     }
 
     public void setDirection(Id.Direction direction) {
@@ -239,4 +265,5 @@ public class Sprite {
             this.visible.set(visible);
         }
     }
+
 }

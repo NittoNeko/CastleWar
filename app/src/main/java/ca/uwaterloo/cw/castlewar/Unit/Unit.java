@@ -4,6 +4,8 @@ package ca.uwaterloo.cw.castlewar.Unit;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.health.SystemHealthManager;
 import android.util.Log;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import ca.uwaterloo.cw.castlewar.Effect.Buff;
 import ca.uwaterloo.cw.castlewar.Effect.Effect;
 import ca.uwaterloo.cw.castlewar.Base.GameObject;
 import ca.uwaterloo.cw.castlewar.Game.Combat;
+import ca.uwaterloo.cw.castlewar.Game.GameManager;
 import ca.uwaterloo.cw.castlewar.R;
 import ca.uwaterloo.cw.castlewar.Structure.CombatView;
 import ca.uwaterloo.cw.castlewar.Structure.Id;
@@ -47,21 +50,18 @@ abstract public class Unit extends GameObject {
     private CombatView combatView;
 
 
-    public Unit(int id, String name, String description, int resource, Status status, ArrayList<Integer> idle, ArrayList<Integer> walk, ArrayList<Integer> run, ArrayList<Integer> attack, ArrayList<Integer> die) {
+    public Unit(int id, String name, String description, int resource, Status status, Integer move ,Integer combat, Id.Direction initialDirection) {
         super(id, name, description, resource, status);
         this.player = Id.Player.ONE;
         this.moveTile = null;
         this.actionTile = null;
         this.isReady = true;
         this.level = 1;
+        this.getSprite().enableUnit();
+        this.getSprite().setInitialDirection(initialDirection);
+        this.getSprite().addResources(null, move, combat);
         this.getSprite().setConfig(Tile.SIZE, Tile.SIZE, 4);
-        this.getSprite().addResources(Id.Image.IDLE, idle);
-        this.getSprite().addResources(Id.Image.WALK, walk);
-        this.getSprite().addResources(Id.Image.RUN, run);
-        this.getSprite().addResources(Id.Image.ATTACK, attack);
-        this.getSprite().addResources(Id.Image.DIE, die);
         this.getSprite().setY(System.getGroundLine() - Tile.SIZE);
-        this.getSprite().switchImage(Id.Image.IDLE);
     }
 
     public void clone(Unit unit) {
@@ -228,9 +228,6 @@ abstract public class Unit extends GameObject {
             attackAbility.apply(this);
         }
 
-        // play attack animation
-        final Animation animation = new Animation();
-        final ArrayList<Bitmap> attack = this.getSprite().getBitmaps(Id.Image.ATTACK, checkDirection());
     }
 
     public void defend() {
@@ -268,10 +265,14 @@ abstract public class Unit extends GameObject {
         getBaseStatus().setHp(currentHp);
         reapplyEffect();
         int after = this.getModifiedStatus().getHp();
+
+        // play animation
         final Animation animation = new Animation();
         final CombatView combatView = this.combatView;
         animation.setIntValues(before, after);
-        animation.setDuration(1000);
+        Integer delta = Math.abs(before - after);
+        long duration = delta * Animation.MILISECOND / Animation.VALUE_PER_SECOND;
+        animation.setDuration(duration);
         animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -286,6 +287,7 @@ abstract public class Unit extends GameObject {
                 animation.start();
             }
         });
+        animation.waitForStart();
     }
 
     public boolean isDead(){
@@ -403,7 +405,7 @@ abstract public class Unit extends GameObject {
     public void reflectOnView() {
         if (combatView == null) return;
         final Status status = this.getModifiedStatus();
-        final Bitmap portrait = this.getSprite().getPortrait(checkDirection());
+        final Bitmap portrait = this.getSprite().getCombat(checkDirection());
         final ArrayList<Effect> effects = this.currentEffects;
         System.runOnUi(new Runnable() {
             @Override
@@ -504,6 +506,12 @@ abstract public class Unit extends GameObject {
     public void setCombatView(CombatView combatView) {
         this.combatView = combatView;
         reflectOnView();
+    }
+
+    @Override
+    public void draw(Canvas canvas, Paint paint) {
+        Sprite sprite = getSprite();
+        canvas.drawBitmap(sprite.getBitmap(), sprite.getX(), sprite.getY(), paint);
     }
 
     public Damage getDamage() {

@@ -13,8 +13,8 @@ import ca.uwaterloo.cw.castlewar.R;
  */
 
 abstract public class Lawful extends Unit {
-    public Lawful(int id, String name, String description, int resource, Status status, ArrayList<Integer> idle, ArrayList<Integer> walk, ArrayList<Integer> run, ArrayList<Integer> attack, ArrayList<Integer> die) {
-        super(id, name,description, resource,status, idle, walk, run, attack, die);
+    public Lawful(int id, String name, String description, int resource, Status status, Integer move ,Integer combat, Id.Direction initialDirection) {
+        super(id, name,description, resource,status, move, combat, initialDirection);
     }
 
     public static ArrayList<Unit> getAllLawful() {
@@ -27,130 +27,52 @@ abstract public class Lawful extends Unit {
 
     public static class Archer extends Lawful {
         public Archer() {
-            super(Id.Lawful.ARCHER.ordinal(), "Archer", "123", R.drawable.archer_idle_000,
+            super(Id.Lawful.ARCHER.ordinal(), "Archer", "123", R.drawable.archer_portrait,
                     new Status(80, 80, 25, 10, 10, 1, 1, 1, 1),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.archer_idle_000,
-                            R.drawable.archer_idle_001,
-                            R.drawable.archer_idle_002,
-                            R.drawable.archer_idle_003,
-                            R.drawable.archer_idle_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.archer_walk_000,
-                            R.drawable.archer_walk_001,
-                            R.drawable.archer_walk_002,
-                            R.drawable.archer_walk_003,
-                            R.drawable.archer_walk_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.archer_run_000,
-                            R.drawable.archer_run_001,
-                            R.drawable.archer_run_002,
-                            R.drawable.archer_run_003,
-                            R.drawable.archer_run_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.archer_attack_000,
-                            R.drawable.archer_attack_003,
-                            R.drawable.archer_attack_005,
-                            R.drawable.archer_attack_007,
-                            R.drawable.archer_attack_009
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.archer_die_000,
-                            R.drawable.archer_die_002,
-                            R.drawable.archer_die_004,
-                            R.drawable.archer_die_006,
-                            R.drawable.archer_die_009
-                    ))
-            );
+                    R.drawable.archer_move, R.drawable.archer_combat, Id.Direction.RIGHT);
         }
     }
 
     public static class Mage extends Lawful {
         public Mage() {
-            super(Id.Lawful.MAGE.ordinal(), "Mage","das", R.drawable.mage_idle_000,
+            super(Id.Lawful.MAGE.ordinal(), "Mage","das", R.drawable.mage_portrait,
                     new Status(50, 50, 30, 0, 0, 1, 1, 1, 2),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.mage_idle_000,
-                            R.drawable.mage_idle_001,
-                            R.drawable.mage_idle_002,
-                            R.drawable.mage_idle_003,
-                            R.drawable.mage_idle_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.mage_walk_000,
-                            R.drawable.mage_walk_001,
-                            R.drawable.mage_walk_002,
-                            R.drawable.mage_walk_003,
-                            R.drawable.mage_walk_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.mage_run_000,
-                            R.drawable.mage_run_001,
-                            R.drawable.mage_run_002,
-                            R.drawable.mage_run_003,
-                            R.drawable.mage_run_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.mage_attack_000,
-                            R.drawable.mage_attack_004,
-                            R.drawable.mage_attack_006,
-                            R.drawable.mage_attack_008,
-                            R.drawable.mage_attack_009
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.mage_die_000,
-                            R.drawable.mage_die_002,
-                            R.drawable.mage_die_004,
-                            R.drawable.mage_die_006,
-                            R.drawable.mage_die_008
-                    ))
-            );
+                    R.drawable.mage_move, R.drawable.mage_combat, Id.Direction.RIGHT);
         }
     }
 
     public static class SwordMan extends Lawful {
         public SwordMan() {
-            super(Id.Lawful.SWORDMAN.ordinal(), "Sword Man", "dea", R.drawable.swordman_idle_000,
+            super(Id.Lawful.SWORDMAN.ordinal(), "Sword Man", "dea", R.drawable.swordman_portrait,
                     new Status(100, 100, 30, 20, 5, 1, 0, 0, 1),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.swordman_idle_000,
-                            R.drawable.swordman_idle_001,
-                            R.drawable.swordman_idle_002,
-                            R.drawable.swordman_idle_003,
-                            R.drawable.swordman_idle_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.swordman_walk_000,
-                            R.drawable.swordman_walk_001,
-                            R.drawable.swordman_walk_002,
-                            R.drawable.swordman_walk_003,
-                            R.drawable.swordman_walk_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.swordman_run_000,
-                            R.drawable.swordman_run_001,
-                            R.drawable.swordman_run_002,
-                            R.drawable.swordman_run_003,
-                            R.drawable.swordman_run_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.swordman_attack_000,
-                            R.drawable.swordman_attack_002,
-                            R.drawable.swordman_attack_003,
-                            R.drawable.swordman_attack_004,
-                            R.drawable.swordman_attack_005
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.swordman_die_000,
-                            R.drawable.swordman_die_003,
-                            R.drawable.swordman_die_005,
-                            R.drawable.swordman_die_007,
-                            R.drawable.swordman_die_009
-                    ))
-            );
+                    R.drawable.swordman_move, R.drawable.swordman_combat, Id.Direction.LEFT);
+        }
+    }
+
+    public static class Bandit extends Lawful
+    {
+        public Bandit() {
+            super(Id.Lawful.SWORDMAN.ordinal(), "Bandit", "dsa", R.drawable.swordman_portrait,
+                    new Status(80, 80, 30, 10, 5, 1, 0, 0, 1),
+                    R.drawable.swordman_move, R.drawable.swordman_combat, Id.Direction.LEFT);
+        }
+    }
+
+    public static class Thief extends Lawful
+    {
+        public Thief() {
+            super(Id.Lawful.SWORDMAN.ordinal(), "Thief", "dsaR",R.drawable.swordman_portrait,
+                    new Status(50, 50, 40, 10, 10, 2, 0, 0, 1),
+                    R.drawable.swordman_move, R.drawable.swordman_combat, Id.Direction.LEFT);
+        }
+    }
+
+    public static class Ranger extends Lawful
+    {
+        public Ranger() {
+            super(Id.Lawful.SWORDMAN.ordinal(), "Ranger","dsa", R.drawable.swordman_portrait,
+                    new Status(40, 40, 30, 10, 5, 1, 1, 1, 1),
+                    R.drawable.swordman_move, R.drawable.swordman_combat, Id.Direction.LEFT);
         }
     }
 }

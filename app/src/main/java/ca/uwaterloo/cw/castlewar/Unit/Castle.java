@@ -1,8 +1,12 @@
 package ca.uwaterloo.cw.castlewar.Unit;
 
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
 import java.util.ArrayList;
 
+import ca.uwaterloo.cw.castlewar.Base.Sprite;
 import ca.uwaterloo.cw.castlewar.Base.Status;
 import ca.uwaterloo.cw.castlewar.Structure.Id;
 import ca.uwaterloo.cw.castlewar.Base.System;
@@ -16,10 +20,11 @@ public class Castle extends Unit {
     public static final int SIZE = 300;
 
     public Castle(int id, String name, String description, int resource, Status status) {
-        super(id, name, description, resource, status, null,null,null,null,null);
+        super(id, name, description, resource, status,null,null, Id.Direction.RIGHT);
+        this.getSprite().disableUnit();
+        this.getSprite().addResources(null, null, resource);
         this.getSprite().setConfig(SIZE, SIZE, 4);
         this.getSprite().setY(System.getGroundLine() - SIZE);
-        this.getSprite().switchImage(Id.Image.PORTRAIT);
     }
 
     public static Castle createCastle(Id.Castle castle) {
@@ -28,6 +33,12 @@ public class Castle extends Unit {
             case EVIL_CASTLE: return new EvilCastle();
             default: return null;
         }
+    }
+
+    @Override
+    public void draw(Canvas canvas, Paint paint) {
+        Sprite sprite = getSprite();
+        canvas.drawBitmap(sprite.getPortrait(), sprite.getX(), sprite.getY(), paint);
     }
 
     public static class HolyCastle extends Castle {

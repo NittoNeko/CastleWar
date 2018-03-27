@@ -116,9 +116,10 @@ abstract public class Level extends GameObject {
                     new ArrayList<>(Arrays.asList(1, 1, 1, 3)),
                     new ArrayList<>(Arrays.asList(0, 0, 0, 1)));
             // decide enemies
-            addChaotics(new Chaotic.Ranger().setLevel(1).setAllAbility(null, null, null));
-            addChaotics(new Chaotic.Bandit().setLevel(1).setAllAbility(null, null, null));
-            addChaotics(new Chaotic.Thief().setLevel(1).setAllAbility(null, null, null));
+            addChaotics(new Chaotic.Orc().setLevel(1).setAllAbility(null, null, null));
+            addChaotics(new Chaotic.Slime().setLevel(1).setAllAbility(null, null, null));
+            addChaotics(new Chaotic.Darklord().setLevel(1).setAllAbility(null, null, null));
+            addChaotics(new Chaotic.Bat().setLevel(1).setAllAbility(null, null, null));
 
             // decide potions that AI will use
             addPotions(new Potion.HpPotion().setLevel(1));

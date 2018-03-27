@@ -49,6 +49,7 @@ public class SinglePlayerActivity extends AppCompatActivity {
 
     public void startLevel(final Level level, final Unit[] unitInStockPlayer1, final Item[] itemInStockPlayer1) {
         setContentView(R.layout.game_screen);
+        ((ImageView) findViewById(R.id.GameLoading)).setImageBitmap(System.scaleBitmap(R.drawable.game_loading, 500, null, 1));
         System.oneTimeThread.execute(new Runnable() {
             @Override
             public void run() {

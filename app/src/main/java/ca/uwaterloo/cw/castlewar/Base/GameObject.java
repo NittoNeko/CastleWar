@@ -33,6 +33,7 @@ abstract public class GameObject {
         this(id, name, description, resource);
         this.baseStatus = status;
         this.modifiedStatus = new Status(status);
+        this.getSprite().setConfig(100, 100, 1);
     }
 
     public String getDescription()
@@ -61,7 +62,7 @@ abstract public class GameObject {
     }
 
     public void draw (Canvas canvas, Paint paint) {
-        sprite.draw(canvas, paint);
+        canvas.drawBitmap(sprite.getPortrait(), sprite.getX(), sprite.getY(), paint);
     }
 
     public Status getModifiedStatus() {

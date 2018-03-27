@@ -12,148 +12,49 @@ import ca.uwaterloo.cw.castlewar.R;
  */
 
 abstract public class Chaotic extends Unit {
-    public Chaotic(int id, String name, String description, int resource, Status status, ArrayList<Integer> idle, ArrayList<Integer> walk, ArrayList<Integer> run, ArrayList<Integer> attack, ArrayList<Integer> die)
+    public Chaotic(int id, String name, String description, int resource, Status status,Integer move ,Integer combat, Id.Direction initialDirection)
     {
-        super(id, name, description, resource,status, idle, walk, run, attack, die);
+        super(id, name, description, resource,status, move, combat, initialDirection);
     }
 
     public static ArrayList<Unit> getAllChaotic() {
         ArrayList<Unit> chaotic = new ArrayList<>();
-        chaotic.add(new Bandit());
-        chaotic.add(new Thief());
-        chaotic.add(new Ranger());
+        chaotic.add(new Orc());
+        chaotic.add(new Slime());
+        chaotic.add(new Bat());
+        chaotic.add(new Darklord());
         return chaotic;
     }
 
-    public static class Bandit extends Chaotic
-    {
-        public Bandit() {
-            super(Id.Chaotic.BANDIT.ordinal(), "Bandit", "dsa", R.drawable.bandit_idle_000,
-                    new Status(80, 80, 30, 10, 5, 1, 0, 0, 1),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.bandit_idle_000,
-                            R.drawable.bandit_idle_001,
-                            R.drawable.bandit_idle_002,
-                            R.drawable.bandit_idle_003,
-                            R.drawable.bandit_idle_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.bandit_walk_000,
-                            R.drawable.bandit_walk_001,
-                            R.drawable.bandit_walk_002,
-                            R.drawable.bandit_walk_003,
-                            R.drawable.bandit_walk_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.bandit_run_000,
-                            R.drawable.bandit_run_001,
-                            R.drawable.bandit_run_002,
-                            R.drawable.bandit_run_003,
-                            R.drawable.bandit_run_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.bandit_attack_000,
-                            R.drawable.bandit_attack_002,
-                            R.drawable.bandit_attack_004,
-                            R.drawable.bandit_attack_006,
-                            R.drawable.bandit_attack_008
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.bandit_die_000,
-                            R.drawable.bandit_die_002,
-                            R.drawable.bandit_die_004,
-                            R.drawable.bandit_die_006,
-                            R.drawable.bandit_die_009
-                    ))
-            );
+    public static class Orc extends Chaotic {
+        public Orc() {
+            super(Id.Chaotic.ORC.ordinal(), "Orc", "123", R.drawable.orc_portrait,
+                    new Status(80, 80, 25, 10, 10, 1, 1, 1, 1),
+                    R.drawable.orc_move, R.drawable.orc_combat, Id.Direction.LEFT);
         }
     }
 
-    public static class Thief extends Chaotic
-    {
-        public Thief() {
-            super(Id.Chaotic.THIEF.ordinal(), "Thief", "dsaR",R.drawable.thief_idle_000,
-                    new Status(50, 50, 40, 10, 10, 2, 0, 0, 1),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.thief_idle_000,
-                            R.drawable.thief_idle_001,
-                            R.drawable.thief_idle_002,
-                            R.drawable.thief_idle_003,
-                            R.drawable.thief_idle_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.thief_walk_000,
-                            R.drawable.thief_walk_001,
-                            R.drawable.thief_walk_002,
-                            R.drawable.thief_walk_003,
-                            R.drawable.thief_walk_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.thief_run_000,
-                            R.drawable.thief_run_001,
-                            R.drawable.thief_run_002,
-                            R.drawable.thief_run_003,
-                            R.drawable.thief_run_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.thief_attack_000,
-                            R.drawable.thief_attack_002,
-                            R.drawable.thief_attack_004,
-                            R.drawable.thief_attack_006,
-                            R.drawable.thief_attack_008
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.thief_die_000,
-                            R.drawable.thief_die_003,
-                            R.drawable.thief_die_005,
-                            R.drawable.thief_die_007,
-                            R.drawable.thief_die_009
-                    ))
-            );
+    public static class Bat extends Chaotic {
+        public Bat() {
+            super(Id.Chaotic.BAT.ordinal(), "Bat", "123", R.drawable.bat_portrait,
+                    new Status(80, 80, 25, 10, 10, 1, 1, 1, 1),
+                    R.drawable.bat_move, R.drawable.bat_combat, Id.Direction.RIGHT);
         }
     }
 
-    public static class Ranger extends Chaotic
-    {
-        public Ranger() {
-            super(Id.Chaotic.RANGER.ordinal(), "Ranger","dsa", R.drawable.ranger_idle_000,
-                    new Status(40, 40, 30, 10, 5, 1, 1, 1, 1),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.ranger_idle_000,
-                            R.drawable.ranger_idle_001,
-                            R.drawable.ranger_idle_002,
-                            R.drawable.ranger_idle_003,
-                            R.drawable.ranger_idle_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.ranger_walk_000,
-                            R.drawable.ranger_walk_001,
-                            R.drawable.ranger_walk_002,
-                            R.drawable.ranger_walk_003,
-                            R.drawable.ranger_walk_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.ranger_run_000,
-                            R.drawable.ranger_run_001,
-                            R.drawable.ranger_run_002,
-                            R.drawable.ranger_run_003,
-                            R.drawable.ranger_run_004
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.ranger_attack_000,
-                            R.drawable.ranger_attack_003,
-                            R.drawable.ranger_attack_005,
-                            R.drawable.ranger_attack_007,
-                            R.drawable.ranger_attack_009
-                    )),
-                    new ArrayList<>(Arrays.asList(
-                            R.drawable.ranger_die_000,
-                            R.drawable.ranger_die_003,
-                            R.drawable.ranger_die_005,
-                            R.drawable.ranger_die_007,
-                            R.drawable.ranger_die_009
-                    ))
-            );
+    public static class Slime extends Chaotic {
+        public Slime() {
+            super(Id.Chaotic.SLIME.ordinal(), "Slime", "123", R.drawable.slime_portrait,
+                    new Status(80, 80, 25, 10, 10, 1, 1, 1, 1),
+                    R.drawable.slime_move, R.drawable.slime_combat, Id.Direction.LEFT);
+        }
+    }
+
+    public static class Darklord extends Chaotic {
+        public Darklord() {
+            super(Id.Chaotic.DARKLORD.ordinal(), "Darklord", "123", R.drawable.darklord_portrait,
+                    new Status(80, 80, 25, 10, 10, 1, 1, 1, 1),
+                    R.drawable.darklord_move, R.drawable.darklord_combat, Id.Direction.RIGHT);
         }
     }
 }

@@ -12,8 +12,8 @@ abstract public class Id {
     }
 
     public enum Chaotic {
-            // Chaotic Units
-        BANDIT,THIEF,RANGER,
+        // Chaotic Units
+        ORC, BAT, SLIME, DARKLORD
     }
 
     public enum Castle {
@@ -59,7 +59,15 @@ abstract public class Id {
     }
 
     public enum Direction {
-        LEFT, RIGHT
+        LEFT, RIGHT;
+
+        public Id.Direction getOpponent() {
+            if (this == LEFT) {
+                return RIGHT;
+            } else {
+                return LEFT;
+            }
+        }
     }
 
     public enum Player {
@@ -72,9 +80,5 @@ abstract public class Id {
                 return ONE;
             }
         }
-    }
-
-    public enum Image {
-        PORTRAIT, IDLE, WALK, RUN, ATTACK, DIE
     }
 }

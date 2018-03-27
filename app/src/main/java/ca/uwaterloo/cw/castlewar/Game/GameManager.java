@@ -9,7 +9,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.SystemClock;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,15 +63,12 @@ public class GameManager {
     public static final long MAX_FPS = 45;
     public static final long MIN_FPS = 5;
     public static final int BASIC_RECOVERY = 3;
-    public static final int ICON_SIZE = 150;
     public static final int MILISECOND = 1000;
     public static final int CARD_NUM = 5;
     public static final int DRAW_NUM = 2;
-    public static final int DRAW_COST = 3;
+    public static final int DRAW_COST = 1;
     public static final int MAX_COST = 5;
     public static final float SCROLL_PIXEL_PER_SECOND = 2000; // speed of screen
-    public static final int PIXEL_PER_UPDATE = 30;   // speed of character
-    public static final long VALUE_PER_SECOND = 25;  // this is speed of text
     public static final float FRAME_PER_SECOND = 30;
     public static final float LOGIC_PER_SECOND = 30;  // this is the speed of updates of normal background thread
     public static final float CONSTANT_PER_SECOND = 10; // this is the speed of updates constant anime, music and so on
@@ -92,6 +94,8 @@ public class GameManager {
     private Terrain terrain;
 
     // game control
+    private AtomicBoolean doubleSpeed = new AtomicBoolean(false);
+    private AtomicBoolean hasLine = new AtomicBoolean(false);
     private GameLogic gameLogic = new GameLogic();
     private GameScreen gameScreen = new GameScreen();
     private GameConstant gameConstant = new GameConstant();
@@ -108,6 +112,8 @@ public class GameManager {
     private HashMap<Id.Player, Terrain.BattleField> rearBattleField = new HashMap<>(2);
 
     // screen control
+    private TextView winLose;
+    private TextView coinReward;
     private float framePerSecond;
     private long screenSleepTime;
     private final int backgroundWidth;
@@ -126,13 +132,15 @@ public class GameManager {
     private Paint paint = new Paint();
     private Bitmap screen;
     private HorizontalScrollView screenView;
-    private ProgressBar progressBar;
+    private ImageView gameLoading;
     private AtomicBoolean hasScroll = new AtomicBoolean();
     private Bitmap background;
     private int backgroundY;
 
     private GameManager(Activity activity, Terrain terrain) {
         instance = this;
+        this.coinReward = activity.findViewById(R.id.CoinReward);
+        this.winLose = activity.findViewById(R.id.WinLose);
         this.attackerView = new CombatView(
                 (TextView) activity.findViewById(R.id.AttackerHp),
                 (TextView) activity.findViewById(R.id.AttackerMaxHp),
@@ -152,7 +160,7 @@ public class GameManager {
         this.background = System.getRandomGameBackground(terrain.getBattleFieldsWidth());
         this.backgroundY = (System.getScreenHeight() - background.getHeight()) / 2;
         this.hasScroll.set(true);
-        this.progressBar = activity.findViewById(R.id.GameLoading);
+        this.gameLoading = activity.findViewById(R.id.GameLoading);
         this.paint.setARGB(255, 0, 0, 0);
         this.paint.setStyle(Paint.Style.STROKE);
         this.paint.setStrokeWidth(10);
@@ -216,6 +224,7 @@ public class GameManager {
         this.maxCost.put(Id.Player.ONE, MAX_COST);
         this.maxCost.put(Id.Player.TWO, MAX_COST);
         initializeImages();
+        Animation.initializeAnimations();
     }
 
     // called for singleplayer
@@ -254,14 +263,10 @@ public class GameManager {
 
     public void initializeUnitImage() {
         for (Unit unit : unitInStock.get(Id.Player.ONE)) {
-            for (Id.Image image : Id.Image.values()) {
-                unit.getSprite().initializeBitmaps(image);
-            }
+            unit.getSprite().initializeAll();
         }
         for (Unit unit : unitInStock.get(Id.Player.TWO)) {
-            for (Id.Image image : Id.Image.values()) {
-                unit.getSprite().initializeBitmaps(image);
-            }
+            unit.getSprite().initializeAll();
         }
     }
 
@@ -269,12 +274,20 @@ public class GameManager {
         System.runOnUi(new Runnable() {
             @Override
             public void run() {
-                combatBoard.setBackground(System.scaleDrawable(R.drawable.combat_board, System.getScreenWidth(), null, 4));
-                unitMenu.setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, System.getScreenHeight() / 2, 4));
+                activity.findViewById(R.id.AttackerHpWrapper).setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, 50, 4));
+                activity.findViewById(R.id.DefenderHpWrapper).setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, 50, 4));
+                activity.findViewById(R.id.AttackerHpBar).setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, 25, 4));
+                activity.findViewById(R.id.DefenderHpBar).setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, 25, 4));
+                ((ImageButton) activity.findViewById(R.id.SpeedButton)).setImageBitmap(System.scaleBitmap(R.drawable.speed_button, 200, 200, 3));
+                ((ImageButton) activity.findViewById(R.id.LineButton)).setImageBitmap(System.scaleBitmap(R.drawable.line_button, 200, 200, 3));
+                activity.findViewById(R.id.Result).setBackground(System.scaleDrawable(R.drawable.plane_yellow, 600, 600, 4));
+                ((ImageButton) activity.findViewById(R.id.Facebook)).setImageBitmap(System.scaleBitmap(R.drawable.facebook, 100, 100, 2));
+                ((ImageButton) activity.findViewById(R.id.GoBackToTitle)).setImageBitmap(System.scaleBitmap(R.drawable.ok, 100, 100, 2));
+                unitMenu.setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, System.getScreenHeight() / 2, 2));
                 activity.findViewById(R.id.EndTurn).setBackground(System.scaleDrawable(R.drawable.blue_button, null, Tile.SIZE, 1));
                 activity.findViewById(R.id.Redraw).setBackground(System.scaleDrawable(R.drawable.blue_button, null, Tile.SIZE, 1));
                 activity.findViewById(R.id.Draw).setBackground(System.scaleDrawable(R.drawable.blue_button, null, Tile.SIZE, 1));
-                activity.findViewById(R.id.cost).setBackground(System.scaleDrawable(R.drawable.button_blue_long, null, Tile.SIZE, 4));
+                activity.findViewById(R.id.cost).setBackground(System.scaleDrawable(R.drawable.button_blue_long, null, Tile.SIZE, 2));
                 for (ImageButton imageButton : unitImageButtons) {
                     imageButton.setBackground(System.scaleDrawable(R.drawable.square_blue_button, Tile.SIZE, Tile.SIZE, 1));
                 }
@@ -282,13 +295,33 @@ public class GameManager {
                     imageButton.setBackground(System.scaleDrawable(R.drawable.square_blue_button, Tile.SIZE, Tile.SIZE, 1));
                 }
                 for (TextView textView : unitCostTexts) {
-                    textView.setBackground(System.scaleDrawable(R.drawable.button_blue_small, Tile.SIZE, Tile.SIZE, 4));
+                    textView.setBackground(System.scaleDrawable(R.drawable.button_blue_small, Tile.SIZE, Tile.SIZE, 2));
                 }
                 for (TextView textView : itemCostTexts) {
-                    textView.setBackground(System.scaleDrawable(R.drawable.button_blue_small, Tile.SIZE, Tile.SIZE, 4));
+                    textView.setBackground(System.scaleDrawable(R.drawable.button_blue_small, Tile.SIZE, Tile.SIZE, 2));
                 }
             }
         });
+    }
+
+    private void redrawCards() {
+        int countUnit = 0, countItem = 0;
+        for (int i = 0; i < CARD_NUM; ++i) {
+            if (unitInDeck.get(player)[i] != null) {
+                if (countUnit < DRAW_NUM) {
+                    generateUnitCard(i);
+                    postUnitCard(i);
+                    countUnit++;
+                }
+            }
+            if (itemInDeck.get(player)[i] != null) {
+                if (countItem < DRAW_NUM) {
+                    generateItemCard(i);
+                    postItemCard(i);
+                    countItem++;
+                }
+            }
+        }
     }
 
     private void drawCards() {
@@ -439,6 +472,10 @@ public class GameManager {
         Button endTurn = activity.findViewById(R.id.EndTurn);
         Button redraw = activity.findViewById(R.id.Redraw);
         Button draw = activity.findViewById(R.id.Draw);
+        ImageButton speed = activity.findViewById(R.id.SpeedButton);
+        ImageButton line = activity.findViewById(R.id.LineButton);
+        ImageButton facebook = activity.findViewById(R.id.Facebook);
+        ImageButton ok = activity.findViewById(R.id.GoBackToTitle);
 
         for (int i = 0; i < CARD_NUM; ++i) {
             final int position = i;
@@ -542,7 +579,7 @@ public class GameManager {
                         buttonLock.writeLock().lock();
                         try {
                             if (cost.get(player) >= DRAW_COST) {
-                                drawCards();
+                                redrawCards();
                                 setCostBy(-DRAW_COST);
                                 postCost();
                             }
@@ -551,6 +588,49 @@ public class GameManager {
                         }
                     }
                 });
+            }
+        });
+
+        speed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.oneTimeThread.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleSpeed.set(!doubleSpeed.get());
+                    }
+                });
+            }
+        });
+
+        line.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.oneTimeThread.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        hasLine.set(!hasLine.get());
+                    }
+                });
+            }
+        });
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.runOnUi(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.onBackPressed();
+                    }
+                });
+            }
+        });
+
+        facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
@@ -572,7 +652,7 @@ public class GameManager {
             x = backgroundWidth - System.getScreenWidth();
         final int copy = x;
         final float scrollTime = Math.abs(screenView.getScrollX() - copy) * MILISECOND / SCROLL_PIXEL_PER_SECOND;
-        if (Math.abs(screenView.getScrollX() - copy) < System.getScreenWidth() * 0.1) return;
+        if (Math.abs(screenView.getScrollX() - copy) < System.getScreenWidth() * 0.3) return;
         hasScroll.set(false);
         System.runOnUi(new Runnable() {
             @Override
@@ -607,8 +687,11 @@ public class GameManager {
         System.runOnUi(new Runnable() {
             @Override
             public void run() {
-                progressBar.setVisibility(View.GONE);
+                gameLoading.setVisibility(View.GONE);
                 screenView.setVisibility(View.VISIBLE);
+                activity.findViewById(R.id.SpeedButton).setVisibility(View.VISIBLE);
+                activity.findViewById(R.id.LineButton).setVisibility(View.VISIBLE);
+
             }
         });
         currentState.set(Id.GameState.PREPARE);
@@ -681,10 +764,69 @@ public class GameManager {
             for (Unit iterator : unitInCombat.get(player).getCopyOfContent()) {
                 iterator.move();
             }
+            if (target.isVisible()) {
+                target.move();
+                screenFocusOn(target);
+            }
 
             if (!animations.isEmpty()) {
                 if (System.gameFlow) java.lang.System.out.println("waiting for animation");
                 // check if running
+                return;
+            }
+
+            // check death
+            for (Unit unit : unitInCombat.get(Id.Player.ONE).getCopyOfContent()) {
+                if (unit.isDead()) unitInCombat.get(Id.Player.ONE).remove(unit);
+            }
+
+            for (Unit unit : unitInCombat.get(Id.Player.TWO).getCopyOfContent()) {
+                if (unit.isDead()) unitInCombat.get(Id.Player.TWO).remove(unit);
+            }
+
+            // check win
+            if (castle.get(Id.Player.ONE).isDead()) {
+                // add something in the future
+                System.runOnUi(new Runnable() {
+                    @Override
+                    public void run() {
+                        String string;
+                        if (isAi) {
+                            string = "You Lose!";
+                            winLose.setText(string);
+                            string = "You Gain Nothing!";
+                            coinReward.setText(string);
+                        } else {
+                            string = "Player 2 Wins!";
+                            winLose.setText(string);
+                        }
+                        activity.findViewById(R.id.Result).setVisibility(View.VISIBLE);
+                    }
+                });
+                while (isGameActive.get()) {
+                    // busy wait until game ends
+                }
+                return;
+            } else if (castle.get(Id.Player.TWO).isDead()) {
+                System.runOnUi(new Runnable() {
+                    @Override
+                    public void run() {
+                        String string;
+                        if (isAi) {
+                            string = "You Win!";
+                            winLose.setText(string);
+                            string = "You Gain " + level.getCoinRewards() + " Coins!";
+                            coinReward.setText(string);
+                        } else {
+                            string = "Player 1 Wins!";
+                            winLose.setText(string);
+                        }
+                        activity.findViewById(R.id.Result).setVisibility(View.VISIBLE);
+                    }
+                });
+                while (isGameActive.get()) {
+                    // busy wait until game ends
+                }
                 return;
             }
 
@@ -750,14 +892,10 @@ public class GameManager {
                                 return;
                             } else {
                                 currentUnit.decideStrategy(terrain);
-                                // switch to moving
-                                currentUnit.getSprite().switchImage(Id.Image.WALK);
                             }
                         }
                     }
                     if (currentUnit.getMoveTile() == null) {
-                        // switch back
-                        currentUnit.getSprite().switchImage(Id.Image.IDLE);
                         if (System.gameFlow) java.lang.System.out.println("finish moving");
                         // go to combat
                         if (currentUnit.getActionTile() != null) {
@@ -779,12 +917,17 @@ public class GameManager {
                                 target.setMoveTile(currentUnit.getActionTile());
                             } else {
                                 if (System.gameFlow) java.lang.System.out.println("targeting");
-                                target.move();
-                                screenFocusOn(target);
                                 if (target.getMoveTile() == null) {
                                     if (System.gameFlow)
                                         java.lang.System.out.println("finish targeting, switch to combat");
                                     // before go to combat
+                                    final Drawable drawable = System.getRandomCombatBackground(System.getScreenWidth() * 3 / 4);
+                                    System.runOnUi(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            combatBoard.setBackground(drawable);
+                                        }
+                                    });
                                     target.setVisible(false);
                                     combat = new Combat(attacker, defender);
                                     currentState.set(Id.GameState.COMBAT);
@@ -826,40 +969,12 @@ public class GameManager {
                         }
                     }
             }
-
-            // check death
-            for (Unit unit : unitInCombat.get(Id.Player.ONE).getCopyOfContent()) {
-                if (unit.isDead()) unitInCombat.get(Id.Player.ONE).remove(unit);
-            }
-
-            for (Unit unit : unitInCombat.get(Id.Player.TWO).getCopyOfContent()) {
-                if (unit.isDead()) unitInCombat.get(Id.Player.TWO).remove(unit);
-            }
-
-            // check win
-            if (castle.get(Id.Player.ONE).isDead()) {
-                // add something in the future
-                System.runOnUi(new Runnable() {
-                    @Override
-                    public void run() {
-                        activity.onBackPressed();
-                    }
-                });
-            } else if (castle.get(Id.Player.TWO).isDead()) {
-                // add something
-                System.runOnUi(new Runnable() {
-                    @Override
-                    public void run() {
-                        activity.onBackPressed();
-                    }
-                });
-            }
         }
 
         @Override
         public void run() {
             while (isGameActive.get()) {
-                reaSleepTime = SystemClock.uptimeMillis() + LOGIC_SLEEP_TIME;
+                reaSleepTime = SystemClock.uptimeMillis() + (long) (LOGIC_SLEEP_TIME * (doubleSpeed.get() ? 1.5 : 1));
                 gameLogic();
                 reaSleepTime -= SystemClock.uptimeMillis();
                 if (reaSleepTime > 0) {
@@ -912,10 +1027,12 @@ public class GameManager {
             castle.get(Id.Player.TWO).draw(canvas, paint);
 
             // draw lines to distinguish sections
-            for (Terrain.BattleField battleField : terrain.getBattleFields()) {
-                if (battleField.getId() == 0) continue;
-                int x = battleField.getTiles()[0].getX();
-                canvas.drawLine(x, 0, x, System.getScreenHeight(), paint);
+            if (hasLine.get()) {
+                for (Terrain.BattleField battleField : terrain.getBattleFields()) {
+                    if (battleField.getId() == 0) continue;
+                    int x = battleField.getTiles()[0].getX();
+                    canvas.drawLine(x, 0, x, System.getScreenHeight(), paint);
+                }
             }
 
             if (target.isVisible()) {

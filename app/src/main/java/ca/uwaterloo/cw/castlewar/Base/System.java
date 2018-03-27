@@ -62,7 +62,7 @@ public class System extends Application {
     // self instance
     private static Application application;
 
-    // get reference of context
+    // get reference of threadpool
     public static final ExecutorService gameThreads = Executors.newFixedThreadPool(3);
     public static final ExecutorService oneTimeThread = Executors.newFixedThreadPool(5);
 
@@ -90,10 +90,10 @@ public class System extends Application {
         Random random = new Random();
         int id = random.nextInt(4);
         switch(id){
-            case 0: return scaleDrawable(R.drawable.background_desert, null, groundLine, 4);
-            case 1: return scaleDrawable(R.drawable.background_desert_border, null, groundLine, 4);
-            case 2: return scaleDrawable(R.drawable.background_desert_road, null, groundLine,4);
-            case 3: return scaleDrawable(R.drawable.background_ruin, null, groundLine,4);
+            case 0: return scaleDrawable(R.drawable.background_desert, null, groundLine, 2);
+            case 1: return scaleDrawable(R.drawable.background_desert_border, null, groundLine, 2);
+            case 2: return scaleDrawable(R.drawable.background_desert_road, null, groundLine,2);
+            case 3: return scaleDrawable(R.drawable.background_ruin, null, groundLine,2);
         }
         return null;
     }
@@ -106,6 +106,18 @@ public class System extends Application {
             case 1: return scaleBitmap(R.drawable.background_near_lake, backgroundWidth, null,2);
             case 2: return scaleBitmap(R.drawable.background_nice_lake, backgroundWidth, null,2);
             case 3: return scaleBitmap(R.drawable.background_night_forest, backgroundWidth, null,2);
+        }
+        return null;
+    }
+
+    public static Drawable getRandomCombatBackground(int width){
+        Random random = new Random();
+        int id = random.nextInt(4);
+        switch(id){
+            case 0: return scaleDrawable(R.drawable.combat_castle, width, null,2);
+            case 1: return scaleDrawable(R.drawable.combat_crystal, width, null,2);
+            case 2: return scaleDrawable(R.drawable.combat_ice, width, null,2);
+            case 3: return scaleDrawable(R.drawable.combat_lava, width, null,2);
         }
         return null;
     }
@@ -141,8 +153,22 @@ public class System extends Application {
             float ratio = (float) width / (float)original.getWidth();
             return Bitmap.createScaledBitmap(original, width,  (int) (original.getHeight() * ratio), true);
         }
-
         return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(resources(), resource, option), width, height, true);
+    }
+
+    public static Bitmap scaleBitmap(Bitmap bitmap, Integer width, Integer height, int downsize) {
+        BitmapFactory.Options option = new BitmapFactory.Options();
+        option.inSampleSize = downsize;
+        if (width == null && height == null) {
+            return bitmap;
+        } else if (width == null){
+            float ratio = (float) height / (float) bitmap.getHeight();
+            return Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * ratio), height, true);
+        } else if (height == null){
+            float ratio = (float) width / (float)bitmap.getWidth();
+            return Bitmap.createScaledBitmap(bitmap, width,  (int) (bitmap.getHeight() * ratio), true);
+        }
+        return Bitmap.createScaledBitmap(bitmap, width, height, true);
     }
 
     public static int getGroundLine()
