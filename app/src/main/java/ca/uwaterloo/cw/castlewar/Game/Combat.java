@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import ca.uwaterloo.cw.castlewar.Base.Animation;
 import ca.uwaterloo.cw.castlewar.Structure.Id;
 import ca.uwaterloo.cw.castlewar.Unit.Unit;
 
@@ -26,10 +27,13 @@ public class Combat {
 
     public Combat(Unit attacker, Unit defender) {
         this.currentTurn = 0;
+        attacker.setRole(Id.CombatRole.ATTACKER);
+        defender.setRole(Id.CombatRole.DEFENDER);
         this.units.put(Id.CombatRole.ATTACKER, attacker);
         this.units.put(Id.CombatRole.DEFENDER, defender);
         this.distance = Math.abs(attacker.getCurrentTile().getParentId() - defender.getCurrentTile().getParentId());
         this.combatStage = Id.CombatStage.INITIAL;
+        Animation.initializeAnimations(attacker.getAttack(), defender.getAttack());
 
         // initialize turns
         for (int i = 0; i < MAX_TURN - 1; ++i) {

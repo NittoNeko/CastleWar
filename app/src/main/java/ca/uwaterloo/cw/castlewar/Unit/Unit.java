@@ -48,15 +48,18 @@ abstract public class Unit extends GameObject {
     private Ability defenseAbility;
     private Ability utilityAbility;
     private CombatView combatView;
+    private Id.Attack attack;
+    private Id.CombatRole role;
 
 
-    public Unit(int id, String name, String description, int resource, Status status, Integer move ,Integer combat, Id.Direction initialDirection) {
+    public Unit(int id, String name, String description, int resource, Status status, Integer move ,Integer combat, Id.Direction initialDirection, Id.Attack attack) {
         super(id, name, description, resource, status);
         this.player = Id.Player.ONE;
         this.moveTile = null;
         this.actionTile = null;
         this.isReady = true;
         this.level = 1;
+        this.attack = attack;
         this.getSprite().enableUnit();
         this.getSprite().setInitialDirection(initialDirection);
         this.getSprite().addResources(null, move, combat);
@@ -228,6 +231,7 @@ abstract public class Unit extends GameObject {
             attackAbility.apply(this);
         }
 
+        Animation.attackEffect(this.role, this.opponent.combatView.getAnimation());
     }
 
     public void defend() {
@@ -267,27 +271,7 @@ abstract public class Unit extends GameObject {
         int after = this.getModifiedStatus().getHp();
 
         // play animation
-        final Animation animation = new Animation();
-        final CombatView combatView = this.combatView;
-        animation.setIntValues(before, after);
-        Integer delta = Math.abs(before - after);
-        long duration = delta * Animation.MILISECOND / Animation.VALUE_PER_SECOND;
-        animation.setDuration(duration);
-        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int hp = (int) valueAnimator.getAnimatedValue();
-                combatView.getHp().setText(Integer.toString(hp));
-                combatView.getHealthBar().setProgress(hp);
-            }
-        });
-        System.runOnUi(new Runnable() {
-            @Override
-            public void run() {
-                animation.start();
-            }
-        });
-        animation.waitForStart();
+        Animation.healthEffect(before, after, this.combatView);
     }
 
     public boolean isDead(){
@@ -512,6 +496,22 @@ abstract public class Unit extends GameObject {
     public void draw(Canvas canvas, Paint paint) {
         Sprite sprite = getSprite();
         canvas.drawBitmap(sprite.getBitmap(), sprite.getX(), sprite.getY(), paint);
+    }
+
+    public Id.Attack getAttack() {
+        return attack;
+    }
+
+    public void setAttack(Id.Attack attack) {
+        this.attack = attack;
+    }
+
+    public Id.CombatRole getRole() {
+        return role;
+    }
+
+    public void setRole(Id.CombatRole role) {
+        this.role = role;
     }
 
     public Damage getDamage() {

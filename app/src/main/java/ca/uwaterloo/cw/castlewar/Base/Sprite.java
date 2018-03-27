@@ -43,7 +43,7 @@ public class Sprite {
         this.portraitResource = portraitResource;
         this.width = 100;
         this.height = 100;
-        this.downsize = 4;
+        this.downsize = 1;
         this.isUnit = false;
         this.initialDirection = Id.Direction.RIGHT;
         this.indexFlow = new Atomic.Id<>(Id.Direction.RIGHT);
@@ -78,6 +78,7 @@ public class Sprite {
     // only once when initializing a new game
     // when generating new units, use copy moving image instead
     public void initializeAll(){
+        setConfig(100, 100, 1);
         initializePortrait();
         initializeMove();
         initializeCombat();
@@ -121,10 +122,11 @@ public class Sprite {
         if (isUnit) {
             int row = 2;
             int column = 4;
-            Bitmap original = System.scaleBitmap(this.portraitResource, null, null, 1);
+            setConfig(400, null, 1);
+            Bitmap original = System.scaleBitmap(this.portraitResource, this.width, this.height, 1);
             int width = original.getWidth() / column;
             int height = original.getHeight() / row;
-            this.portrait = System.scaleBitmap(Bitmap.createBitmap(original, 0, 0, width, height), this.width, this.height, this.downsize);
+            this.portrait = Bitmap.createBitmap(original, 0, 0, width, height);
         } else {
             this.portrait = System.scaleBitmap(this.portraitResource, this.width,  this.height, this.downsize);
         }
