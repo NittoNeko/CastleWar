@@ -784,6 +784,7 @@ public class GameManager {
                 if (iterator.isReady()) {
                     unit = iterator;
                     break;
+
                 }
             }
             return unit;
