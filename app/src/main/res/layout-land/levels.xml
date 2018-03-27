@@ -75,13 +75,13 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/bubblegum_sans"
-                android:text="@string/EnemyTitle"
+                android:text="@string/Difficulty"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/background_light"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/itemName"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/EnemyTitle" />
+                tools:text="@string/Difficulty" />
 
             <TextView
                 android:id="@+id/RewardTitle"
@@ -109,7 +109,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/Enemies"
+                    android:id="@+id/Difficulty"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
@@ -119,7 +119,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/bubblegum_sans"
                     android:scrollHorizontally="true"
-                    android:text="@string/Enemies"
+                    android:text="@string/Difficulty"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@android:color/background_light"
                     android:textStyle="bold"
@@ -157,7 +157,7 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/RewardTitle"
-                    app:layout_constraintTop_toTopOf="@id/Enemies" />
+                    app:layout_constraintTop_toTopOf="@id/Difficulty" />
 
             </HorizontalScrollView>
 

@@ -12,14 +12,12 @@
         import android.widget.TextView;
         import android.widget.Toast;
 
-        import ca.uwaterloo.cw.castlewar.Model.GameObject;
-        import ca.uwaterloo.cw.castlewar.Model.Item;
-        import ca.uwaterloo.cw.castlewar.Model.SystemData;
-        import ca.uwaterloo.cw.castlewar.Model.UserProfile;
+        import ca.uwaterloo.cw.castlewar.Item.Item;
+        import ca.uwaterloo.cw.castlewar.Base.System;
+        import ca.uwaterloo.cw.castlewar.Base.User;
         import ca.uwaterloo.cw.castlewar.R;
 
 
-        import java.util.ArrayList;
         import java.util.List;
 
 /**
@@ -77,18 +75,18 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
 
         // Get the pair to have its data displayed at position in the list
         final Item item = myShopItems.get(position);
-        final Context context = SystemData.getContext();
+        final Context context = System.context();
         // Assign data to view components
         holder.itemNameTextView.setText(item.getName());
         holder.itemDescriptionTextView.setText(item.getDescription());
-        holder.itemPictureImageView.setBackground(SystemData.scaleDrawable(R.drawable.item_background, SystemData.PIXEL,SystemData.PIXEL,1));
-        holder.itemButton.setBackground(SystemData.scaleDrawable(R.drawable.yellow_button, SystemData.PIXEL,SystemData.PIXEL,2));
+        holder.itemPictureImageView.setBackground(System.scaleDrawable(R.drawable.item_background, 200,200,1));
+        holder.itemButton.setBackground(System.scaleDrawable(R.drawable.yellow_button, 200,200,2));
         holder.itemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(item.Buy()){
-                    Toast.makeText(context,"Item Purchased", Toast.LENGTH_SHORT).show();
-                    long money = UserProfile.getCOIN().getNum();
+                if(item.upgrade()){
+                    Toast.makeText(context,"Item upgraded", Toast.LENGTH_SHORT).show();
+                    long money = User.getCOIN().getNum();
                     myTextView.setText(Long.toString(money));
                 } else {
                     Toast.makeText(context,"Not Enough Money" , Toast.LENGTH_SHORT).show();

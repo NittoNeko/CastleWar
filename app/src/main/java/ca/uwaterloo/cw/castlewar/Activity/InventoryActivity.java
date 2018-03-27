@@ -10,15 +10,13 @@
         import android.support.v7.widget.LinearLayoutManager;
         import android.support.v7.widget.RecyclerView;
         import android.view.View;
-        import android.widget.ProgressBar;
         import android.widget.TextView;
 
-        import ca.uwaterloo.cw.castlewar.Model.Coin;
-        import ca.uwaterloo.cw.castlewar.Model.GameObject;
-        import ca.uwaterloo.cw.castlewar.Model.Id;
-        import ca.uwaterloo.cw.castlewar.Model.Item;
-        import ca.uwaterloo.cw.castlewar.Model.SystemData;
-        import ca.uwaterloo.cw.castlewar.Model.UserProfile;
+        import ca.uwaterloo.cw.castlewar.Item.Potion;
+        import ca.uwaterloo.cw.castlewar.Structure.Id;
+        import ca.uwaterloo.cw.castlewar.Item.Item;
+        import ca.uwaterloo.cw.castlewar.Base.System;
+        import ca.uwaterloo.cw.castlewar.Base.User;
         import ca.uwaterloo.cw.castlewar.R;
 
         import java.util.ArrayList;
@@ -35,11 +33,10 @@ public class InventoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
         // Initialize items in the inventory and add them to the ArrayList
-        for (Id.Item item : Id.Item.values()){
-            inventoryItems.add(SystemData.createItem(item.ordinal()));
-        }
-        findViewById(R.id.imageView3).setBackground(SystemData.scaleDrawable(R.drawable.background_night_forest, null, SystemData.getScreenHeight(), 2));
-        findViewById(R.id.coinImageView).setBackground(SystemData.scaleDrawable(R.drawable.gold_coin, SystemData.PIXEL, SystemData.PIXEL, 2));
+        inventoryItems = Potion.getAllPotion();
+
+        findViewById(R.id.imageView3).setBackground(System.scaleDrawable(R.drawable.background_night_forest, null, System.getScreenHeight(), 2));
+        findViewById(R.id.coinImageView).setBackground(System.scaleDrawable(R.drawable.gold_coin, 200, 200, 2));
     }
 
 
@@ -52,7 +49,7 @@ public class InventoryActivity extends AppCompatActivity {
 
         // Get the TextView
         TextView myTextView = findViewById(R.id.coinNum);
-        long money = UserProfile.getCOIN().getNum();
+        long money = User.getCOIN().getNum();
         myTextView.setText(Long.toString(money));
 
         // use a linear layout manager
@@ -62,8 +59,5 @@ public class InventoryActivity extends AppCompatActivity {
         // specify an adapter (see also next example)
         RecyclerView.Adapter myAdapter = new InventoryItemsRecyclerViewAdapter(inventoryItems, myTextView);
         myRecyclerView.setAdapter(myAdapter);
-
-        // Hide the progress bar when all items are presented
-
     }
 }

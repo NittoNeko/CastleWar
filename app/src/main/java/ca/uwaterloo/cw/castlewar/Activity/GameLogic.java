@@ -130,8 +130,8 @@ public class GameLogic{
     }
 
     // Game object
-    private ArrayList<Ally> allies;
-    private ArrayList<Enemy> enemies;
+    private ArrayList<Lawful> allies;
+    private ArrayList<Chaotic> enemies;
     private Level level;
 
     // game control

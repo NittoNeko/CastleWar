@@ -13,12 +13,11 @@
         import android.widget.ProgressBar;
         import android.widget.TextView;
 
-        import ca.uwaterloo.cw.castlewar.Model.Coin;
-        import ca.uwaterloo.cw.castlewar.Model.GameObject;
-        import ca.uwaterloo.cw.castlewar.Model.Id;
-        import ca.uwaterloo.cw.castlewar.Model.Item;
-        import ca.uwaterloo.cw.castlewar.Model.SystemData;
-        import ca.uwaterloo.cw.castlewar.Model.UserProfile;
+        import ca.uwaterloo.cw.castlewar.Item.Potion;
+        import ca.uwaterloo.cw.castlewar.Structure.Id;
+        import ca.uwaterloo.cw.castlewar.Item.Item;
+        import ca.uwaterloo.cw.castlewar.Base.System;
+        import ca.uwaterloo.cw.castlewar.Base.User;
         import ca.uwaterloo.cw.castlewar.R;
 
         import java.util.ArrayList;
@@ -36,17 +35,15 @@ public class ShopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
         // Initialize items in the shop and add them to the ArrayList
-        for (Id.Item item : Id.Item.values()){
-            shopItems.add(SystemData.createItem(item.ordinal()));
-        }
+        shopItems = Potion.getAllPotion();
 
         // Construct User Profile to get amount of coins
-        myCoins = UserProfile.getCOIN().getNum();
+        myCoins = User.getCOIN().getNum();
 
         // Private reference to the progress bar
         progressBar = findViewById(R.id.progressBar);
-        findViewById(R.id.imageView4).setBackground(SystemData.scaleDrawable(R.drawable.background_near_lake, null, SystemData.getScreenHeight(), 2));
-        findViewById(R.id.coinImageView).setBackground(SystemData.scaleDrawable(R.drawable.gold_coin, SystemData.PIXEL, SystemData.PIXEL, 2));
+        findViewById(R.id.imageView4).setBackground(System.scaleDrawable(R.drawable.background_near_lake, null, System.getScreenHeight(), 2));
+        findViewById(R.id.coinImageView).setBackground(System.scaleDrawable(R.drawable.gold_coin, 200, 200, 2));
     }
 
 
@@ -63,7 +60,7 @@ public class ShopActivity extends AppCompatActivity {
         // Get the TextView
         TextView myTextView = findViewById(R.id.coinNum);
 
-        long money = UserProfile.getCOIN().getNum();
+        long money = User.getCOIN().getNum();
         myTextView.setText(Long.toString(money));
 
         // use a linear layout manager
