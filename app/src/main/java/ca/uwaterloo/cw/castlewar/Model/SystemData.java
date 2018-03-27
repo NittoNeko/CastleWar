@@ -60,7 +60,7 @@ public class SystemData {
 
     // output control
     public final static boolean gameFps = false;
-    public final static boolean gameFlow = false;
+    public final static boolean gameFlow = true;
 
     // game setting
     public static final int CARD_NUM = 5;

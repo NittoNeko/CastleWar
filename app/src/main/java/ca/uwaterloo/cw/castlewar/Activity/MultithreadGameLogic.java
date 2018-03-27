@@ -797,6 +797,8 @@ public class MultithreadGameLogic {
         currentState.set(Id.GameState.MOVING);
         buttonLock.writeLock().unlock();
 
+        System.out.println("lock release");
+
         // recover cost
         setCostBy(costPerTurn.get(isPlayer1.get()));
     }

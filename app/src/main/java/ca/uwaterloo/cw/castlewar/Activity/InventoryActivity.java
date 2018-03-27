@@ -64,7 +64,6 @@ public class InventoryActivity extends AppCompatActivity {
         myRecyclerView.setAdapter(myAdapter);
 
         // Hide the progress bar when all items are presented
-        progressBar.setVisibility(View.INVISIBLE);
 
     }
 }

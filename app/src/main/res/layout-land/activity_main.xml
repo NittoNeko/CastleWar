@@ -15,7 +15,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/bubblegum_sans"
-        android:onClick="enterInventory"
+        android:onClick="shareVideos"
         android:text="@string/Inventory"
         android:textColor="@color/cardview_light_background"
         app:layout_constraintBottom_toTopOf="@+id/Shop"
