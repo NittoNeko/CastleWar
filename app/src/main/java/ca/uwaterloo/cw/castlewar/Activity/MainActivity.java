@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity{
             e.printStackTrace();
         }
         findViewById(R.id.SinglePlayer).setBackground(System.scaleDrawable(R.drawable.blue_button,null,null,1));
+        findViewById(R.id.MultiPlayer).setBackground(System.scaleDrawable(R.drawable.blue_button,null,null,1));
         findViewById(R.id.Shop).setBackground(System.scaleDrawable(R.drawable.blue_button,null,null,1));
         findViewById(R.id.Inventory).setBackground(System.scaleDrawable(R.drawable.blue_button,null,null,1));
     }
@@ -58,6 +59,15 @@ public class MainActivity extends AppCompatActivity{
         // Show new screen
         startActivity(userIntent);
     }
+
+    public void enterMultiPlayer(View view) {
+        // Create an intent to show a new screen passing data to it
+        Intent userIntent = new Intent(this, MultiPlayerActivity.class);
+
+        // Show new screen
+        startActivity(userIntent);
+    }
+
 
     public void enterShop(View view)
     {

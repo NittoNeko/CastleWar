@@ -81,4 +81,8 @@ abstract public class Id {
             }
         }
     }
+
+    public enum Attack {
+        HIT, ICE_BALST, THUNDER, WATER, ARROW, CLAW, SLASH_FIRE, SLASH
+    }
 }

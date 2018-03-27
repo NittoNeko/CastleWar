@@ -38,6 +38,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import ca.uwaterloo.cw.castlewar.Base.Animation;
@@ -67,21 +68,19 @@ public class GameManager {
     private static GameManager instance;
     public final Activity activity;
 
-    public static final long MAX_FPS = 45;
-    public static final long MIN_FPS = 5;
-    public static final int BASIC_RECOVERY = 3;
-    public static final int MILISECOND = 1000;
-    public static final int CARD_NUM = 5;
-    public static final int DRAW_NUM = 2;
-    public static final int DRAW_COST = 1;
-    public static final int MAX_COST = 5;
-    public static final float SCROLL_PIXEL_PER_SECOND = 2000; // speed of screen
-    public static final float FRAME_PER_SECOND = 30;
-    public static final float LOGIC_PER_SECOND = 30;  // this is the speed of updates of normal background thread
-    public static final float CONSTANT_PER_SECOND = 10; // this is the speed of updates constant anime, music and so on
-    public static final long FRAME_SLEEP_TIME = MILISECOND / (long) FRAME_PER_SECOND;
-    public static final long LOGIC_SLEEP_TIME = MILISECOND / (long) LOGIC_PER_SECOND;
-    public static final long CONSTANT_SLEEP_TIME = MILISECOND / (long) CONSTANT_PER_SECOND;
+    private static final long MAX_FPS = 45;
+    private static final long MIN_FPS = 5;
+    private static final int BASIC_RECOVERY = 3;
+    private static final int MILISECOND = 1000;
+    private static final int CARD_NUM = 5;
+    private static final int DRAW_NUM = 2;
+    private static final int DRAW_COST = 1;
+    private static final int MAX_COST = 5;
+    private static final float SCROLL_PIXEL_PER_SECOND = 2000; // speed of screen
+    private static AtomicInteger LOGIC_PER_SECOND = new AtomicInteger(25);  // this is the speed of updates of normal background thread
+    private static final float CONSTANT_PER_SECOND = 10; // this is the speed of updates constant anime, music and so on
+    private static AtomicInteger LOGIC_SLEEP_TIME = new AtomicInteger(MILISECOND / LOGIC_PER_SECOND.get());
+    private static final long CONSTANT_SLEEP_TIME = MILISECOND / (long) CONSTANT_PER_SECOND;
 
     // Game object
     private Unit currentUnit = null;
@@ -231,7 +230,6 @@ public class GameManager {
         this.maxCost.put(Id.Player.ONE, MAX_COST);
         this.maxCost.put(Id.Player.TWO, MAX_COST);
         initializeImages();
-        Animation.initializeAnimations();
     }
 
     // called for singleplayer
@@ -250,7 +248,7 @@ public class GameManager {
     // called for multiplayer
     public GameManager(Activity activity, Terrain terrain, Id.Castle player1, Id.Castle player2) {
         this(activity, terrain);
-        this.isAi = true;
+        this.isAi = false;
         this.terrain = terrain;
         if (player1 == Id.Castle.HOLY_CASTLE) {
             this.unitInStock.put(Id.Player.ONE, User.currentLawfuls());
@@ -281,10 +279,8 @@ public class GameManager {
         System.runOnUi(new Runnable() {
             @Override
             public void run() {
-                activity.findViewById(R.id.AttackerHpWrapper).setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, 50, 4));
-                activity.findViewById(R.id.DefenderHpWrapper).setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, 50, 4));
-                activity.findViewById(R.id.AttackerHpBar).setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, 25, 4));
-                activity.findViewById(R.id.DefenderHpBar).setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, 25, 4));
+                activity.findViewById(R.id.AttackerHpBar).setBackground(System.scaleDrawable(R.drawable.health_bar, null, 100, 4));
+                activity.findViewById(R.id.DefenderHpBar).setBackground(System.scaleDrawable(R.drawable.health_bar, null, 100, 4));
                 ((ImageButton) activity.findViewById(R.id.SpeedButton)).setImageBitmap(System.scaleBitmap(R.drawable.speed_button, 200, 200, 3));
                 ((ImageButton) activity.findViewById(R.id.LineButton)).setImageBitmap(System.scaleBitmap(R.drawable.line_button, 200, 200, 3));
                 activity.findViewById(R.id.Result).setBackground(System.scaleDrawable(R.drawable.plane_yellow, 600, 600, 4));
@@ -415,7 +411,7 @@ public class GameManager {
         System.runOnUi(new Runnable() {
             @Override
             public void run() {
-                String string = cost.get(player).toString() + "/" + maxCost.get(player).toString();
+                String string = (player == Id.Player.ONE ? "Player 1: " : "Player 2: ") + cost.get(player).toString() + "/" + maxCost.get(player).toString();
                 costText.setText(string);
             }
         });
@@ -605,6 +601,13 @@ public class GameManager {
                     @Override
                     public void run() {
                         doubleSpeed.set(!doubleSpeed.get());
+                        if (doubleSpeed.get()) {
+                            LOGIC_PER_SECOND.set(LOGIC_PER_SECOND.get() * 2);
+                        } else {
+                            LOGIC_PER_SECOND.set(LOGIC_PER_SECOND.get() / 2);
+                        }
+                        LOGIC_SLEEP_TIME.set(MILISECOND / LOGIC_PER_SECOND.get());
+                        Animation.setSpeed(doubleSpeed.get());
                     }
                 });
             }
@@ -729,6 +732,14 @@ public class GameManager {
         this.animations.remove(animation);
     }
 
+    public boolean isAnimationEmpty() {
+        return this.animations.isEmpty();
+    }
+
+    public boolean isGameActive() {
+        return this.isGameActive.get();
+    }
+
     public static GameManager instance() {
         if (instance == null) Log.e("NULL EXCEPTION", "NO ACTIVE GAME MANAGER", new NullPointerException());
         return instance;
@@ -805,6 +816,7 @@ public class GameManager {
             // check win
             if (castle.get(Id.Player.ONE).isDead()) {
                 // add something in the future
+                currentState.set(Id.GameState.MOVING);
                 System.runOnUi(new Runnable() {
                     @Override
                     public void run() {
@@ -817,6 +829,7 @@ public class GameManager {
                         } else {
                             string = "Player 2 Wins!";
                             winLose.setText(string);
+                            coinReward.setText(null);
                         }
                         activity.findViewById(R.id.Result).setVisibility(View.VISIBLE);
                     }
@@ -826,6 +839,7 @@ public class GameManager {
                 }
                 return;
             } else if (castle.get(Id.Player.TWO).isDead()) {
+                currentState.set(Id.GameState.MOVING);
                 System.runOnUi(new Runnable() {
                     @Override
                     public void run() {
@@ -838,6 +852,7 @@ public class GameManager {
                         } else {
                             string = "Player 1 Wins!";
                             winLose.setText(string);
+                            coinReward.setText(null);
                         }
                         activity.findViewById(R.id.Result).setVisibility(View.VISIBLE);
                     }
@@ -992,7 +1007,7 @@ public class GameManager {
         @Override
         public void run() {
             while (isGameActive.get()) {
-                reaSleepTime = SystemClock.uptimeMillis() + (long) (LOGIC_SLEEP_TIME * (doubleSpeed.get() ? 1.5 : 1));
+                reaSleepTime = SystemClock.uptimeMillis() + LOGIC_SLEEP_TIME.get();
                 gameLogic();
                 reaSleepTime -= SystemClock.uptimeMillis();
                 if (reaSleepTime > 0) {
@@ -1040,7 +1055,7 @@ public class GameManager {
             screen = Bitmap.createBitmap(backgroundWidth, backgroundHeight, Bitmap.Config.ARGB_8888);
             canvas = new Canvas(screen);
             canvas.drawBitmap(background, 0, backgroundY, paint);
-            level.getTerrain().draw(canvas, paint);
+            terrain.draw(canvas, paint);
             castle.get(Id.Player.ONE).draw(canvas, paint);
             castle.get(Id.Player.TWO).draw(canvas, paint);
 

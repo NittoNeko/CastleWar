@@ -29,6 +29,12 @@
             android:screenOrientation="landscape">
         </activity>
         <activity
+            android:name=".Activity.MultiPlayerActivity"
+            android:label="@string/MultiPlayer"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="landscape">
+        </activity>
+        <activity
             android:name=".Activity.ShopActivity"
             android:screenOrientation="landscape">
         </activity>
