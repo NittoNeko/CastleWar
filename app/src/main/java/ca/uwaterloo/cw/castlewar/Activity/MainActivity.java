@@ -1,11 +1,16 @@
 package ca.uwaterloo.cw.castlewar.Activity;
 
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.content.Intent;
 import android.widget.ImageView;
+
+import com.facebook.share.model.ShareVideo;
+import com.facebook.share.model.ShareVideoContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.util.concurrent.ExecutionException;
 
@@ -79,5 +84,21 @@ public class MainActivity extends AppCompatActivity{
 
         // Show new screen
         startActivity(userIntent);
+    }
+
+    public void shareVideos(View view){
+        ShareDialog shareDialog = new ShareDialog(this);
+        Uri videoFileUri = Uri.parse("file://" +getCacheDir().getAbsolutePath() + "/gameplay.mp4");
+        ShareVideo video = new ShareVideo.Builder()
+                .setLocalUrl(videoFileUri)
+                .build();
+        ShareVideoContent content = new ShareVideoContent.Builder()
+                .setContentTitle("My combat Videos")
+                .setContentDescription("Time to show my true skill")
+                .setVideo(video)
+                .build();
+        if(shareDialog.canShow(ShareVideoContent.class)){
+            shareDialog.show(content);
+        }
     }
 }
