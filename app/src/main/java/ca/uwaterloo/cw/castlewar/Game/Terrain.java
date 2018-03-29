@@ -22,7 +22,9 @@ public class Terrain extends GameObject {
 
     public static Terrain createTerrain(Id.Terrain terrain) {
         switch (terrain) {
-            case FOREST: return new Forest();
+            case SHORT_FIELD: return new ShortField();
+            case MEDIUM_FIELD: return new MediumField();
+            case LONG_FIELD: return new LongField();
             default: return null;
         }
     }
@@ -69,10 +71,21 @@ public class Terrain extends GameObject {
         return reverse;
     }
 
-    public static class Forest extends Terrain
-    {
-        public Forest() {
-            super(Id.Terrain.FOREST.ordinal(), "Forest", "A peaceful place.", R.drawable.forest_ground, 500, 4);
+    public static class ShortField extends Terrain {
+        public ShortField() {
+            super(Id.Terrain.SHORT_FIELD.ordinal(), "Short Field", "Three Sections", R.drawable.forest_ground, 500, 3);
+        }
+    }
+
+    public static class MediumField extends Terrain {
+        public MediumField() {
+            super(Id.Terrain.MEDIUM_FIELD.ordinal(), "Medium Field", "Four Sections", R.drawable.forest_ground, 500, 4);
+        }
+    }
+
+    public static class LongField extends Terrain {
+        public LongField() {
+            super(Id.Terrain.LONG_FIELD.ordinal(), "Long Field", "Five Sections", R.drawable.forest_ground, 500, 5);
         }
     }
 

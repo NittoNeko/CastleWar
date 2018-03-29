@@ -3,9 +3,12 @@ package ca.uwaterloo.cw.castlewar.Item;
 
 import java.util.ArrayList;
 
+import ca.uwaterloo.cw.castlewar.Base.Sprite;
 import ca.uwaterloo.cw.castlewar.Base.Status;
+import ca.uwaterloo.cw.castlewar.Effect.Buff;
 import ca.uwaterloo.cw.castlewar.Structure.Id;
 import ca.uwaterloo.cw.castlewar.R;
+import ca.uwaterloo.cw.castlewar.Unit.Unit;
 
 /**
  * Created by harri on 2018/2/14.
@@ -13,8 +16,8 @@ import ca.uwaterloo.cw.castlewar.R;
 
 abstract public class Potion extends Item {
 
-    public Potion(int id, String name,String description, int resource, int basePrice, Status status) {
-        super(id, name, description, resource, basePrice, status);
+    public Potion(int id, String name,String description, int resource, Status status) {
+        super(id, name, description, resource, status);
     }
 
     public static ArrayList<Item> getAllPotion() {
@@ -26,19 +29,22 @@ abstract public class Potion extends Item {
         return potion;
     }
 
-    @Override
-    public void use() {
-
-    }
-
-    public static class HpPotion extends Potion
-    {
+    public static class HpPotion extends Potion {
+        private int restore = 30;
         public HpPotion() {
             super(Id.Item.HP_POTION.ordinal(), "Health Potion",
-                    "The HP Portion costs 100 coins to buy, and gives 50 coins after selling, it can heal and increase your HP to maximum.",
-                    R.drawable.potion_hp, 100, new Status(1));
+                    "A fantastic potion that can heal wounds.\n" +
+                            "Restore 30 Hit Point for units.\n" +
+                            "1 Cost",
+                    R.drawable.potion_hp, new Status(1));
         }
 
+        @Override
+        public void use(ArrayList<Unit> units) {
+            for (Unit unit : units) {
+                unit.modifyBaseHealth(restore);
+            }
+        }
     }
 
     public static class AttackPotion extends Potion
@@ -46,8 +52,21 @@ abstract public class Potion extends Item {
         public AttackPotion()
         {
             super(Id.Item.ATTACK_POTION.ordinal(), "Attack Potion",
-                    "The Attack Potion costs 300 coins to buy, and gives 200 coins after selling, it can increase your character's attack ability.",
-                    R.drawable.potion_attack, 300, new Status(1));
+                    "Enrage! Be brave!\n" +
+                            "Add [Brave] Buff to units.\n" +
+                            "1 Cost",
+                    R.drawable.potion_attack, new Status(1));
+        }
+
+        @Override
+        public void use(ArrayList<Unit> units) {
+            Sprite sprite = new Buff.Brave().getSprite();
+            sprite.getPortrait();
+            for (Unit unit : units) {
+                Buff.Brave brave = new Buff.Brave();
+                brave.getSprite().clone(sprite);
+                unit.receiveEffect(brave);
+            }
         }
     }
 
@@ -55,8 +74,21 @@ abstract public class Potion extends Item {
     {
         public DefensePotion() {
             super(Id.Item.DEFENSE_POTION.ordinal(), "Defense Potion",
-                    "The Defense Potion costs 200 coins to buy, and give 100 coins after selling, it can increase your character's defense ability.",
-                    R.drawable.potion_defense, 200, new Status(1));
+                    "No pain. No Fear.\n" +
+                            "Add [Tough] Buff to units\n" +
+                            "1 Cost",
+                    R.drawable.potion_defense, new Status(1));
+        }
+
+        @Override
+        public void use(ArrayList<Unit> units) {
+            Sprite sprite = new Buff.Tough().getSprite();
+            sprite.getPortrait();
+            for (Unit unit : units) {
+                Buff.Tough tough = new Buff.Tough();
+                tough.getSprite().clone(sprite);
+                unit.receiveEffect(tough);
+            }
         }
     }
 
@@ -64,8 +96,21 @@ abstract public class Potion extends Item {
     {
         public SpeedPotion() {
             super(Id.Item.SPEED_POTION.ordinal(), "Speed Potion",
-                    "The Speed Potion costs 100 coins to buy, and give 50 coins after selling, it can increase your character's speed." ,
-                    R.drawable.potion_speed, 100, new Status(1));
+                    "Light like a feather...well, just a moment.\n" +
+                            "Add [Swift] Buff to units.\n" +
+                            "1 Cost",
+                    R.drawable.potion_speed, new Status(1));
+        }
+
+        @Override
+        public void use(ArrayList<Unit> units) {
+            Sprite sprite = new Buff.Swift().getSprite();
+            sprite.getPortrait();
+            for (Unit unit : units) {
+                Buff.Swift swift = new Buff.Swift();
+                swift.getSprite().clone(sprite);
+                unit.receiveEffect(swift);
+            }
         }
     }
 }

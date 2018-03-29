@@ -1,3 +1,5 @@
+/*
+
 package ca.uwaterloo.cw.castlewar.Base;
 
 import java.util.ArrayList;
@@ -12,9 +14,9 @@ import ca.uwaterloo.cw.castlewar.Unit.Chaotic;
 import ca.uwaterloo.cw.castlewar.Unit.Lawful;
 import ca.uwaterloo.cw.castlewar.Unit.Unit;
 
-/**
+
  * Created by harrison33 on 2018/2/3.
- */
+
 
 public class User {
     // temporarily store levels
@@ -51,3 +53,4 @@ public class User {
         return COIN;
     }
 }
+*/

@@ -9,10 +9,4 @@ import ca.uwaterloo.cw.castlewar.R;
  */
 
 abstract public class Icon {
-    public static final Bitmap empty;
-
-    static {
-        empty = System.scaleBitmap(R.drawable.cross, 100, 100, 2);
-    }
-
 }

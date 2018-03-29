@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.health.SystemHealthManager;
 import android.util.Log;
@@ -41,12 +42,10 @@ abstract public class Unit extends GameObject {
     private Tile actionTile;
     private Id.RoundRole roundRole;
     private Unit opponent;
-    private int level;
     private Damage damage;
     private ArrayList<Effect> currentEffects = new ArrayList<>();
     private Ability attackAbility;
     private Ability defenseAbility;
-    private Ability utilityAbility;
     private CombatView combatView;
     private Id.Attack attack;
     private Id.CombatRole role;
@@ -58,7 +57,6 @@ abstract public class Unit extends GameObject {
         this.moveTile = null;
         this.actionTile = null;
         this.isReady = true;
-        this.level = 1;
         this.attack = attack;
         this.getSprite().enableUnit();
         this.getSprite().setInitialDirection(initialDirection);
@@ -68,11 +66,9 @@ abstract public class Unit extends GameObject {
     }
 
     public void clone(Unit unit) {
-        this.level = unit.level;
         this.getSprite().clone(unit.getSprite());
         this.attackAbility = unit.attackAbility;
         this.defenseAbility = unit.defenseAbility;
-        this.utilityAbility = unit.utilityAbility;
     }
 
     private boolean checkHasEnemy(Tile start, Tile end, Terrain terrain){
@@ -215,10 +211,6 @@ abstract public class Unit extends GameObject {
     }
 
     public void startTurn() {
-        this.damage = null;
-        if (utilityAbility != null && utilityAbility.getTriggerStage() == Id.CombatStage.END) {
-            utilityAbility.apply(this);
-        }
         applyEffect(Id.CombatStage.START);
     }
 
@@ -241,9 +233,6 @@ abstract public class Unit extends GameObject {
         if (defenseAbility != null && defenseAbility.getTriggerStage() == Id.CombatStage.FIGHT) {
             defenseAbility.apply(this);
         }
-
-        // play hurt animation
-
     }
 
     // take damage
@@ -254,10 +243,6 @@ abstract public class Unit extends GameObject {
 
     public void endTurn() {
         this.damage = null;
-        if (utilityAbility != null && utilityAbility.getTriggerStage() == Id.CombatStage.END) {
-            utilityAbility.apply(this);
-        }
-        applyEffect(Id.CombatStage.END);
     }
 
     // here since permanently lose or gain health
@@ -265,13 +250,13 @@ abstract public class Unit extends GameObject {
     public void modifyBaseHealth(int offset) {
         int before = this.getModifiedStatus().getHp();
         int currentHp = this.getBaseStatus().getHp() + offset;
-        if (currentHp < 0) currentHp = 0;
         getBaseStatus().setHp(currentHp);
         reapplyEffect();
         int after = this.getModifiedStatus().getHp();
 
         // play animation
-        Animation.healthEffect(before, after, this.combatView);
+
+        if (this.combatView != null) Animation.healthEffect(before, after, this.combatView);
     }
 
     public boolean isDead(){
@@ -303,7 +288,7 @@ abstract public class Unit extends GameObject {
         while (iterator.hasNext()) {
             Effect effect = iterator.next();
             effect.reduceTurn();
-            if (effect.getTurnLeft() <= 0) iterator.remove();
+            if (effect.getTurn() <= 0) iterator.remove();
         }
         reflectOnView();
         reapplyEffect();
@@ -320,15 +305,14 @@ abstract public class Unit extends GameObject {
     // take actual effects like poison
     private void applyEffect(Id.CombatStage stage) {
         for (Effect effect : this.currentEffects) {
-            if (effect.getTriggerStage() == stage) effect.reapply(this);
+            effect.reapply(this);
         }
         reapplyEffect();
     }
 
-    public Unit setAllAbility(Ability attackAbility, Ability defenseAbility, Ability utilityAbility) {
+    public Unit setAllAbility(Ability attackAbility, Ability defenseAbility) {
         setAttackAbility(attackAbility);
         setDefenseAbility(defenseAbility);
-        setUtilityAbility(utilityAbility);
         return this;
     }
 
@@ -340,9 +324,6 @@ abstract public class Unit extends GameObject {
         this.defenseAbility = defenseAbility;
     }
 
-    public void setUtilityAbility(Ability utilityAbility) {
-        this.utilityAbility = utilityAbility;
-    }
 
     public void animate() {
         this.getSprite().switchBitmap();
@@ -400,18 +381,21 @@ abstract public class Unit extends GameObject {
                 combatView.getAnimation().setImageBitmap(null);
                 combatView.getHealthBar().setMax(status.getMaxHp());
                 combatView.getHealthBar().setProgress(status.getHp());
-                combatView.getEffects().removeAllViews();
-                for (Effect effect : effects) {
-                    ImageView imageView = new ImageView(System.context());
-                    imageView.setImageBitmap(effect.getPortrait());
-                    combatView.getEffects().addView(imageView);
+                if (player == Id.Player.ONE) {
+                    String string = "Player 1";
+                    combatView.getTitle().setText(string);
+                } else {
+                    String string = "Player 2";
+                    combatView.getTitle().setText(string);
                 }
             }
         });
+
+        // draw later!!!!
     }
 
     private Id.Direction checkDirection() {
-        return this.roundRole == Id.RoundRole.ACTIVE ? Id.Direction.RIGHT : Id.Direction.LEFT;
+        return this.role == Id.CombatRole.ATTACKER ? Id.Direction.RIGHT : Id.Direction.LEFT;
     }
 
     public Unit getOpponent() {
@@ -474,15 +458,6 @@ abstract public class Unit extends GameObject {
         this.roundRole = roundRole;
     }
 
-    public int getLevel() {
-        return level;
-    }
-
-    public Unit setLevel(int level) {
-        this.level = level;
-        return this;
-    }
-
     public CombatView getCombatView() {
         return combatView;
     }
@@ -496,6 +471,42 @@ abstract public class Unit extends GameObject {
     public void draw(Canvas canvas, Paint paint) {
         Sprite sprite = getSprite();
         canvas.drawBitmap(sprite.getBitmap(), sprite.getX(), sprite.getY(), paint);
+
+        // draw hp above chars
+        Paint paintHp = new Paint();
+        int healthWidth = 80;
+        int interval = 10;
+        int healthHeight = 20;
+        int indent = 10;
+        int left = sprite.getX() + indent;
+        int right = left + healthWidth;
+        int top = sprite.getY() - healthHeight - interval;
+        int bottom = top + healthHeight;
+        paintHp.setColor(Color.RED);
+        canvas.drawRect(left, top, right, bottom, paintHp);
+        paintHp.setColor(Color.GREEN);
+        int currentHealthWidth = (int) (((float) getModifiedStatus().getHp() / (float)getModifiedStatus().getMaxHp()) * (float) healthWidth);
+        right = left + currentHealthWidth;
+        canvas.drawRect(left, top, right, bottom, paintHp);
+
+        // draw effect above chars
+        int textWidth = 80;
+        int textHeight = 40;
+        int inter = 80 + textHeight;
+        for (int i = 0; i < currentEffects.size(); i ++) {
+            Paint paintEffect = new Paint();
+            int l = sprite.getX() + indent;
+            int r = l + textWidth;
+            int t = top - i * inter - interval;
+            int b = t + textHeight;
+            paintEffect.setColor(Animation.AnimateColor.getAnimateColor());
+            paintEffect.setTextSize(textHeight);
+            canvas.drawText(Integer.toString(currentEffects.get(i).getTurn()), l,t,paintEffect);
+            paintEffect.setTextAlign(Paint.Align.RIGHT);
+            canvas.drawText(Integer.toString(currentEffects.get(i).getStack()),r,t, paintEffect);
+            Bitmap bitmap = currentEffects.get(i).getPortrait();
+            canvas.drawBitmap(bitmap, l, t - inter - inter, paintEffect);
+        }
     }
 
     public Id.Attack getAttack() {

@@ -78,7 +78,6 @@ public class Sprite {
     // only once when initializing a new game
     // when generating new units, use copy moving image instead
     public void initializeAll(){
-        setConfig(100, 100, 1);
         initializePortrait();
         initializeMove();
         initializeCombat();

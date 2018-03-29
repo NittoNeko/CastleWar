@@ -1,9 +1,9 @@
-
+/*
         package ca.uwaterloo.cw.castlewar.Activity;
 
-/**
- * Created by Sparks on 2018-02-23.
- */
+
+ Created by Sparks on 2018-02-23.
+
 
         import android.os.Bundle;
         import android.support.v7.app.AppCompatActivity;
@@ -76,3 +76,4 @@ public class ShopActivity extends AppCompatActivity {
 
     }
 }
+*/

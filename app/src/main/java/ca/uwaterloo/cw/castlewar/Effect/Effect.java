@@ -9,38 +9,53 @@ import ca.uwaterloo.cw.castlewar.Unit.Unit;
  */
 
 abstract public class Effect extends GameObject {
-    private Id.CombatStage triggerStage = Id.CombatStage.START;
-    private Unit unit;
-    private int turnLeft;
+    private int turn;
+    private int stack;
+    private int maxTurn;
+    private int maxStack;
+    public static final int MAX_TURN = 99;
+    public static final int MAX_STACK = 99;
 
-    public Effect(int id, String name,String description, int resource) {
+    public Effect(int id, String name,String description, int resource, int turn, int stack, int maxTurn, int maxStack) {
         super(id, name,description, resource);
-    }
-
-    public int getTurnLeft() {
-        return turnLeft;
-    }
-
-    public void reduceTurn() {
-        this.turnLeft--;
+        this.turn = turn;
+        this.stack = stack;
+        this.maxTurn = maxTurn;
+        this.maxStack = maxStack;
+        this.getSprite().setConfig(80,80,1);
     }
 
     // called for actual side effects like poison
-    public void apply(Unit unit) {
-        // no op
-    }
+    abstract public void apply(Unit unit);
 
     // called for status changes like brave
-    public void reapply(Unit unit) {
-        // no op
-    }
+    abstract public void reapply(Unit unit);
 
     public void overApply(Effect effect) {
         // simply extend the time
-        this.turnLeft += effect.turnLeft;
+        this.setTurn(this.turn + effect.turn);
+        this.setStack(this.stack + effect.stack);
     }
 
-    public Id.CombatStage getTriggerStage() {
-        return triggerStage;
+    public void setTurn(int turnLeft) {
+        this.turn = turnLeft;
+        if (this.turn > this.maxTurn) this.turn = this.maxTurn;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public int getStack() {
+        return stack;
+    }
+
+    public void setStack(int stack) {
+        this.stack = stack;
+        if (this.stack > this.maxStack) this.stack = this.maxStack;
+    }
+
+    public void reduceTurn() {
+        this.turn--;
     }
 }

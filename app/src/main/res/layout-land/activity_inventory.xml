@@ -2,62 +2,14 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/inventoryWrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/inventoryItemsRecyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="261dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_weight="1"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.14"
-        tools:listitem="@layout/inventory_item" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/inventoryPage"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="42dp"
-        tools:layout_editor_absoluteY="9dp">
-
-        <ImageView
-            android:id="@+id/coinImageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/coinNum"
-            android:layout_width="321dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="220dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/bubblegum_sans"
-            android:textColor="@android:color/holo_orange_light"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Coin" />
-
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_margin="8dp" />
 
 </android.support.constraint.ConstraintLayout>

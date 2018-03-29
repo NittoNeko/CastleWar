@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context="ca.uwaterloo.cw.castlewar.Activity.SinglePlayerActivity">
+    tools:context="ca.uwaterloo.cw.castlewar.Activity.GameActivity">
 
     <HorizontalScrollView
         android:id="@+id/GameScreenWrapper"
@@ -25,39 +25,63 @@
     </HorizontalScrollView>
 
     <ImageButton
-        android:id="@+id/SpeedButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:id="@+id/Record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/LineButton"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.027" />
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageButton
+        android:id="@+id/ShowUnit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Record"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
         android:id="@+id/LineButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="472dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageButton
+        android:id="@+id/SpeedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <LinearLayout
         android:id="@+id/CombatBoard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.4"
@@ -155,10 +179,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/AttackerHpBar" />
 
-            <HorizontalScrollView
+            <ImageView
                 android:id="@+id/AttackerEffects"
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
@@ -166,12 +190,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/AttackerAbility">
-
-            </HorizontalScrollView>
+                app:layout_constraintTop_toBottomOf="@+id/AttackerTitle"
+                app:srcCompat="@color/colorPrimary" />
 
             <TextView
-                android:id="@+id/AttackerAbility"
+                android:id="@+id/AttackerTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -295,10 +318,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/DefenderHpBar" />
 
-            <HorizontalScrollView
+            <ImageView
                 android:id="@+id/DefenderEffects"
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
@@ -306,12 +329,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/DefenderAbility">
-
-            </HorizontalScrollView>
+                app:layout_constraintTop_toBottomOf="@+id/DefenderTitle"
+                app:srcCompat="@color/colorPrimary" />
 
             <TextView
-                android:id="@+id/DefenderAbility"
+                android:id="@+id/DefenderTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -343,15 +365,13 @@
 
     <LinearLayout
         android:id="@+id/UnitMenu"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
         android:padding="20dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -359,6 +379,10 @@
             android:id="@+id/cost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="175dp"
+            android:layout_marginRight="175dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:fontFamily="@font/bubblegum_sans"
             android:paddingTop="5dp"
@@ -369,6 +393,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:orientation="horizontal">
 
@@ -472,6 +498,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:orientation="horizontal">
 
@@ -596,7 +624,9 @@
         <LinearLayout
             android:id="@+id/Function"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:orientation="horizontal">
 
@@ -648,67 +678,59 @@
         android:id="@+id/Result"
         android:layout_width="258dp"
         android:layout_height="164dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="96dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/GameScreenWrapper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.021">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/WinLose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="32dp"
             android:fontFamily="@font/bubblegum_sans"
-            android:textSize="18sp"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/CoinReward"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/bubblegum_sans"
-            android:text="TextView"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/WinLose" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <ImageButton
             android:id="@+id/GoBackToTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="64dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="64dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/Facebook"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.049"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/CoinReward" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <ImageButton
             android:id="@+id/Facebook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="72dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="64dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/CoinReward" />
+            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>
 

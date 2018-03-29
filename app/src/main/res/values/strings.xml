@@ -2,6 +2,7 @@
     <string name="itemQuantity">Item Quantity</string>
     <string name="app_name">Castle War</string>
     <string name="SinglePlayer">SinglePlayer</string>
+    <string name="MultiPlayer">MultiPlayer</string>
     <string name="Shop">Shop</string>
     <string name="Inventory">Inventory</string>
     <string name="title_activity_prepare">PrepareStage</string>
@@ -34,4 +35,6 @@
     <string name="Difficulty">Difficulty:</string>
     <string name="facebook_app_id">2032516033690164</string>
     <string name="facebook_login_protocol_scheme">fb2032516033690164</string>
+    <string name="Ally">Ally:</string>
+    <string name="Description">Description:</string>
 </resources>

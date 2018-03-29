@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
+import ca.uwaterloo.cw.castlewar.Activity.MainActivity;
 import ca.uwaterloo.cw.castlewar.Effect.Buff;
 import ca.uwaterloo.cw.castlewar.Structure.Id;
 import ca.uwaterloo.cw.castlewar.Unit.Ability;
@@ -38,6 +39,7 @@ import ca.uwaterloo.cw.castlewar.R;
 
 import android.app.Application;
 import android.content.res.Resources;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.view.Display;
 import android.view.WindowManager;
@@ -61,6 +63,7 @@ import ca.uwaterloo.cw.castlewar.Unit.Unit;
 public class System extends Application {
     // self instance
     private static Application application;
+    private static MainActivity activity; // kept for facebook
 
     // get reference of threadpool
     public static final ExecutorService gameThreads = Executors.newFixedThreadPool(3);
@@ -76,10 +79,11 @@ public class System extends Application {
     private static int groundLine;
     private static Handler handler;
 
-    public static void initialize(WindowManager windowManager, Handler h) {
+    public static void initialize(WindowManager windowManager, Handler h, MainActivity a) {
         Display display = windowManager.getDefaultDisplay();
         Point point = new Point();
         display.getSize(point);
+        activity = a;
         screenWidth = point.x;
         screenHeight = point.y;
         groundLine = (int) (screenHeight * 0.8);
@@ -171,6 +175,18 @@ public class System extends Application {
         return Bitmap.createScaledBitmap(bitmap, width, height, true);
     }
 
+    public static MediaPlayer createMedia(int resource, boolean loop) {
+        MediaPlayer mediaPlayer = MediaPlayer.create(activity, resource);
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mediaPlayer.release();
+            }
+        });
+        mediaPlayer.setLooping(loop);
+        return mediaPlayer;
+    }
+
     public static int getGroundLine()
     {
         return groundLine;
@@ -195,6 +211,10 @@ public class System extends Application {
 
     public static void runOnUi(Runnable r) {
         handler.post(r);
+    }
+
+    public static MainActivity getMainActivity() {
+        return activity;
     }
 
     @Override

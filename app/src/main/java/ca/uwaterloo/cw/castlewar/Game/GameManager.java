@@ -3,17 +3,16 @@ package ca.uwaterloo.cw.castlewar.Game;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.SystemClock;
-import android.provider.ContactsContract;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,17 +22,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.share.model.ShareVideo;
 import com.facebook.share.model.ShareVideoContent;
 import com.facebook.share.widget.ShareDialog;
 
-import org.w3c.dom.Text;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -41,10 +37,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import ca.uwaterloo.cw.castlewar.Activity.GameActivity;
 import ca.uwaterloo.cw.castlewar.Base.Animation;
-import ca.uwaterloo.cw.castlewar.Base.Icon;
+import ca.uwaterloo.cw.castlewar.Base.Recorder;
 import ca.uwaterloo.cw.castlewar.Base.Sprite;
 import ca.uwaterloo.cw.castlewar.Base.Tile;
+import ca.uwaterloo.cw.castlewar.Item.Potion;
 import ca.uwaterloo.cw.castlewar.Structure.Atomic;
 import ca.uwaterloo.cw.castlewar.Base.GameObject;
 import ca.uwaterloo.cw.castlewar.Structure.CombatView;
@@ -52,11 +50,10 @@ import ca.uwaterloo.cw.castlewar.Structure.Id;
 import ca.uwaterloo.cw.castlewar.Base.System;
 import ca.uwaterloo.cw.castlewar.Unit.Castle;
 import ca.uwaterloo.cw.castlewar.Item.Item;
-import ca.uwaterloo.cw.castlewar.Base.User;
 import ca.uwaterloo.cw.castlewar.R;
+import ca.uwaterloo.cw.castlewar.Unit.Chaotic;
+import ca.uwaterloo.cw.castlewar.Unit.Lawful;
 import ca.uwaterloo.cw.castlewar.Unit.Unit;
-
-import static com.facebook.FacebookSdk.getCacheDir;
 
 
 /**
@@ -66,8 +63,8 @@ import static com.facebook.FacebookSdk.getCacheDir;
 public class GameManager {
     // store self as public blackboard
     private static GameManager instance;
-    public final Activity activity;
 
+    private static final int BASE_LOGIC_PER_SECOND = 25;
     private static final long MAX_FPS = 45;
     private static final long MIN_FPS = 5;
     private static final int BASIC_RECOVERY = 3;
@@ -76,8 +73,8 @@ public class GameManager {
     private static final int DRAW_NUM = 2;
     private static final int DRAW_COST = 1;
     private static final int MAX_COST = 5;
-    private static final float SCROLL_PIXEL_PER_SECOND = 2000; // speed of screen
-    private static AtomicInteger LOGIC_PER_SECOND = new AtomicInteger(25);  // this is the speed of updates of normal background thread
+    private static final float SCROLL_PIXEL_PER_SECOND = 4000; // speed of screen
+    private static AtomicInteger LOGIC_PER_SECOND = new AtomicInteger(BASE_LOGIC_PER_SECOND);  // this is the speed of updates of normal background thread
     private static final float CONSTANT_PER_SECOND = 10; // this is the speed of updates constant anime, music and so on
     private static AtomicInteger LOGIC_SLEEP_TIME = new AtomicInteger(MILISECOND / LOGIC_PER_SECOND.get());
     private static final long CONSTANT_SLEEP_TIME = MILISECOND / (long) CONSTANT_PER_SECOND;
@@ -100,7 +97,7 @@ public class GameManager {
     private Terrain terrain;
 
     // game control
-    private AtomicBoolean doubleSpeed = new AtomicBoolean(false);
+    private Atomic.Id<Id.Speed> gameSpeed = new Atomic.Id<>(Id.Speed.NORMAL);
     private AtomicBoolean hasLine = new AtomicBoolean(false);
     private GameLogic gameLogic = new GameLogic();
     private GameScreen gameScreen = new GameScreen();
@@ -118,6 +115,7 @@ public class GameManager {
     private HashMap<Id.Player, Terrain.BattleField> rearBattleField = new HashMap<>(2);
 
     // screen control
+    private HashMap<Id.Speed, Bitmap> speedImage = new HashMap<>(Id.Speed.values().length);
     private TextView winLose;
     private TextView coinReward;
     private float framePerSecond;
@@ -142,27 +140,46 @@ public class GameManager {
     private AtomicBoolean hasScroll = new AtomicBoolean();
     private Bitmap background;
     private int backgroundY;
+    private ImageButton speedButton;
+    private ImageButton lineButton;
+    private ConstraintLayout result;
+    private AtomicBoolean isRecord = new AtomicBoolean(false);
+    private Bitmap recordingImage;
+    private Bitmap endRecordingImage;
+    private ImageButton recording;
+    private ImageButton showUnit;
+    private boolean everRecord = false;
+
+    // music control
+    private MediaPlayer backgroundMusic;
 
     private GameManager(Activity activity, Terrain terrain) {
         instance = this;
-        this.coinReward = activity.findViewById(R.id.CoinReward);
+        this.recording = activity.findViewById(R.id.Record);
+        this.showUnit = activity.findViewById(R.id.ShowUnit);
+        this.recordingImage = System.scaleBitmap(R.drawable.record, 100, 100, 2);
+        this.endRecordingImage = System.scaleBitmap(R.drawable.end_record, 100, 100, 2);
+        this.result = activity.findViewById(R.id.Result);
+        this.backgroundMusic =  System.createMedia(R.raw.moving, true);
+        this.speedButton = activity.findViewById(R.id.SpeedButton);
+        this.lineButton = activity.findViewById(R.id.LineButton);
         this.winLose = activity.findViewById(R.id.WinLose);
         this.attackerView = new CombatView(
                 (TextView) activity.findViewById(R.id.AttackerHp),
                 (TextView) activity.findViewById(R.id.AttackerMaxHp),
-                (HorizontalScrollView) activity.findViewById(R.id.AttackerEffects),
+                (ImageView) activity.findViewById(R.id.AttackerEffects),
                 (ProgressBar) activity.findViewById(R.id.AttackerHpBar),
                 (ImageView) activity.findViewById(R.id.AttackerImage),
                 (ImageView) activity.findViewById(R.id.AttackerAnimation),
-                (TextView) activity.findViewById(R.id.AttackerAbility));
+                (TextView) activity.findViewById(R.id.AttackerTitle));
         this.defenderView = new CombatView(
                 (TextView) activity.findViewById(R.id.DefenderHp),
                 (TextView) activity.findViewById(R.id.DefenderMaxHp),
-                (HorizontalScrollView) activity.findViewById(R.id.DefenderEffects),
+                (ImageView) activity.findViewById(R.id.DefenderEffects),
                 (ProgressBar) activity.findViewById(R.id.DefenderHpBar),
                 (ImageView) activity.findViewById(R.id.DefenderImage),
                 (ImageView) activity.findViewById(R.id.DefenderAnimation),
-                (TextView) activity.findViewById(R.id.DefenderAbility));
+                (TextView) activity.findViewById(R.id.DefenderTitle));
         this.background = System.getRandomGameBackground(terrain.getBattleFieldsWidth());
         this.backgroundY = (System.getScreenHeight() - background.getHeight()) / 2;
         this.hasScroll.set(true);
@@ -175,7 +192,6 @@ public class GameManager {
         this.attacker = null;
         this.defender = null;
         this.currentState.set(Id.GameState.PREPARE);
-        this.activity = activity;
         for (Id.Thread id : Id.Thread.values())
             this.waits.put(id, null);
         this.unitInCombat.put(Id.Player.ONE, new Atomic.List<Unit>(25));
@@ -202,23 +218,6 @@ public class GameManager {
         this.backgroundWidth = terrain.getBattleFieldsWidth();
         this.backgroundHeight = System.getScreenHeight();
         this.screenSleepTime = MILISECOND / (long) framePerSecond;
-        this.castle.put(Id.Player.ONE, Castle.createCastle(Id.Castle.HOLY_CASTLE));
-        this.castle.put(Id.Player.TWO, Castle.createCastle(Id.Castle.EVIL_CASTLE));
-        this.castle.get(Id.Player.ONE).setPlayer(Id.Player.ONE);
-        this.castle.get(Id.Player.TWO).setPlayer(Id.Player.TWO);
-        this.castle.get(Id.Player.TWO).getSprite().setX(backgroundWidth - castle.get(Id.Player.TWO).getSprite().getPortrait().getWidth());
-        int leftCastlePosition = Castle.SIZE / Tile.SIZE / 2;
-        int rightCastlePosition = Castle.SIZE / Tile.SIZE / 2 + terrain.getBattleFieldLength() / Tile.SIZE;
-        for (int i = 0; i < Castle.SIZE / Tile.SIZE; ++i) {
-            this.rearBattleField.get(Id.Player.ONE).getTiles()[i].setUnit(castle.get(Id.Player.ONE));
-            if (i == leftCastlePosition)
-                this.castle.get(Id.Player.ONE).setCurrentTile(this.rearBattleField.get(Id.Player.ONE).getTiles()[i]);
-        }
-        for (int i = rearBattleField.get(Id.Player.TWO).getTiles().length - 1; i >= Castle.SIZE / Tile.SIZE / 2 + terrain.getBattleFieldLength() / Tile.SIZE; --i) {
-            this.rearBattleField.get(Id.Player.TWO).getTiles()[i].setUnit(castle.get(Id.Player.TWO));
-            if (i == rightCastlePosition)
-                this.castle.get(Id.Player.TWO).setCurrentTile(this.rearBattleField.get(Id.Player.TWO).getTiles()[i]);
-        }
         this.costPerTurn.put(Id.Player.ONE, BASIC_RECOVERY);
         this.costPerTurn.put(Id.Player.TWO, BASIC_RECOVERY);
         this.unitInDeck.put(Id.Player.ONE, new Unit[CARD_NUM]);
@@ -235,12 +234,31 @@ public class GameManager {
     // called for singleplayer
     public GameManager(Activity activity, Level level) {
         this(activity, level.getTerrain());
+        this.castle.put(Id.Player.ONE, Castle.createCastle(Id.Castle.HOLY_CASTLE));
+        this.castle.put(Id.Player.TWO, Castle.createCastle(Id.Castle.EVIL_CASTLE));
+        this.castle.get(Id.Player.ONE).setPlayer(Id.Player.ONE);
+        this.castle.get(Id.Player.TWO).setPlayer(Id.Player.TWO);
+        this.castle.get(Id.Player.TWO).getSprite().setX(backgroundWidth - castle.get(Id.Player.TWO).getSprite().getPortrait().getWidth());
+        int leftCastlePosition = Castle.SIZE / Tile.SIZE / 2;
+        int rightCastlePosition = Castle.SIZE / Tile.SIZE / 2 + terrain.getBattleFieldLength() / Tile.SIZE;
+        for (int i = 0; i < Castle.SIZE / Tile.SIZE; ++i) {
+            this.rearBattleField.get(Id.Player.ONE).getTiles()[i].setUnit(castle.get(Id.Player.ONE));
+            if (i == leftCastlePosition)
+                this.castle.get(Id.Player.ONE).setCurrentTile(this.rearBattleField.get(Id.Player.ONE).getTiles()[i]);
+        }
+        for (int i = rearBattleField.get(Id.Player.TWO).getTiles().length - 1; i >=  terrain.getBattleFieldLength() / Tile.SIZE; --i) {
+            this.rearBattleField.get(Id.Player.TWO).getTiles()[i].setUnit(castle.get(Id.Player.TWO));
+            if (i == rightCastlePosition)
+                this.castle.get(Id.Player.TWO).setCurrentTile(this.rearBattleField.get(Id.Player.TWO).getTiles()[i]);
+        }
+
         this.isAi = true;
         this.level = level;
-        this.unitInStock.put(Id.Player.ONE, User.currentLawfuls());
-        this.unitInStock.put(Id.Player.TWO, level.currentChaotics());
-        this.itemInStock.put(Id.Player.ONE, User.currentPotions());
-        this.itemInStock.put(Id.Player.TWO, level.currentPotions());
+        this.unitInStock.put(Id.Player.ONE, level.getAlly());
+        this.unitInStock.put(Id.Player.TWO, level.getEnemy());
+        this.itemInStock.put(Id.Player.ONE, level.getAllyPotion());
+        this.itemInStock.put(Id.Player.TWO, level.getEnemyPotion());
+
         initializeUnitImage();
         initializeButtons();
     }
@@ -248,20 +266,39 @@ public class GameManager {
     // called for multiplayer
     public GameManager(Activity activity, Terrain terrain, Id.Castle player1, Id.Castle player2) {
         this(activity, terrain);
+
+        this.castle.put(Id.Player.ONE, Castle.createCastle(player1));
+        this.castle.put(Id.Player.TWO, Castle.createCastle(player2));
+        this.castle.get(Id.Player.ONE).setPlayer(Id.Player.ONE);
+        this.castle.get(Id.Player.TWO).setPlayer(Id.Player.TWO);
+        this.castle.get(Id.Player.TWO).getSprite().setX(backgroundWidth - castle.get(Id.Player.TWO).getSprite().getPortrait().getWidth());
+        int leftCastlePosition = Castle.SIZE / Tile.SIZE / 2;
+        int rightCastlePosition = Castle.SIZE / Tile.SIZE / 2 + terrain.getBattleFieldLength() / Tile.SIZE;
+        for (int i = 0; i < Castle.SIZE / Tile.SIZE; ++i) {
+            this.rearBattleField.get(Id.Player.ONE).getTiles()[i].setUnit(castle.get(Id.Player.ONE));
+            if (i == leftCastlePosition)
+                this.castle.get(Id.Player.ONE).setCurrentTile(this.rearBattleField.get(Id.Player.ONE).getTiles()[i]);
+        }
+        for (int i = rearBattleField.get(Id.Player.TWO).getTiles().length - 1; i >= Castle.SIZE / Tile.SIZE / 2 + terrain.getBattleFieldLength() / Tile.SIZE; --i) {
+            this.rearBattleField.get(Id.Player.TWO).getTiles()[i].setUnit(castle.get(Id.Player.TWO));
+            if (i == rightCastlePosition)
+                this.castle.get(Id.Player.TWO).setCurrentTile(this.rearBattleField.get(Id.Player.TWO).getTiles()[i]);
+        }
+
         this.isAi = false;
         this.terrain = terrain;
         if (player1 == Id.Castle.HOLY_CASTLE) {
-            this.unitInStock.put(Id.Player.ONE, User.currentLawfuls());
+            this.unitInStock.put(Id.Player.ONE, Lawful.getAllLawful());
         } else {
-            this.unitInStock.put(Id.Player.ONE, User.currentChaotics());
+            this.unitInStock.put(Id.Player.ONE, Chaotic.getAllChaotic());
         }
         if (player2 == Id.Castle.HOLY_CASTLE) {
-            this.unitInStock.put(Id.Player.TWO, User.currentLawfuls());
+            this.unitInStock.put(Id.Player.TWO, Lawful.getAllLawful());
         } else {
-            this.unitInStock.put(Id.Player.TWO, User.currentChaotics());
+            this.unitInStock.put(Id.Player.TWO, Chaotic.getAllChaotic());
         }
-        this.itemInStock.put(Id.Player.ONE, User.currentPotions());
-        this.itemInStock.put(Id.Player.TWO, User.currentPotions());
+        this.itemInStock.put(Id.Player.ONE, Potion.getAllPotion());
+        this.itemInStock.put(Id.Player.TWO, Potion.getAllPotion());
         initializeUnitImage();
         initializeButtons();
     }
@@ -276,32 +313,44 @@ public class GameManager {
     }
 
     private void initializeImages() {
+        final Activity activity = GameActivity.instance();
         System.runOnUi(new Runnable() {
             @Override
             public void run() {
-                activity.findViewById(R.id.AttackerHpBar).setBackground(System.scaleDrawable(R.drawable.health_bar, null, 100, 4));
-                activity.findViewById(R.id.DefenderHpBar).setBackground(System.scaleDrawable(R.drawable.health_bar, null, 100, 4));
-                ((ImageButton) activity.findViewById(R.id.SpeedButton)).setImageBitmap(System.scaleBitmap(R.drawable.speed_button, 200, 200, 3));
-                ((ImageButton) activity.findViewById(R.id.LineButton)).setImageBitmap(System.scaleBitmap(R.drawable.line_button, 200, 200, 3));
-                activity.findViewById(R.id.Result).setBackground(System.scaleDrawable(R.drawable.plane_yellow, 600, 600, 4));
-                ((ImageButton) activity.findViewById(R.id.Facebook)).setImageBitmap(System.scaleBitmap(R.drawable.facebook, 100, 100, 2));
-                ((ImageButton) activity.findViewById(R.id.GoBackToTitle)).setImageBitmap(System.scaleBitmap(R.drawable.ok, 100, 100, 2));
-                unitMenu.setBackground(System.scaleDrawable(R.drawable.plane_yellow, null, System.getScreenHeight() / 2, 2));
-                activity.findViewById(R.id.EndTurn).setBackground(System.scaleDrawable(R.drawable.blue_button, null, Tile.SIZE, 1));
-                activity.findViewById(R.id.Redraw).setBackground(System.scaleDrawable(R.drawable.blue_button, null, Tile.SIZE, 1));
-                activity.findViewById(R.id.Draw).setBackground(System.scaleDrawable(R.drawable.blue_button, null, Tile.SIZE, 1));
-                activity.findViewById(R.id.cost).setBackground(System.scaleDrawable(R.drawable.button_blue_long, null, Tile.SIZE, 2));
+                speedImage.put(Id.Speed.NORMAL, System.scaleBitmap(R.drawable.normal_speed, 150, 100, 3));
+                speedImage.put(Id.Speed.DOUBLE, System.scaleBitmap(R.drawable.double_speed, 150, 100, 3));
+                speedImage.put(Id.Speed.TRIPLE, System.scaleBitmap(R.drawable.triple_speed, 150, 100, 3));
+                speedButton.setImageBitmap(speedImage.get(Id.Speed.NORMAL));
+                speedButton.setBackground(null);
+                lineButton.setImageBitmap(System.scaleBitmap(R.drawable.line_button, 100, 100, 3));
+                lineButton.setBackground(null);
+                attackerView.getTitle().setBackground(System.scaleDrawable(R.drawable.text_frame, null, 50, 1));
+                defenderView.getTitle().setBackground(System.scaleDrawable(R.drawable.text_frame, null, 50, 1));
+                result.setBackground(System.scaleDrawable(R.drawable.plane_yellow, 600, 600, 4));
+                ((ImageButton) activity.findViewById(R.id.Facebook)).setImageBitmap(System.scaleBitmap(R.drawable.facebook, 200, 200, 2));
+                ((ImageButton) activity.findViewById(R.id.Facebook)).setBackground(null);
+                ((ImageButton) activity.findViewById(R.id.GoBackToTitle)).setImageBitmap(System.scaleBitmap(R.drawable.ok, 200, 200, 2));
+                ((ImageButton) activity.findViewById(R.id.GoBackToTitle)).setBackground(null);
+                showUnit.setImageBitmap(System.scaleBitmap(R.drawable.show_unit, 100, 100, 2));
+                showUnit.setBackground(null);
+                recording.setImageBitmap(recordingImage);
+                recording.setBackground(null);
+                unitMenu.setBackground(System.scaleDrawable(R.drawable.panel, null, System.getScreenHeight() / 2, 1));
+                activity.findViewById(R.id.EndTurn).setBackground(System.scaleDrawable(R.drawable.button_game, null, Tile.SIZE, 1));
+                activity.findViewById(R.id.Redraw).setBackground(System.scaleDrawable(R.drawable.button_game, null, Tile.SIZE, 1));
+                activity.findViewById(R.id.Draw).setBackground(System.scaleDrawable(R.drawable.button_game, null, Tile.SIZE, 1));
+                activity.findViewById(R.id.cost).setBackground(System.scaleDrawable(R.drawable.text_frame, null, Tile.SIZE, 2));
                 for (ImageButton imageButton : unitImageButtons) {
-                    imageButton.setBackground(System.scaleDrawable(R.drawable.square_blue_button, Tile.SIZE, Tile.SIZE, 1));
+                    imageButton.setBackground(System.scaleDrawable(R.drawable.portrait_frame, Tile.SIZE, Tile.SIZE, 1));
                 }
                 for (ImageButton imageButton : itemImageButtons) {
-                    imageButton.setBackground(System.scaleDrawable(R.drawable.square_blue_button, Tile.SIZE, Tile.SIZE, 1));
+                    imageButton.setBackground(System.scaleDrawable(R.drawable.portrait_frame, Tile.SIZE, Tile.SIZE, 1));
                 }
                 for (TextView textView : unitCostTexts) {
-                    textView.setBackground(System.scaleDrawable(R.drawable.button_blue_small, Tile.SIZE, Tile.SIZE, 2));
+                    textView.setBackground(System.scaleDrawable(R.drawable.text_frame, Tile.SIZE, Tile.SIZE, 2));
                 }
                 for (TextView textView : itemCostTexts) {
-                    textView.setBackground(System.scaleDrawable(R.drawable.button_blue_small, Tile.SIZE, Tile.SIZE, 2));
+                    textView.setBackground(System.scaleDrawable(R.drawable.text_frame, Tile.SIZE, Tile.SIZE, 2));
                 }
             }
         });
@@ -353,6 +402,14 @@ public class GameManager {
 
         // recover cost
         setCostBy(costPerTurn.get(player));
+
+        // delay a little bit to wait for refresh of unit board to dis appear
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void generateUnitCard(int position) {
@@ -390,7 +447,7 @@ public class GameManager {
         System.runOnUi(new Runnable() {
             @Override
             public void run() {
-                unitImageButtons[position].setImageBitmap(unit != null ? unit.getPortrait() : Icon.empty);
+                unitImageButtons[position].setImageBitmap(unit != null ? unit.getPortrait() : null);
                 unitCostTexts[position].setText(unit != null ? Integer.toString(unit.getModifiedStatus().getCost()) : "0");
             }
         });
@@ -401,7 +458,7 @@ public class GameManager {
         System.runOnUi(new Runnable() {
             @Override
             public void run() {
-                itemImageButtons[position].setImageBitmap(item != null ? item.getPortrait() : Icon.empty);
+                itemImageButtons[position].setImageBitmap(item != null ? item.getPortrait() : null);
                 itemCostTexts[position].setText(item != null ? Integer.toString(item.getModifiedStatus().getCost()) : "0");
             }
         });
@@ -438,12 +495,20 @@ public class GameManager {
 
     public void useItem(final int position) {
         Item item = itemInDeck.get(player)[position];
+        item.use(unitInCombat.get(player).getCopyOfContent());
         itemInDeck.get(player)[position] = null;
     }
 
     // importatn when switching players
     public void switchPlayer() {
+        // before check minus one turn for effects first
+        // check buffs
+        for (Unit unit : unitInCombat.get(player).getCopyOfContent()) {
+            unit.checkEffect();
+        }
+
         player = player.getOpponent();
+
         if (player == Id.Player.ONE || !isAi) {
             for (int i = 0; i < CARD_NUM; ++i) {
                 postUnitCard(i);
@@ -451,10 +516,7 @@ public class GameManager {
             }
             postCost();
         }
-        // check buffs
-        for (Unit unit : unitInCombat.get(player).getCopyOfContent()) {
-            unit.checkEffect();
-        }
+
     }
 
     public void initializeButtons() {
@@ -472,11 +534,10 @@ public class GameManager {
         this.player = Id.Player.ONE;
         postCost();
 
+        Activity activity = GameActivity.instance();
         Button endTurn = activity.findViewById(R.id.EndTurn);
         Button redraw = activity.findViewById(R.id.Redraw);
         Button draw = activity.findViewById(R.id.Draw);
-        ImageButton speed = activity.findViewById(R.id.SpeedButton);
-        ImageButton line = activity.findViewById(R.id.LineButton);
         ImageButton facebook = activity.findViewById(R.id.Facebook);
         ImageButton ok = activity.findViewById(R.id.GoBackToTitle);
 
@@ -490,15 +551,20 @@ public class GameManager {
                         public void run() {
                             buttonLock.writeLock().lock();
                             Unit unit = unitInDeck.get(player)[position];
-                            if (unit == null) {
-                                // cannot go for null unit
-                            } else if (currentState.get() != Id.GameState.PREPARE) {
-                                // cannot generate when it's not prepae statge
-                            } else if (unit.getModifiedStatus().getCost() > cost.get(player)) {
-                                // no enough cost
-                            } else if (rearBattleField.get(player).getAvailableTileNum() <= 0) {
-                                // no enough slot
+                            if (unit == null ||
+                                    currentState.get() != Id.GameState.PREPARE ||
+                                    unit.getModifiedStatus().getCost() > cost.get(player)||
+                                    rearBattleField.get(player).getAvailableTileNum() <= 0) {
+                                MediaPlayer mediaPlayer = System.createMedia(R.raw.not_enough, false);
+                                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                    @Override
+                                    public void onCompletion(MediaPlayer mediaPlayer) {
+                                        mediaPlayer.release();
+                                    }
+                                });
+                                mediaPlayer.start();
                             } else {
+                                System.createMedia(R.raw.choose_unit, false).start();
                                 placeUnit(position);
                                 postUnitCard(position);
                                 setCostBy(-unit.getModifiedStatus().getCost());
@@ -519,15 +585,14 @@ public class GameManager {
                         public void run() {
                             buttonLock.writeLock().lock();
                             Item item = itemInDeck.get(player)[position];
-                            if (item == null) {
-                                // cannot go for null unit
-                            } else if (currentState.get() != Id.GameState.PREPARE) {
-                                // cannot generate when it's not prepae statge
-                            } else if (item.getModifiedStatus().getCost() > cost.get(player)) {
-                                // no enough cost
+                            if (item == null ||
+                                    currentState.get() != Id.GameState.PREPARE ||
+                                    item.getModifiedStatus().getCost() > cost.get(player)) {
+                                System.createMedia(R.raw.not_enough, false).start();
                             } else {
+                                System.createMedia(R.raw.drink_potion, false).start();
                                 useItem(position);
-                                postUnitCard(position);
+                                postItemCard(position);
                                 setCostBy(-item.getModifiedStatus().getCost());
                                 postCost();
                             }
@@ -545,6 +610,7 @@ public class GameManager {
                     @Override
                     public void run() {
                         buttonLock.writeLock().lock();
+                        System.createMedia(R.raw.end_turn, false).start();
                         goFight();
                         buttonLock.writeLock().unlock();
                     }
@@ -561,9 +627,12 @@ public class GameManager {
                         buttonLock.writeLock().lock();
                         try {
                             if (cost.get(player) >= DRAW_COST) {
+                                System.createMedia(R.raw.draw, false).start();
                                 drawCards();
                                 setCostBy(-DRAW_COST);
                                 postCost();
+                            } else {
+                                System.createMedia(R.raw.not_enough, false).start();
                             }
                         } finally {
                             buttonLock.writeLock().unlock();
@@ -582,9 +651,12 @@ public class GameManager {
                         buttonLock.writeLock().lock();
                         try {
                             if (cost.get(player) >= DRAW_COST) {
+                                System.createMedia(R.raw.draw, false).start();
                                 redrawCards();
                                 setCostBy(-DRAW_COST);
                                 postCost();
+                            } else {
+                                System.createMedia(R.raw.not_enough, false).start();
                             }
                         } finally {
                             buttonLock.writeLock().unlock();
@@ -594,31 +666,54 @@ public class GameManager {
             }
         });
 
-        speed.setOnClickListener(new View.OnClickListener() {
+        speedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.oneTimeThread.execute(new Runnable() {
                     @Override
                     public void run() {
-                        doubleSpeed.set(!doubleSpeed.get());
-                        if (doubleSpeed.get()) {
-                            LOGIC_PER_SECOND.set(LOGIC_PER_SECOND.get() * 2);
-                        } else {
-                            LOGIC_PER_SECOND.set(LOGIC_PER_SECOND.get() / 2);
+                        switch(gameSpeed.get()) {
+                            case NORMAL: {
+                                gameSpeed.set(Id.Speed.DOUBLE);
+                                LOGIC_PER_SECOND.set(BASE_LOGIC_PER_SECOND * 2);
+                                break;
+                            }
+                            case DOUBLE: {
+                                gameSpeed.set(Id.Speed.TRIPLE);
+                                LOGIC_PER_SECOND.set(BASE_LOGIC_PER_SECOND * 2);
+                                break;
+                            }
+                            case TRIPLE: {
+                                if (currentState.get() == Id.GameState.COMBAT) {
+                                    System.createMedia(R.raw.not_enough, false).start();
+                                    return;
+                                };
+                                gameSpeed.set(Id.Speed.NORMAL);
+                                LOGIC_PER_SECOND.set(BASE_LOGIC_PER_SECOND);
+                                break;
+                            }
                         }
+                        System.createMedia(R.raw.button, false).start();
+                        System.runOnUi(new Runnable() {
+                            @Override
+                            public void run() {
+                                speedButton.setImageBitmap(speedImage.get(gameSpeed.get()));
+                            }
+                        });
                         LOGIC_SLEEP_TIME.set(MILISECOND / LOGIC_PER_SECOND.get());
-                        Animation.setSpeed(doubleSpeed.get());
+                        Animation.setSpeed(gameSpeed.get());
                     }
                 });
             }
         });
 
-        line.setOnClickListener(new View.OnClickListener() {
+        lineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.oneTimeThread.execute(new Runnable() {
                     @Override
                     public void run() {
+                        System.createMedia(R.raw.button, false).start();
                         hasLine.set(!hasLine.get());
                     }
                 });
@@ -631,7 +726,8 @@ public class GameManager {
                 System.runOnUi(new Runnable() {
                     @Override
                     public void run() {
-                        activity.onBackPressed();
+                        System.createMedia(R.raw.button, false).start();
+                        GameActivity.instance().onBackPressed();
                     }
                 });
             }
@@ -640,21 +736,68 @@ public class GameManager {
         facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShareDialog shareDialog = new ShareDialog(activity);
-                Uri videoFileUri = Uri.parse("file://" + getCacheDir().getAbsolutePath() + "/gameplay.mp4");
-                ShareVideo video = new ShareVideo.Builder()
-                        .setLocalUrl(videoFileUri)
-                        .build();
-                ShareVideoContent content = new ShareVideoContent.Builder()
-                        .setContentTitle("My combat Videos")
-                        .setContentDescription("Time to show my true skill")
-                        .setVideo(video)
-                        .build();
-                if(shareDialog.canShow(ShareVideoContent.class)){
-                    shareDialog.show(content);
+                System.runOnUi(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!everRecord) {
+                            System.createMedia(R.raw.not_enough, false).start();
+                            return;
+                        }
+                        System.createMedia(R.raw.button, false).start();
+                        ShareDialog shareDialog = new ShareDialog(System.getMainActivity());
+
+                        File file = new File(System.getMainActivity().getExternalCacheDir().getAbsolutePath() + "/Combat.mp4");
+                        Uri videoFileUri = Uri.fromFile(file);
+                        // Uri videoFileUri = Uri.parse("file://" + getCacheDir().getAbsolutePath() + "/Combat.mp4");
+                        ShareVideo video = new ShareVideo.Builder()
+                                .setLocalUrl(videoFileUri)
+                                .build();
+                        ShareVideoContent content = new ShareVideoContent.Builder()
+                                .setContentTitle("My combat Videos")
+                                .setContentDescription("Time to show my true skill")
+                                .setVideo(video)
+                                .build();
+                        if (shareDialog.canShow(content, ShareDialog.Mode.AUTOMATIC)) {
+                            shareDialog.show(content, ShareDialog.Mode.AUTOMATIC);
+                        }
+                        GameActivity.instance().onBackPressed();
+                    }
+                });
+            }
+        });
+
+        showUnit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.runOnUi(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.createMedia(R.raw.button,false).start();
+                        if (unitMenu.getVisibility() == View.VISIBLE) unitMenu.setVisibility(View.GONE);
+                        else unitMenu.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+
+        recording.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.oneTimeThread.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.createMedia(R.raw.button, false).start();
+                        if (isRecord.get()) {
+                            stopRecord();
+                        } else {
+                            startRecord();
+                        }
+                    }
+                });
             }
         });
     }
+
 
 
     public void screenFocusOn(GameObject gameObject) {
@@ -673,7 +816,7 @@ public class GameManager {
             x = backgroundWidth - System.getScreenWidth();
         final int copy = x;
         final float scrollTime = Math.abs(screenView.getScrollX() - copy) * MILISECOND / SCROLL_PIXEL_PER_SECOND;
-        if (Math.abs(screenView.getScrollX() - copy) < System.getScreenWidth() * 0.3) return;
+        if (Math.abs(screenView.getScrollX() - copy) < (int) ((float) System.getScreenWidth() * 0.2)) return;
         hasScroll.set(false);
         System.runOnUi(new Runnable() {
             @Override
@@ -692,6 +835,29 @@ public class GameManager {
         });
     }
 
+    public void startRecord() {
+        Recorder.startRecording();
+        isRecord.set(true);
+        System.runOnUi(new Runnable() {
+            @Override
+            public void run() {
+                recording.setImageBitmap(endRecordingImage);
+            }
+        });
+        everRecord = true;
+    }
+
+    public void stopRecord() {
+        Recorder.stopRecording();
+        isRecord.set(false);
+        System.runOnUi(new Runnable() {
+            @Override
+            public void run() {
+                recording.setImageBitmap(recordingImage);
+            }
+        });
+    }
+
     public void onFirstStart() {
         this.isGameActive.set(true);
         currentState.set(Id.GameState.MOVING);
@@ -705,23 +871,22 @@ public class GameManager {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        currentState.set(Id.GameState.PREPARE);
         System.runOnUi(new Runnable() {
             @Override
             public void run() {
                 gameLoading.setVisibility(View.GONE);
                 screenView.setVisibility(View.VISIBLE);
-                activity.findViewById(R.id.SpeedButton).setVisibility(View.VISIBLE);
-                activity.findViewById(R.id.LineButton).setVisibility(View.VISIBLE);
-
+                speedButton.setVisibility(View.VISIBLE);
+                lineButton.setVisibility(View.VISIBLE);
+                recording.setVisibility(View.VISIBLE);
+                showUnit.setVisibility(View.VISIBLE);
+                unitMenu.setVisibility(View.VISIBLE);
             }
         });
-        currentState.set(Id.GameState.PREPARE);
         waits.put(Id.Thread.DATA, System.gameThreads.submit(gameLogic));
         screenFocusOn(castle.get(Id.Player.ONE));
-    }
-
-    public Combat getCurrentCombat() {
-        return this.combat;
+        this.backgroundMusic.start();
     }
 
     public void addAnimation(Animation animation) {
@@ -753,6 +918,15 @@ public class GameManager {
     }
 
     public void onPause() {
+        if (backgroundMusic != null) {
+            this.backgroundMusic.stop();
+            this.backgroundMusic.release();
+            this.backgroundMusic = null;
+        }
+        if (isRecord.get()) {
+            stopRecord();
+        }
+        if (this.combat != null) combat.stopMusic();
         isGameActive.set(false);
         synchronized (screenCondition) {
             screenCondition.finished = true;
@@ -794,6 +968,7 @@ public class GameManager {
             for (Unit iterator : unitInCombat.get(player).getCopyOfContent()) {
                 iterator.move();
             }
+
             if (target.isVisible()) {
                 target.move();
                 screenFocusOn(target);
@@ -825,14 +1000,20 @@ public class GameManager {
                         if (isAi) {
                             string = "You Lose!";
                             winLose.setText(string);
-                            string = "You Gain Nothing!";
-                            coinReward.setText(string);
+                            System.createMedia(R.raw.defeat, false).start();
                         } else {
                             string = "Player 2 Wins!";
                             winLose.setText(string);
                             coinReward.setText(null);
+                            System.createMedia(R.raw.victory, false).start();
                         }
-                        activity.findViewById(R.id.Result).setVisibility(View.VISIBLE);
+                        if (combat != null) combat.stopMusic();
+                        backgroundMusic.stop();
+                        backgroundMusic.release();
+                        backgroundMusic = null;
+                        if (isRecord.get()) stopRecord();
+                        recording.setImageBitmap(recordingImage);
+                        result.setVisibility(View.VISIBLE);
                     }
                 });
                 while (isGameActive.get()) {
@@ -848,14 +1029,19 @@ public class GameManager {
                         if (isAi) {
                             string = "You Win!";
                             winLose.setText(string);
-                            string = "You Gain " + level.getCoinRewards() + " Coins!";
-                            coinReward.setText(string);
                         } else {
                             string = "Player 1 Wins!";
                             winLose.setText(string);
-                            coinReward.setText(null);
                         }
-                        activity.findViewById(R.id.Result).setVisibility(View.VISIBLE);
+                        System.createMedia(R.raw.victory, false).start();
+                        if (combat != null) combat.stopMusic();
+                        if (isRecord.get()) stopRecord();
+                        recording.setImageBitmap(recordingImage);
+                        backgroundMusic.stop();
+                        backgroundMusic.release();
+                        backgroundMusic = null;
+                        result.setVisibility(View.VISIBLE);
+
                     }
                 });
                 while (isGameActive.get()) {
@@ -871,11 +1057,13 @@ public class GameManager {
                         // summon units
                         int count = 0;
                         int num = level.getUnitNum();
+                        java.lang.System.out.println("the num is " + num);
                         while (rearBattleField.get(player).getAvailableTileNum() > 0 && count < num) {
                             int randomPos = random.nextInt(CARD_NUM);
                             placeUnit(randomPos);
                             generateUnitCard(randomPos);
                             count++;
+                            java.lang.System.out.println("the count is " + count);
                             if (System.gameFlow) java.lang.System.out.println("summon enemy");
                         }
 
@@ -891,8 +1079,16 @@ public class GameManager {
                         }
 
                         // fight if all enemies finish moving
-                        for (Unit unit : unitInCombat.get(player).getCopyOfContent()) {
-                            if (unit.getMoveTile() != null) return;
+                        boolean finish = false;
+                        while (!finish) {
+                            finish = true;
+                            for (Unit unit : unitInCombat.get(player).getCopyOfContent()) {
+                                unit.move();
+                                if (unit.getMoveTile() != null){
+                                    finish = false;
+                                    break;
+                                }
+                            }
                         }
                         goFight();
                     } else {
@@ -908,8 +1104,16 @@ public class GameManager {
                                 java.lang.System.out.println("no unit is ready, switch turn");
                             switchPlayer();
                             screenFocusOn(castle.get(player));
-                            postCost();
                             currentState.set(Id.GameState.PREPARE);
+
+                            if (player == Id.Player.ONE || !isAi) {
+                                System.runOnUi(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        unitMenu.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                            }
 
                             // reset isReady for units
                             for (Unit unit : unitInCombat.get(player).getCopyOfContent()) {
@@ -938,6 +1142,8 @@ public class GameManager {
                             defender = currentUnit.getActionTile().getUnit();
                             attacker.setOpponent(defender);
                             defender.setOpponent(attacker);
+                            attacker.setRole(Id.CombatRole.ATTACKER);
+                            defender.setRole(Id.CombatRole.DEFENDER);
                             attacker.setCombatView(attackerView);
                             defender.setCombatView(defenderView);
                             attacker.changeDirection();
@@ -963,8 +1169,9 @@ public class GameManager {
                                         }
                                     });
                                     target.setVisible(false);
-                                    combat = new Combat(attacker, defender);
+                                    combat = new Combat(attacker, defender, gameSpeed.get());
                                     currentState.set(Id.GameState.COMBAT);
+                                    if (gameSpeed.get() != Id.Speed.TRIPLE) backgroundMusic.pause();
                                 }
                             }
                         } else {
@@ -980,27 +1187,29 @@ public class GameManager {
                     break;
                 case COMBAT:
                     // if combat finished
-                    if (combat == null) {
+                    if (combat.isFinish()) {
                         if (System.gameFlow)
                             java.lang.System.out.println("combat finished, end this character's turn");
                         currentUnit.setReady(false);
                         currentUnit = null;
+                        combat.stopMusic();
+                        combat = null;
+                        if (gameSpeed.get() != Id.Speed.TRIPLE) backgroundMusic.start();
                         currentState.set(Id.GameState.MOVING);
                     } else {
                         if (System.gameFlow) java.lang.System.out.println("start combat");
                         // cause delay between turns
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+
+                        if (gameSpeed.get() != Id.Speed.TRIPLE)  {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         // fight and see if combat is done
-                        if (combat.fight()) {
-                            attacker.setCombatView(null);
-                            defender.setCombatView(null);
-                            combat = null;
-                        }
+                        combat.fight();
                     }
             }
         }
@@ -1032,6 +1241,7 @@ public class GameManager {
             for (Unit unit : unitInCombat.get(Id.Player.TWO).getCopyOfContent()) {
                 unit.animate();
             }
+            Animation.AnimateColor.animate();
         }
 
         @Override
@@ -1086,9 +1296,9 @@ public class GameManager {
                     gameScreenView.setImageBitmap(screen);
                     // set visibility
                     if (currentState.get() == Id.GameState.PREPARE) {
-                        if (unitMenu.getVisibility() == View.GONE) {
+                        if (showUnit.getVisibility() == View.GONE) {
                             if (player == Id.Player.ONE || !isAi) {
-                                unitMenu.setVisibility(View.VISIBLE);
+                                showUnit.setVisibility(View.VISIBLE);
                             }
                         }
                         if (combatBoard.getVisibility() == View.VISIBLE)
@@ -1096,11 +1306,13 @@ public class GameManager {
                     } else if (currentState.get() == Id.GameState.COMBAT) {
                         if (unitMenu.getVisibility() == View.VISIBLE)
                             unitMenu.setVisibility(View.GONE);
+                        if (showUnit.getVisibility() == View.VISIBLE) showUnit.setVisibility(View.GONE);
                         if (combatBoard.getVisibility() == View.GONE)
-                            combatBoard.setVisibility(View.VISIBLE);
+                            if (gameSpeed.get() != Id.Speed.TRIPLE) combatBoard.setVisibility(View.VISIBLE);
                     } else if (currentState.get() == Id.GameState.MOVING) {
                         if (unitMenu.getVisibility() == View.VISIBLE)
                             unitMenu.setVisibility(View.GONE);
+                        if (showUnit.getVisibility() == View.VISIBLE) showUnit.setVisibility(View.GONE);
                         if (combatBoard.getVisibility() == View.VISIBLE)
                             combatBoard.setVisibility(View.GONE);
                     }

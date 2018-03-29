@@ -14,20 +14,20 @@ import org.w3c.dom.Text;
 public class CombatView {
     private TextView hp;
     private TextView maxHp;
-    private HorizontalScrollView effects;
+    private ImageView effects;
     private ProgressBar healthBar;
     private ImageView unit;
     private ImageView animation;
-    private TextView ability;
+    private TextView title;
 
-    public CombatView(TextView hp, TextView maxHp, HorizontalScrollView effects, ProgressBar healthBar, ImageView unit, ImageView animation, TextView ability) {
+    public CombatView(TextView hp, TextView maxHp, ImageView effects, ProgressBar healthBar, ImageView unit, ImageView animation, TextView title) {
         this.hp = hp;
         this.maxHp = maxHp;
         this.effects = effects;
         this.healthBar = healthBar;
         this.unit = unit;
         this.animation = animation;
-        this.ability = ability;
+        this.title = title;
     }
 
     public TextView getHp() {
@@ -38,7 +38,7 @@ public class CombatView {
         return maxHp;
     }
 
-    public HorizontalScrollView getEffects() {
+    public ImageView getEffects() {
         return effects;
     }
 
@@ -54,7 +54,7 @@ public class CombatView {
         return animation;
     }
 
-    public TextView getAbility() {
-        return ability;
+    public TextView getTitle() {
+        return title;
     }
 }

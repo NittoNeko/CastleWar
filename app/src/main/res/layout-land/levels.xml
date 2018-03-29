@@ -75,13 +75,13 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/bubblegum_sans"
-                android:text="@string/Difficulty"
+                android:text="@string/Ally"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/background_light"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/itemName"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/Difficulty" />
+                tools:text="@string/Ally" />
 
             <TextView
                 android:id="@+id/RewardTitle"
@@ -90,14 +90,14 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/bubblegum_sans"
-                android:text="@string/RewardTitle"
+                android:text="@string/EnemyTitle"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/background_light"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/Terrain"
                 app:layout_constraintTop_toBottomOf="@+id/EnemyTitle"
-                tools:text="@string/RewardTitle" />
+                tools:text="@string/EnemyTitle" />
 
             <HorizontalScrollView
                 android:layout_width="300dp"

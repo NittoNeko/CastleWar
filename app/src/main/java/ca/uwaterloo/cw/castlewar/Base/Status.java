@@ -51,6 +51,8 @@ public class Status {
 
     public void setHp(int hp) {
         this.hp.set(hp);
+        if (this.hp.get() > this.maxHp) this.hp.set(maxHp);
+        else if (this.hp.get() < 0) this.hp.set(0);
     }
 
     public int getMaxHp() {

@@ -3,6 +3,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.uwaterloo.cw.castlewar">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <application
         android:name=".Base.System"
         android:allowBackup="true"
@@ -11,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <provider android:authorities="com.facebook.app.FacebookContentProvider{2032516033690164}"
+        <provider android:authorities="com.facebook.app.FacebookContentProvider2032516033690164"
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true"/>
         <activity
@@ -23,14 +25,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.SinglePlayerActivity"
+            android:name=".Activity.GameActivity"
             android:label="@string/SinglePlayer"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="landscape">
-        </activity>
-        <activity
-            android:name=".Activity.MultiPlayerActivity"
-            android:label="@string/MultiPlayer"
             android:theme="@style/AppTheme"
             android:screenOrientation="landscape">
         </activity>

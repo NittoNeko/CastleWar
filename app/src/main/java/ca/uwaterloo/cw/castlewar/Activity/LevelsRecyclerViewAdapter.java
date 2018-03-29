@@ -10,17 +10,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import ca.uwaterloo.cw.castlewar.Structure.Id;
-import ca.uwaterloo.cw.castlewar.Unit.Lawful;
-import ca.uwaterloo.cw.castlewar.Item.Item;
 import ca.uwaterloo.cw.castlewar.Game.Level;
-import ca.uwaterloo.cw.castlewar.Item.Potion;
 import ca.uwaterloo.cw.castlewar.Base.System;
-import ca.uwaterloo.cw.castlewar.Unit.Unit;
-import ca.uwaterloo.cw.castlewar.Base.User;
 import ca.uwaterloo.cw.castlewar.R;
 
 public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecyclerViewAdapter.ViewHolder>{
-    private final SinglePlayerActivity singlePlayerActivity;
+    private final GameActivity gameActivity;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -37,8 +32,8 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
     }
 
     // Construct the ViewAdapter
-    public LevelsRecyclerViewAdapter(SinglePlayerActivity singlePlayerActivity) {
-        this.singlePlayerActivity = singlePlayerActivity;
+    public LevelsRecyclerViewAdapter(GameActivity gameActivity) {
+        this.gameActivity = gameActivity;
     }
 
     // Create new views
@@ -77,14 +72,15 @@ public class LevelsRecyclerViewAdapter extends RecyclerView.Adapter<LevelsRecycl
         // Assign data to view components
         holder.levelTextView.setText(level.getName());
         holder.terrainTextView.setText(level.getDisplayableTerrain());
-        holder.DifficultyTextView.setText(level.getDescription());
-        holder.rewardsTextView.setText(level.getDisplayableRewards());
+        holder.DifficultyTextView.setText(level.getDisplayableAlly());
+        holder.rewardsTextView.setText(level.getDisplayableEnemy());
         holder.startButton.setBackground(System.scaleDrawable(R.drawable.button_right, 200, 200,4));
         holder.backGround.setBackground(System.scaleDrawable(R.drawable.blue_button, System.getScreenWidth(), System.getScreenHeight() / 4,1));
         holder.startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                singlePlayerActivity.startLevel(level);
+                System.createMedia(R.raw.book, false).start();
+                gameActivity.startLevel(level);
             }
         });
     }

@@ -1,4 +1,4 @@
-
+/*
         package ca.uwaterloo.cw.castlewar.Activity;
 
         import android.content.Context;
@@ -20,9 +20,9 @@
 
         import java.util.List;
 
-/**
+
  * Created by Sparks on 2018-02-23.
- */
+
 
 public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItemsRecyclerViewAdapter.ViewHolder>{
     private List<Item> myShopItems;
@@ -105,3 +105,4 @@ public class ShopItemsRecyclerViewAdapter extends RecyclerView.Adapter<ShopItems
         return myShopItems.size();
     }
 }
+*/

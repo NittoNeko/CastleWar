@@ -7,13 +7,13 @@ package ca.uwaterloo.cw.castlewar.Structure;
 abstract public class Id {
     public enum Lawful {
         // Lawful Units
-        SWORDMAN, ARCHER, MAGE,
+        SWORDMAN, ARCHER, ICEMAGE, PRINCE, GODDESS
 
     }
 
     public enum Chaotic {
         // Chaotic Units
-        ORC, BAT, SLIME, DARKLORD
+        MINOTAUR, BAT, GHOST, IMP, DARKLORD
     }
 
     public enum Castle {
@@ -27,7 +27,11 @@ abstract public class Id {
     }
 
     public enum Buff {
-        ATTACK, DEFENSE, SPEED,
+        BRAVE, TOUGH, SWIFT,
+    }
+
+    public enum Debuff {
+        COWARD, WEAK,
     }
 
     public enum Level {
@@ -35,7 +39,7 @@ abstract public class Id {
     }
 
     public enum Terrain {
-        FOREST,
+        SHORT_FIELD, MEDIUM_FIELD, LONG_FIELD
     }
 
     public enum GameState {
@@ -83,6 +87,10 @@ abstract public class Id {
     }
 
     public enum Attack {
-        HIT, ICE_BALST, THUNDER, WATER, ARROW, CLAW, SLASH_FIRE, SLASH
+        SLASH_FIRE, CLAW, DARK_RUNE, DARK_SLASH, DARK_BALL, ARROW, ICE_FALL, THUNDER_SLASH, GREAT_SLASH, MAGIC_SLASH
+    }
+
+    public enum Speed {
+        NORMAL, DOUBLE, TRIPLE
     }
 }

@@ -1,10 +1,16 @@
 package ca.uwaterloo.cw.castlewar.Game;
 
+import android.media.MediaPlayer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import ca.uwaterloo.cw.castlewar.Base.Animation;
+import ca.uwaterloo.cw.castlewar.Base.System;
+import ca.uwaterloo.cw.castlewar.R;
+import ca.uwaterloo.cw.castlewar.Structure.Atomic;
 import ca.uwaterloo.cw.castlewar.Structure.Id;
 import ca.uwaterloo.cw.castlewar.Unit.Unit;
 
@@ -24,11 +30,14 @@ public class Combat {
     private Id.CombatStage combatStage;
     private Unit activeUnit;
     private Unit passiveUnit;
+    private MediaPlayer background;
+    private AtomicBoolean isFinish = new AtomicBoolean(false);
 
-    public Combat(Unit attacker, Unit defender) {
+    public Combat(Unit attacker, Unit defender, Id.Speed gameSpeed) {
+        this.background = MediaPlayer.create(System.getMainActivity(), R.raw.combat);
+        this.background.setLooping(true);
+        if (gameSpeed != Id.Speed.TRIPLE) this.background.start();
         this.currentTurn = 0;
-        attacker.setRole(Id.CombatRole.ATTACKER);
-        defender.setRole(Id.CombatRole.DEFENDER);
         this.units.put(Id.CombatRole.ATTACKER, attacker);
         this.units.put(Id.CombatRole.DEFENDER, defender);
         this.distance = Math.abs(attacker.getCurrentTile().getParentId() - defender.getCurrentTile().getParentId());
@@ -39,9 +48,9 @@ public class Combat {
         for (int i = 0; i < MAX_TURN - 1; ++i) {
             turns.add(i % 2 == 0 ? Id.CombatRole.ATTACKER : Id.CombatRole.DEFENDER);
         }
-        if (attacker.getModifiedStatus().getSpeed() > defender.getModifiedStatus().getSpeed()) {
+        if (attacker.getModifiedStatus().getSpeed() > defender.getModifiedStatus().getSpeed() + 5) {
             turns.add(Id.CombatRole.ATTACKER);
-        } else if (attacker.getModifiedStatus().getSpeed() < defender.getModifiedStatus().getSpeed()) {
+        } else if (attacker.getModifiedStatus().getSpeed() + 5 < defender.getModifiedStatus().getSpeed()) {
             turns.add(Id.CombatRole.DEFENDER);
         }
 
@@ -60,11 +69,14 @@ public class Combat {
     }
 
     // return result
-    public boolean fight() {
+    public void fight() {
         switch(combatStage){
             case INITIAL:
                 // set up before combat
-                if (currentTurn >= turns.size()) return true;
+                if (currentTurn >= turns.size()) {
+                    end();
+                    return;
+                }
 
                 // decide whose turn
                 activeUnit = units.get(turns.get(currentTurn));
@@ -98,13 +110,43 @@ public class Combat {
                 break;
         }
         // check death or turn number
-        if (activeUnit.isDead() || passiveUnit.isDead()) return true;
-
-        // the combat is not finished yet
-        return false;
+        if (activeUnit.isDead() || passiveUnit.isDead())  {
+            end();
+            return;
+        }
     }
 
-    public void switchToStage(Id.CombatStage combatStage) {
-        this.combatStage = combatStage;
+    private void end() {
+        this.units.get(Id.CombatRole.ATTACKER).setCombatView(null);
+        this.units.get(Id.CombatRole.DEFENDER).setCombatView(null);
+        this.isFinish.set(true);
+    }
+
+    public void stopMusic() {
+        if (background != null) {
+            this.background.stop();
+            this.background.release();
+            this.background = null;
+        }
+    }
+
+    public void pauseMusic() {
+        if (background != null) {
+            this.background.pause();
+        }
+    }
+
+    public void resumeMusic() {
+        if (background != null) {
+            this.background.start();
+        }
+    }
+
+    public boolean isFinish() {
+        return isFinish.get();
+    }
+
+    public void setFinish(boolean finish) {
+        this.isFinish.set(finish);
     }
 }

@@ -19,60 +19,88 @@ abstract public class Lawful extends Unit {
 
     public static ArrayList<Unit> getAllLawful() {
         ArrayList<Unit> lawful = new ArrayList<>();
+        lawful.add(new SwordMan());
         lawful.add(new Archer());
         lawful.add(new Icemage());
-        lawful.add(new SwordMan());
+        lawful.add(new Prince());
+        lawful.add(new Goddess());
         return lawful;
     }
 
     public static class Archer extends Lawful {
         public Archer() {
-            super(Id.Lawful.ARCHER.ordinal(), "Archer", "123", R.drawable.archer_portrait,
-                    new Status(80, 80, 25, 10, 10, 1, 1, 1, 1),
+            super(Id.Lawful.ARCHER.ordinal(), "Archer", "Deadly Bow and Eagle Eyes.\n" +
+                    "50 Hit Point\n" +
+                    "30 Attack\n" +
+                    "10 Defense\n" +
+                    "10 Agility\n" +
+                    "1 Move Range\n" +
+                    "1 - 2 Attack Range\n" +
+                    "1 Cost",
+                    R.drawable.archer_portrait, new Status(50, 50, 30, 10, 10, 1, 1, 2, 1),
                     R.drawable.archer_move, R.drawable.archer_combat, Id.Direction.RIGHT, Id.Attack.ARROW);
         }
     }
 
     public static class Icemage extends Lawful {
         public Icemage() {
-            super(Id.Lawful.MAGE.ordinal(), "Icemage","das", R.drawable.icemage_portrait,
-                    new Status(50, 50, 30, 0, 0, 1, 1, 1, 2),
-                    R.drawable.icemage_move, R.drawable.icemage_combat, Id.Direction.RIGHT, Id.Attack.ICE_BALST);
+            super(Id.Lawful.ICEMAGE.ordinal(), "Ice Mage","Chill. Freeze. Die.\n" +
+                            "30 Hit Point\n" +
+                            "40 Attack\n" +
+                            "0 Defense\n" +
+                            "0 Agility\n" +
+                            "1 Move Range\n" +
+                            "0 - 2 Attack Range\n" +
+                            "1 Cost",
+                    R.drawable.icemage_portrait, new Status(30, 30, 40, 0, 0, 1, 0, 2, 1),
+                    R.drawable.icemage_move, R.drawable.icemage_combat, Id.Direction.RIGHT, Id.Attack.ICE_FALL);
         }
     }
 
     public static class SwordMan extends Lawful {
         public SwordMan() {
-            super(Id.Lawful.SWORDMAN.ordinal(), "Sword Man", "dea", R.drawable.swordman_portrait,
-                    new Status(100, 100, 30, 20, 5, 1, 0, 0, 1),
-                    R.drawable.swordman_move, R.drawable.swordman_combat, Id.Direction.LEFT, Id.Attack.SLASH);
+            super(Id.Lawful.SWORDMAN.ordinal(), "Sword Man", "Stand by me.\n" +
+                            "100 Hit Point\n" +
+                            "20 Attack\n" +
+                            "25 Defense\n" +
+                            "5 Agility\n" +
+                            "1 Move Range\n" +
+                            "0 - 1 Attack Range\n" +
+                            "1 Cost",
+                    R.drawable.swordman_portrait, new Status(100, 100, 20, 25, 5, 1, 0, 1, 1),
+                    R.drawable.swordman_move, R.drawable.swordman_combat, Id.Direction.LEFT, Id.Attack.THUNDER_SLASH);
         }
     }
 
-    public static class Bandit extends Lawful
+    public static class Prince extends Lawful
     {
-        public Bandit() {
-            super(Id.Lawful.SWORDMAN.ordinal(), "Bandit", "dsa", R.drawable.swordman_portrait,
-                    new Status(80, 80, 30, 10, 5, 1, 0, 0, 1),
-                    R.drawable.swordman_move, R.drawable.swordman_combat, Id.Direction.LEFT, Id.Attack.ICE_BALST);
+        public Prince() {
+            super(Id.Lawful.PRINCE.ordinal(), "Prince", "Protect my people. Protect our faith.\n" +
+                            "80 Hit Point\n" +
+                            "40 Attack\n" +
+                            "20 Defense\n" +
+                            "20 Agility\n" +
+                            "2 Move Range\n" +
+                            "0 - 1 Attack Range\n" +
+                            "2 Cost",
+                    R.drawable.prince_portrait, new Status(80, 80, 40, 20, 20, 2, 0, 1, 2),
+                    R.drawable.prince_move, R.drawable.prince_combat, Id.Direction.LEFT, Id.Attack.GREAT_SLASH);
         }
     }
 
-    public static class Thief extends Lawful
+    public static class Goddess extends Lawful
     {
-        public Thief() {
-            super(Id.Lawful.SWORDMAN.ordinal(), "Thief", "dsaR",R.drawable.swordman_portrait,
-                    new Status(50, 50, 40, 10, 10, 2, 0, 0, 1),
-                    R.drawable.swordman_move, R.drawable.swordman_combat, Id.Direction.LEFT, Id.Attack.ICE_BALST);
-        }
-    }
-
-    public static class Ranger extends Lawful
-    {
-        public Ranger() {
-            super(Id.Lawful.SWORDMAN.ordinal(), "Ranger","dsa", R.drawable.swordman_portrait,
-                    new Status(40, 40, 30, 10, 5, 1, 1, 1, 1),
-                    R.drawable.swordman_move, R.drawable.swordman_combat, Id.Direction.LEFT, Id.Attack.ICE_BALST);
+        public Goddess() {
+            super(Id.Lawful.GODDESS.ordinal(), "Goddess", "May light be with you.\n" +
+                            "50 Hit Point\n" +
+                            "50 Attack\n" +
+                            "10 Defense\n" +
+                            "10 Agility\n" +
+                            "1 Move Range\n" +
+                            "0 - 5 Attack Range\n" +
+                            "2 Cost",
+                    R.drawable.goddess_portrait, new Status(50, 50, 50, 10, 10, 1, 0, 5, 2),
+                    R.drawable.goddess_move, R.drawable.goddess_combat, Id.Direction.LEFT, Id.Attack.MAGIC_SLASH);
         }
     }
 }

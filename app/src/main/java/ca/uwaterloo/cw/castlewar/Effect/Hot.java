@@ -5,7 +5,7 @@ package ca.uwaterloo.cw.castlewar.Effect;
  */
 
 abstract public class Hot extends Effect {
-    public Hot(int id, String name, String description, int resource) {
-        super(id, name, description, resource);
+    public Hot(int id, String name, String description, int resource, int turn, int stack, int maxTurn, int maxStack) {
+        super(id, name, description, resource, turn, stack,maxTurn,maxStack);
     }
 }
