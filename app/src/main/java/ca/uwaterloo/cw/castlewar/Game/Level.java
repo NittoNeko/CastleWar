@@ -105,7 +105,7 @@ abstract public class Level extends GameObject {
 
     public String getDisplayableTerrain()
     {
-        return terrain.getDescription();
+        return this.getDescription();
     }
 
     public Terrain getTerrain() {
@@ -115,22 +115,22 @@ abstract public class Level extends GameObject {
     public static Level createLevel(Id.Level level) {
         switch(level) {
             case ONE_ONE: return new Level_1();
-            case ONE_TWO: return new Level_1();
-            case ONE_THREE: return new Level_1();
-            case ONE_FOUR: return new Level_1();
-            case ONE_FIVE: return new Level_1();
-            case ONE_SIX: return new Level_1();
+            case ONE_TWO: return new Level_2();
+            case ONE_THREE: return new Level_3();
+            case ONE_FOUR: return new Level_4();
+            case ONE_FIVE: return new Level_5();
+            case ONE_SIX: return new Level_6();
             default: return null;
         }
     }
 
     public static class Level_1 extends Level {
         public Level_1() {
-            super(Id.Level.ONE_ONE.ordinal(), "Level 1", "",
-                    0, new Terrain.LongField(),
-                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan(), new Lawful.SwordMan(), new Lawful.SwordMan(), new Lawful.SwordMan())),
-                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan())),
-                    new ArrayList<Item>(Arrays.asList(new Potion.AttackPotion(), new Potion.SpeedPotion(), new Potion.DefensePotion())),
+            super(Id.Level.ONE_ONE.ordinal(), "Level 1", "Adventure",
+                    0, new Terrain.MediumField(),
+                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan(), new Lawful.Archer())),
+                    new ArrayList<Unit>(Arrays.asList(new Chaotic.Imp(), new Chaotic.Bat())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion())),
                     new ArrayList<Item>(Arrays.asList(new Potion.HpPotion())),
                     new ArrayList<>(Arrays.asList(1, 1, 1, 3)),
                     new ArrayList<>(Arrays.asList(0, 0, 0, 1)));
@@ -139,14 +139,66 @@ abstract public class Level extends GameObject {
 
     public static class Level_2 extends Level {
         public Level_2() {
-            super(Id.Level.ONE_TWO.ordinal(), "Level 2", "",
+            super(Id.Level.ONE_TWO.ordinal(), "Level 2", "Ghost Coming",
                     0, new Terrain.LongField(),
-                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan(), new Lawful.SwordMan(), new Lawful.SwordMan(), new Lawful.SwordMan())),
-                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan())),
-                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion())),
-                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion())),
-                    new ArrayList<>(Arrays.asList(1, 1, 1, 3)),
-                    new ArrayList<>(Arrays.asList(0, 0, 0, 1)));
+                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan(), new Lawful.Archer())),
+                    new ArrayList<Unit>(Arrays.asList(new Chaotic.Imp(), new Chaotic.Bat(), new Chaotic.Ghost())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion(), new Potion.AttackPotion())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.AttackPotion())),
+                    new ArrayList<>(Arrays.asList(1, 2, 1, 3)),
+                    new ArrayList<>(Arrays.asList(0, 0, 1)));
+        }
+    }
+
+    public static class Level_3 extends Level {
+        public Level_3() {
+            super(Id.Level.ONE_THREE.ordinal(), "Level 3", "New Ally",
+                    0, new Terrain.MediumField(),
+                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan(), new Lawful.Archer(), new Lawful.Icemage())),
+                    new ArrayList<Unit>(Arrays.asList(new Chaotic.Imp(), new Chaotic.Bat(), new Chaotic.Ghost())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion(), new Potion.AttackPotion())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion(), new Potion.AttackPotion())),
+                    new ArrayList<>(Arrays.asList(1, 2, 2, 3)),
+                    new ArrayList<>(Arrays.asList(0, 2)));
+        }
+    }
+
+    public static class Level_4 extends Level {
+        public Level_4() {
+            super(Id.Level.ONE_FOUR.ordinal(), "Level 4", "Honour",
+                    0, new Terrain.ShortField(),
+                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan(), new Lawful.Archer(), new Lawful.Icemage(), new Lawful.Prince())),
+                    new ArrayList<Unit>(Arrays.asList(new Chaotic.Imp(), new Chaotic.Bat(), new Chaotic.Ghost(), new Chaotic.Minotaur())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion(), new Potion.AttackPotion(), new Potion.DefensePotion())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion(), new Potion.AttackPotion(), new Potion.DefensePotion())),
+                    new ArrayList<>(Arrays.asList(2, 2, 2, 3)),
+                    new ArrayList<>(Arrays.asList(1, 2)));
+        }
+    }
+
+    public static class Level_5 extends Level {
+        public Level_5() {
+            super(Id.Level.ONE_FIVE.ordinal(), "Level 5", "God War",
+                    0, new Terrain.LongField(),
+                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan(), new Lawful.Archer(), new Lawful.Icemage(), new Lawful.Prince(), new Lawful.Goddess())),
+                    new ArrayList<Unit>(Arrays.asList(new Chaotic.Imp(), new Chaotic.Bat(), new Chaotic.Ghost(), new Chaotic.Minotaur(), new Chaotic.Darklord())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion(), new Potion.AttackPotion(), new Potion.DefensePotion(), new Potion.SpeedPotion())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion(), new Potion.AttackPotion(), new Potion.DefensePotion(), new Potion.SpeedPotion())),
+                    new ArrayList<>(Arrays.asList(2, 2, 2, 3)),
+                    new ArrayList<>(Arrays.asList(2, 3)));
+        }
+    }
+
+    public static class Level_6 extends Level {
+        public Level_6() {
+            super(Id.Level.ONE_SIX.ordinal(), "Level 6", "Desperate",
+                    0, new Terrain.ShortField(),
+                    new ArrayList<Unit>(Arrays.asList(new Lawful.SwordMan(), new Lawful.Archer(), new Lawful.Icemage())),
+                    new ArrayList<Unit>(Arrays.asList(new Chaotic.Ghost(), new Chaotic.Minotaur(), new Chaotic.Darklord())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion(), new Potion.AttackPotion(), new Potion.DefensePotion())),
+                    new ArrayList<Item>(Arrays.asList(new Potion.HpPotion(), new Potion.AttackPotion(), new Potion.DefensePotion(), new Potion.SpeedPotion())),
+                    new ArrayList<>(Arrays.asList(2)),
+                    new ArrayList<>(Arrays.asList(2)));
         }
     }
 }

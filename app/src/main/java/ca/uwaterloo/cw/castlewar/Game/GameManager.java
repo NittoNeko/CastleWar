@@ -805,15 +805,15 @@ public class GameManager {
     }
 
     public void screenFocusOn(Sprite sprite) {
-        int x = sprite.getX() - System.getScreenWidth() / 2 + sprite.getBitmap().getWidth() / 2;
+        int x = sprite.getX() - System.getScreenWidth() / 2 + sprite.getBitmap().getWidth();
         screenFocusOn(x);
     }
 
     public void screenFocusOn(int x) {
         if (!hasScroll.get()) return;
-        if (x < 0) x = 0;
+         if (x < 0) x = 0;
         else if (x > backgroundWidth - System.getScreenWidth())
-            x = backgroundWidth - System.getScreenWidth();
+        x = backgroundWidth - System.getScreenWidth() + 200;
         final int copy = x;
         final float scrollTime = Math.abs(screenView.getScrollX() - copy) * MILISECOND / SCROLL_PIXEL_PER_SECOND;
         if (Math.abs(screenView.getScrollX() - copy) < (int) ((float) System.getScreenWidth() * 0.2)) return;
@@ -965,6 +965,8 @@ public class GameManager {
         }
 
         public void gameLogic() {
+            if (!hasScroll.get()) return;
+
             for (Unit iterator : unitInCombat.get(player).getCopyOfContent()) {
                 iterator.move();
             }
@@ -1158,6 +1160,7 @@ public class GameManager {
                             } else {
                                 if (System.gameFlow) java.lang.System.out.println("targeting");
                                 if (target.getMoveTile() == null) {
+                                    screenFocusOn(defender);
                                     if (System.gameFlow)
                                         java.lang.System.out.println("finish targeting, switch to combat");
                                     // before go to combat
