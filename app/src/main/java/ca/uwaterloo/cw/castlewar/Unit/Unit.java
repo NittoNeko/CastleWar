@@ -497,7 +497,7 @@ abstract public class Unit extends GameObject {
             Paint paintEffect = new Paint();
             int l = sprite.getX() + indent;
             int r = l + textWidth;
-            int t = top - i * inter - interval;
+            int t = top - i * (inter + interval);
             int b = t + textHeight;
             paintEffect.setColor(Animation.AnimateColor.getAnimateColor());
             paintEffect.setTextSize(textHeight);
@@ -505,7 +505,7 @@ abstract public class Unit extends GameObject {
             paintEffect.setTextAlign(Paint.Align.RIGHT);
             canvas.drawText(Integer.toString(currentEffects.get(i).getStack()),r,t, paintEffect);
             Bitmap bitmap = currentEffects.get(i).getPortrait();
-            canvas.drawBitmap(bitmap, l, t - inter - inter, paintEffect);
+            canvas.drawBitmap(bitmap, l, t - inter, paintEffect);
         }
     }
 

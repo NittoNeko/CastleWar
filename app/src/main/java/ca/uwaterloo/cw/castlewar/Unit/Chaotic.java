@@ -63,12 +63,12 @@ abstract public class Chaotic extends Unit {
             super(Id.Chaotic.GHOST.ordinal(), "Ghost", "No one ever touches me.\n"  +
                             "10 Hit Point\n" +
                             "20 Attack\n" +
-                            "100 Defense\n" +
+                            "40 Defense\n" +
                             "0 Agility\n" +
                             "1 Move Range\n" +
                             "0 - 1 Attack Range\n" +
                             "1 Cost",
-                    R.drawable.ghost_portrait, new Status(10, 10, 20, 100, 0, 1, 0, 1, 1),
+                    R.drawable.ghost_portrait, new Status(10, 10, 20, 40, 0, 1, 0, 1, 1),
                     R.drawable.ghost_move, R.drawable.ghost_combat, Id.Direction.RIGHT, Id.Attack.DARK_RUNE);
         }
     }
