@@ -9,5 +9,5 @@ Feel free to download the source and build on your own.
 
 This project is:
 
-  - poorly designed and organized due to time restriction.
+  - poorly designed and organized due to lack of time.
   - just to demonstrate our understandings of basic elements of a game.
