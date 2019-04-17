@@ -5,13 +5,6 @@ And it was developed on the Android Studio.
 
 Feel free to download the source and build on your own.
 
-# Technical issues
-
-This project is:
-
-  - poorly designed and organized due to lack of time.
-  - just to demonstrate our understandings of basic elements of a game.
-
 # Notice
 
 If the build fails or you just want to see what does the game look like,
